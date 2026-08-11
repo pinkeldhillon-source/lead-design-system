@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LEAD Design System, live preview</title>
+<style>
+/* Mirrors src/theme.css so this page works when opened on its own. */
+/* LEAD Design System, v1.0
+   Single source of truth for colour, type, spacing and shape.
+   Import this once at the root of the app. */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap');
+
+:root {
+  /* Colour */
+  --lead-ink: #00232F;
+  --lead-ink-deep: #001A23;
+  --lead-ink-body: #22383F;
+  --lead-ink-muted: #5F7278;
+  --lead-accent: #E97132;
+  --lead-accent-light: #F5A472;
+  --lead-accent-text: #A84A16;
+  --lead-cream: #E9DDC7;
+  --lead-canvas: #F7F2E8;
+  --lead-surface: #FFFFFF;
+  --lead-line: #DCD3C2;
+  --lead-success: #1F7A5C;
+  --lead-warning: #E9A13B;
+  --lead-error: #B3341F;
+  --lead-info: #2E6F8E;
+
+  /* Type */
+  --lead-font: 'Montserrat', system-ui, sans-serif;
+
+  /* Space, base unit 8 */
+  --lead-space-1: 4px;
+  --lead-space-2: 8px;
+  --lead-space-3: 12px;
+  --lead-space-4: 16px;
+  --lead-space-6: 24px;
+  --lead-space-8: 32px;
+  --lead-space-12: 48px;
+  --lead-space-16: 64px;
+  --lead-space-24: 96px;
+  --lead-space-32: 128px;
+
+  /* Shape */
+  --lead-radius-sm: 4px;
+  --lead-radius: 8px;
+  --lead-radius-lg: 16px;
+  --lead-radius-full: 999px;
+
+  /* Elevation, warm and soft, never black */
+  --lead-shadow-sm: 0 2px 4px rgba(0, 35, 47, 0.08);
+  --lead-shadow-lg: 0 12px 30px rgba(0, 35, 47, 0.16);
+
+  /* Layout */
+  --lead-container: 1200px;
+  --lead-gutter: 24px;
+  --lead-section-y: 96px;
+}
+
+body {
+  margin: 0;
+  background: var(--lead-canvas);
+  color: var(--lead-ink-body);
+  font-family: var(--lead-font);
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Type scale. Headlines are all caps, body is sentence case. */
+.lead-display {
+  font-size: 64px; line-height: 66px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: -1px; color: var(--lead-ink); margin: 0;
+}
+.lead-h1 {
+  font-size: 44px; line-height: 48px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: -0.5px; color: var(--lead-ink); margin: 0;
+}
+.lead-h2 {
+  font-size: 32px; line-height: 38px; font-weight: 700;
+  text-transform: uppercase; color: var(--lead-ink); margin: 0;
+}
+.lead-h3 {
+  font-size: 22px; line-height: 28px; font-weight: 700; color: var(--lead-ink); margin: 0;
+}
+.lead-eyebrow {
+  font-size: 12px; line-height: 16px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.8px; color: var(--lead-accent-text);
+}
+.lead-lead { font-size: 20px; line-height: 32px; font-weight: 500; color: var(--lead-ink); }
+.lead-body { font-size: 16px; line-height: 28px; font-weight: 400; color: var(--lead-ink-body); }
+.lead-small { font-size: 14px; line-height: 22px; font-weight: 400; color: var(--lead-ink-body); }
+.lead-label {
+  font-size: 12px; line-height: 18px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1.2px; color: var(--lead-ink-muted);
+}
+.lead-stat {
+  font-size: 72px; line-height: 72px; font-weight: 900;
+  letter-spacing: -2px; color: var(--lead-ink);
+}
+
+/* Measure. Body copy stays readable. */
+.lead-measure { max-width: 62ch; }
+
+@media (max-width: 768px) {
+  .lead-display { font-size: 40px; line-height: 42px; letter-spacing: -0.5px; }
+  .lead-h1 { font-size: 32px; line-height: 36px; }
+  .lead-h2 { font-size: 24px; line-height: 30px; }
+  .lead-lead { font-size: 18px; line-height: 28px; }
+  .lead-body { line-height: 26px; }
+  .lead-stat { font-size: 52px; line-height: 52px; }
+  :root { --lead-section-y: 56px; }
+}
+
+/* Layout */
+.lead-container {
+  max-width: var(--lead-container);
+  margin: 0 auto;
+  padding-left: var(--lead-gutter);
+  padding-right: var(--lead-gutter);
+}
+.lead-section { padding-top: var(--lead-section-y); padding-bottom: var(--lead-section-y); }
+.lead-section--dark { background: var(--lead-ink); color: #FFFFFF; }
+.lead-section--cream { background: var(--lead-cream); }
+
+/* Signature device 1: the dot grid.
+   22px spacing, ink at 13 percent. Sits behind heroes and dark bands. */
+.lead-dotgrid {
+  background-image: radial-gradient(circle, rgba(0, 35, 47, 0.13) 1.6px, transparent 1.6px);
+  background-size: 22px 22px;
+}
+.lead-dotgrid--on-dark {
+  background-image: radial-gradient(circle, rgba(233, 221, 199, 0.16) 1.6px, transparent 1.6px);
+  background-size: 22px 22px;
+}
+
+/* Signature device 2: the highlighter. One per screen, on the phrase that matters. */
+.lead-highlight { background: var(--lead-accent); color: var(--lead-ink); padding: 0 8px; }
+.lead-highlight--underline { box-shadow: inset 0 -0.28em 0 rgba(233, 113, 50, 0.75); }
+
+/* Signature device 4: the warm glow. Behind portraits on ink, never behind text. */
+.lead-glow { border-radius: 50%; box-shadow: 0 0 60px 28px rgba(233, 113, 50, 0.42); }
+
+/* Focus. Visible on every interactive element. */
+.lead-focusable:focus-visible {
+  outline: 2px solid var(--lead-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+</style>
+<style>
+  /* Page level styling only. Everything else comes from src/theme.css */
+  .row { display: flex; flex-wrap: wrap; gap: 24px; }
+  .row > * { flex: 1 1 280px; }
+  .card { background: var(--lead-surface); border: 1px solid var(--lead-line);
+          border-radius: var(--lead-radius-lg); padding: 32px; box-shadow: var(--lead-shadow-sm); }
+  .card--cream { background: var(--lead-cream); border-color: #D9C9AC; }
+  .card--ink { background: var(--lead-ink); border-color: var(--lead-ink); }
+  .btn { display: inline-flex; align-items: center; font-size: 15px; line-height: 16px;
+         font-weight: 700; letter-spacing: .3px; border-radius: var(--lead-radius);
+         padding: 14px 24px; text-decoration: none; border: 0; cursor: pointer; }
+  .btn--primary { background: var(--lead-accent); color: var(--lead-ink); }
+  .btn--dark { background: var(--lead-ink); color: #fff; }
+  .btn--secondary { background: transparent; color: var(--lead-ink);
+                    border: 2px solid var(--lead-ink); padding: 12px 22px; }
+  .btn--ghost { padding: 4px 0; border-radius: 0; color: var(--lead-ink);
+                border-bottom: 2px solid var(--lead-accent); }
+  .hero { position: relative; overflow: hidden; }
+  .proof { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .proof span.mark { display: block; height: 22px; width: 92px; background: var(--lead-ink);
+                     opacity: .55; border-radius: 3px; }
+  .field { width: 100%; background: #fff; border: 1px solid var(--lead-line);
+           border-radius: var(--lead-radius); padding: 14px 16px; font: inherit;
+           font-size: 16px; color: var(--lead-ink); }
+  .swatch { height: 84px; border-radius: 12px; border: 1px solid rgba(0,35,47,.10);
+            display: flex; align-items: flex-end; padding: 12px; font-size: 11px; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- HERO. Light, dot grid, one highlighted phrase, one primary action. -->
+<section class="hero lead-section lead-dotgrid">
+  <div class="lead-container">
+    <p class="lead-eyebrow">Leadership consultancy for agencies</p>
+    <h1 class="lead-display" style="max-width: 14ch;">
+      Your agency should run <span class="lead-highlight">without you</span>
+    </h1>
+    <p class="lead-lead lead-measure" style="margin-top: 24px;">
+      In eight weeks your team runs a full week without escalating to you, your client
+      capacity goes up and your delivery margins improve.
+    </p>
+    <div style="margin-top: 32px; display: flex; gap: 16px; flex-wrap: wrap;">
+      <a class="btn btn--primary" href="https://lead-pd.co.uk/book">Book a call</a>
+      <a class="btn btn--secondary" href="#method">See the method</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF ROW. Quiet, never competes with the headline. -->
+<section class="lead-section--cream" style="padding: 32px 0;">
+  <div class="lead-container proof">
+    <p class="lead-label" style="margin: 0;">Trusted by</p>
+    <span class="mark"></span><span class="mark" style="width:72px;"></span>
+    <span class="mark" style="width:104px;"></span><span class="mark" style="width:64px;"></span>
+  </div>
+</section>
+
+<!-- METHOD. Cards on canvas. -->
+<section id="method" class="lead-section">
+  <div class="lead-container">
+    <h2 class="lead-h2">The four pillars</h2>
+    <p class="lead-body lead-measure" style="margin: 16px 0 32px;">
+      One system, four parts. Each one removes a reason the work still needs you in the room.
+    </p>
+    <div class="row">
+      <div class="card">
+        <p class="lead-eyebrow">Pillar 01</p>
+        <h3 class="lead-h3">The leader</h3>
+        <p class="lead-body">The support you give has to outweigh the pressure you apply.</p>
+      </div>
+      <div class="card">
+        <p class="lead-eyebrow">Pillar 02</p>
+        <h3 class="lead-h3">The self sufficient organisation</h3>
+        <p class="lead-body">Structure, ownership and rhythm so work moves without you.</p>
+      </div>
+      <div class="card">
+        <p class="lead-eyebrow">Pillar 03</p>
+        <h3 class="lead-h3">The team</h3>
+        <p class="lead-body">Hiring, onboarding and performance that hold up under load.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS. Big numbers on ink, one accent unit each. -->
+<section class="lead-section lead-section--dark lead-dotgrid--on-dark">
+  <div class="lead-container">
+    <h2 class="lead-h2" style="color:#fff;">What changes</h2>
+    <div class="row" style="margin-top: 32px;">
+      <div>
+        <p class="lead-stat" style="color:#fff;">3<span style="color:var(--lead-accent);">X</span></p>
+        <p class="lead-label" style="color:var(--lead-cream);">Client capacity</p>
+      </div>
+      <div>
+        <p class="lead-stat" style="color:#fff;">25<span style="color:var(--lead-accent);">%</span></p>
+        <p class="lead-label" style="color:var(--lead-cream);">Efficiency gain</p>
+      </div>
+      <div>
+        <p class="lead-stat" style="color:#fff;">8</p>
+        <p class="lead-label" style="color:var(--lead-cream);">Weeks</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPONENTS. The kit, shown in place. -->
+<section class="lead-section">
+  <div class="lead-container">
+    <h2 class="lead-h2">The kit</h2>
+    <div class="row" style="margin-top: 32px;">
+      <div class="card">
+        <h3 class="lead-h3">Buttons</h3>
+        <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start; margin-top:16px;">
+          <a class="btn btn--primary" href="#">Book a call</a>
+          <a class="btn btn--dark" href="#">Book a call</a>
+          <a class="btn btn--secondary" href="#">See the method</a>
+          <a class="btn btn--ghost" href="#">Read the case study</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="lead-h3">Form field</h3>
+        <label class="lead-label" for="email" style="display:block; margin:16px 0 8px;">Work email</label>
+        <input class="field" id="email" type="email" placeholder="founder@agency.com">
+        <p class="lead-small" style="margin-top:12px;">Focus is a 2px accent ring. Errors explain the fix in one sentence.</p>
+      </div>
+      <div class="card card--ink">
+        <p class="lead-lead" style="color:#fff; margin:0;">
+          "I stepped out of delivery in six weeks. The team did not miss a beat."
+        </p>
+        <p class="lead-label" style="color:var(--lead-accent); margin-top:16px;">Founder, 20 person agency</p>
+      </div>
+    </div>
+
+    <h3 class="lead-h3" style="margin-top:48px;">Palette</h3>
+    <div class="row" style="margin-top:16px;">
+      <div class="swatch" style="background:#00232F; color:#E9DDC7;">#00232F</div>
+      <div class="swatch" style="background:#E97132; color:#00232F;">#E97132</div>
+      <div class="swatch" style="background:#E9DDC7; color:#00232F;">#E9DDC7</div>
+      <div class="swatch" style="background:#F7F2E8; color:#00232F;">#F7F2E8</div>
+      <div class="swatch" style="background:#22383F; color:#E9DDC7;">#22383F</div>
+    </div>
+  </div>
+</section>
+
+<!-- CALL TO ACTION. Closes every page. -->
+<section class="lead-section lead-section--dark lead-dotgrid--on-dark">
+  <div class="lead-container">
+    <h2 class="lead-h2" style="color:#fff; max-width:16ch;">Ready to get your week back?</h2>
+    <p class="lead-body lead-measure" style="color:var(--lead-cream); margin:16px 0 32px;">
+      Forty five minute capacity and margin audit. No pitch deck.
+    </p>
+    <a class="btn btn--primary" href="https://lead-pd.co.uk/book">Book a call</a>
+  </div>
+</section>
+
+<footer style="background:var(--lead-ink-deep); padding:32px 0;">
+  <div class="lead-container">
+    <p class="lead-label" style="color:var(--lead-ink-muted); margin:0;">LEAD, lead-pd.com</p>
+  </div>
+</footer>
+
+</body>
+</html>

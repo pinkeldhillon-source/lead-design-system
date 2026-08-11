@@ -1,0 +1,12 @@
+{
+  "name": "lead-design-system",
+  "version": "1.0.0",
+  "description": "Design system for LEAD, a leadership consultancy for founder led agencies. Colour, typography, spacing, shape and components.",
+  "main": "src/components/index.js",
+  "keywords": ["design-system", "design-tokens", "brand", "lead-pd"],
+  "license": "UNLICENSED",
+  "private": true,
+  "peerDependencies": {
+    "react": ">=18"
+  }
+}
