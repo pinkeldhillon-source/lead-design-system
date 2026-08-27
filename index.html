@@ -117,19 +117,6 @@ nav{position:sticky;top:0;z-index:60;background:rgba(10,27,35,.88);backdrop-filt
 .pod.ghosted{border-style:dashed;color:var(--mut);display:flex;align-items:center;justify-content:center;min-width:64px}
 .helm{text-align:center;font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:clamp(20px,2.6vw,26px);color:var(--ink);margin-top:52px}
 
-/* system board */
-.frame{border:.5px solid var(--line);border-radius:12px;background:var(--deep);margin-top:48px;overflow:hidden}
-.frame-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:.5px solid var(--line)}
-.frame-bar i{width:9px;height:9px;border-radius:50%;background:var(--line);font-style:normal}
-.frame-bar i:first-child{background:var(--cm)}
-.frame-bar span{flex:1;text-align:center;font-size:12px;color:var(--mut)}
-.board{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px}
-.tile{background:var(--raised);border:.5px solid var(--line);border-radius:9px;padding:22px}
-.tile .k{font-size:10px}
-.tile h4{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:21px;color:var(--ink);margin-top:9px}
-.tile h4 em{font-style:italic;background-image:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--cm)}
-.tile p{font-size:13.5px;margin-top:8px}
-
 /* pillars */
 .pillar .num{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:22px;background-image:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--cm)}
 .pillar h4{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:24px;color:var(--ink);margin-top:8px}
@@ -179,7 +166,7 @@ footer{border-top:.5px solid var(--line);padding:24px 0}
 
 @media (max-width:860px){
   .nav-links a:not(.btn){display:none}
-  .grid2,.grid3,.board,.about-grid,.cred{grid-template-columns:1fr}
+  .grid2,.grid3,.about-grid,.cred{grid-template-columns:1fr}
   .shift-grid{grid-template-columns:1fr}
   .arrow{transform:rotate(90deg);padding:4px 0}
   .stats{flex-direction:column;gap:0}
@@ -205,7 +192,6 @@ footer{border-top:.5px solid var(--line);padding:24px 0}
   <div class="nav-in">
     <a class="wordmark" href="#top">Pinkel Dhillon<span class="dot">.</span></a>
     <div class="nav-links">
-      <a href="#system">The system</a>
       <a href="#programme">The programme</a>
       <a href="#results">Results</a>
       <a href="#about">Who I am</a>
@@ -290,25 +276,6 @@ footer{border-top:.5px solid var(--line);padding:24px 0}
       </div>
     </div>
     <p class="helm rv">You are still at the helm. <span class="it">You have just moved upstairs.</span></p>
-  </div>
-</section>
-
-<section id="system">
-  <div class="wrap">
-    <div class="centre rv">
-      <div class="k">The system</div>
-      <h2 class="serif">Your whole people system <span class="it">on one page.</span></h2>
-      <p class="lede">The four moves every owner has to get right, built into one clear system and made specific to your agency.</p>
-    </div>
-    <div class="frame rv">
-      <div class="frame-bar"><i></i><i></i><i></i><span>Agency People OS &middot; Live board</span></div>
-      <div class="board">
-        <div class="tile"><div class="k">01 &middot; Org chart</div><h4>Start with <em>the shape.</em></h4><p>One owner per outcome. A maximum of six direct reports. Gaps become roles, and the team reshapes as you grow.</p></div>
-        <div class="tile"><div class="k">02 &middot; Hiring</div><h4>Start with <em>the JD.</em></h4><p>Every role gets the what and the how. Score both at interview. The JD is the contract, and the reference point forever after.</p></div>
-        <div class="tile"><div class="k">03 &middot; Managing</div><h4>Lead with <em>the formula.</em></h4><p>Clarity + expectations + support + review = leadership. Weekly one to ones, feedback inside 24 hours, always back to the JD.</p></div>
-        <div class="tile"><div class="k">04 &middot; Celebrate</div><h4>Reward <em>the right way.</em></h4><p>Promote people already doing the next level's work. Bonus exceptional work at the current level. Success earns reward, on purpose.</p></div>
-      </div>
-    </div>
   </div>
 </section>
 
