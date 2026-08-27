@@ -137,6 +137,11 @@ nav{position:sticky;top:0;z-index:60;background:rgba(10,27,35,.88);backdrop-filt
 .who-row{display:flex;align-items:center;gap:14px;margin-top:20px}
 .who-row .who{margin-top:0}
 .face{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1.5px solid var(--cm);padding:3px;background:var(--deep);flex-shrink:0}
+.testi{max-width:620px;margin-top:56px}
+.testi::before{content:"\201C";display:block;font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:76px;line-height:.62;height:44px;background-image:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--cm)}
+.testi.right{margin-left:auto}
+.t-quote{font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:clamp(22px,2.8vw,29px);line-height:1.45;color:var(--ink)}
+.t-between{text-align:center;font-family:'Fraunces',Georgia,serif;font-weight:300;font-size:19px;margin-top:64px}
 
 /* guarantee */
 .guarantee{background-image:var(--grad);border-top:none}
@@ -222,7 +227,7 @@ footer{border-top:.5px solid var(--line);padding:24px 0}
   <div class="wrap rv">
     <p class="cred-top">The system was built inside operations that do not break.</p>
     <div class="cred">
-      <div><b>3 of the UK's biggest retailers</b><span>Large format, multi site operations</span></div>
+      <div><b>Three of the UK's biggest retailers</b><span>Large format, multi site operations</span></div>
       <div><b>The UK's biggest wholesale distributor</b><span>National scale distribution</span></div>
       <div><b>The UK's biggest coaching and development institute</b><span>Leadership development at scale</span></div>
     </div>
@@ -305,7 +310,7 @@ footer{border-top:.5px solid var(--line);padding:24px 0}
     <div class="grid3 rv" style="margin-top:44px">
       <div class="card get"><div class="rule"></div><h4>Your Leader DNA profile</h4><p>A full leadership diagnostic: written report, insight summary, and a bespoke 30 day plan built from your result.</p></div>
       <div class="card get"><div class="rule"></div><h4>The SSO asset pack</h4><p>Your bespoke org chart, pod structure, role profiles, job descriptions, and your KPI and performance system. Built for your agency.</p></div>
-      <div class="card get"><div class="rule"></div><h4>Eight weekly 1:1s with me</h4><p>Eight sessions across eight weeks, plus a kickoff call. You leave with a 90 day plan you run yourself.</p></div>
+      <div class="card get"><div class="rule"></div><h4>Eight weekly one to ones with me</h4><p>Eight sessions across eight weeks, plus a kickoff call. You leave with a 90 day plan you run yourself.</p></div>
     </div>
   </div>
 </section>
@@ -316,23 +321,22 @@ footer{border-top:.5px solid var(--line);padding:24px 0}
       <div class="k">Results</div>
       <h2 class="serif">Founders already <span class="it">out.</span></h2>
     </div>
-    <div class="grid2 rv" style="margin-top:44px">
-      <div class="card">
-        <p class="quote">&ldquo;My agency has almost 2x'd since working with Pinkel. I've been able to remove myself from the day to day.&rdquo;</p>
-        <div class="who-row">
-          <img class="face" src="face-nativ.jpg" alt="Nativ, Founder of NSY Digital" width="240" height="240">
-          <div>
-            <p class="who">Nativ <span>&middot; Founder, NSY Digital</span></p>
-          </div>
+    <div class="testi rv">
+      <p class="t-quote">My agency has almost 2x'd since working with Pinkel. I've been able to remove myself from the day to day.</p>
+      <div class="who-row">
+        <img class="face" src="face-nativ.jpg" alt="Nativ, Founder of NSY Digital" width="240" height="240">
+        <div>
+          <p class="who">Nativ <span>&middot; Founder, NSY Digital</span></p>
         </div>
       </div>
-      <div class="card">
-        <p class="quote">&ldquo;One of the best investments we've made this year. Impact within two weeks, and the right people in the right seats.&rdquo;</p>
-        <div class="who-row">
-          <img class="face" src="face-hannah.jpg" alt="Hannah, Co-founder of Thoughtful" width="240" height="240">
-          <div>
-            <p class="who">Hannah <span>&middot; Co-founder, Thoughtful</span></p>
-          </div>
+    </div>
+    <p class="t-between rv">Different agencies. <span class="it">The same shift.</span></p>
+    <div class="testi right rv">
+      <p class="t-quote">One of the best investments we've made this year. Impact within two weeks, and the right people in the right seats.</p>
+      <div class="who-row">
+        <img class="face" src="face-hannah.jpg" alt="Hannah, Co-founder of Thoughtful" width="240" height="240">
+        <div>
+          <p class="who">Hannah <span>&middot; Co-founder, Thoughtful</span></p>
         </div>
       </div>
     </div>
@@ -378,7 +382,7 @@ footer{border-top:.5px solid var(--line);padding:24px 0}
       <h2 class="serif">Your first full week without an escalation is <span class="it">eight weeks away.</span></h2>
       <p class="lede">45 minutes, one to one. We will find exactly where you are still the bottleneck, and map what it takes to 3x your capacity. The plan is yours to keep, whether we work together or not.</p>
       <div style="margin-top:32px"><a class="btn" href="https://lead-pd.co.uk/book">Book your free audit</a></div>
-      <p class="note" style="margin:16px auto 0">A short application, then a 45 minute audit. Zero risk on your end.</p>
+      <p class="note" style="margin:16px auto 0">A short application, then a 45 minute audit. No cost, no obligation.</p>
     </div>
   </div>
 </section>
@@ -386,7 +390,7 @@ footer{border-top:.5px solid var(--line);padding:24px 0}
 <footer>
   <div class="wrap foot">
     <span>Pinkel Dhillon <span class="dot">&middot;</span> LEAD</span>
-    <span><a href="https://www.linkedin.com/in/pinkeldhillon/">LinkedIn</a> <span class="dot">&middot;</span> lead-pd.co.uk</span>
+    <span><a href="https://www.linkedin.com/in/pinkeldhillon/">LinkedIn</a> <span class="dot">&middot;</span> lead-pd.com</span>
   </div>
 </footer>
 
