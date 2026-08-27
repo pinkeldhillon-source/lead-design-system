@@ -148,6 +148,10 @@ nav{position:sticky;top:0;z-index:60;background:rgba(10,27,35,.88);backdrop-filt
 .who{margin-top:16px;font-size:14px;color:var(--ink);font-weight:500}
 .who span{color:var(--mut);font-weight:400}
 .win{font-size:13px;color:var(--cm);margin-top:6px}
+.who-row{display:flex;align-items:center;gap:14px;margin-top:20px}
+.who-row .who{margin-top:0}
+.who-row .win{margin-top:3px}
+.face{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1.5px solid var(--cm);padding:3px;background:var(--deep);flex-shrink:0}
 
 /* guarantee */
 .guarantee{background-image:var(--grad);border-top:none}
@@ -350,13 +354,23 @@ footer{border-top:.5px solid var(--line);padding:24px 0}
     <div class="grid2 rv" style="margin-top:44px">
       <div class="card">
         <p class="quote">&ldquo;My agency has almost 2x'd since working with Pinkel. I've been able to remove myself from the day to day.&rdquo;</p>
-        <p class="who">Nativ <span>&middot; Founder, NSY Digital</span></p>
-        <p class="win">$90k to $150k MRR, delivery margins up 20%</p>
+        <div class="who-row">
+          <img class="face" src="face-nativ.jpg" alt="Nativ, Founder of NSY Digital" width="240" height="240">
+          <div>
+            <p class="who">Nativ <span>&middot; Founder, NSY Digital</span></p>
+            <p class="win">$90k to $150k MRR, delivery margins up 20%</p>
+          </div>
+        </div>
       </div>
       <div class="card">
         <p class="quote">&ldquo;One of the best investments we've made this year. Impact within two weeks, and the right people in the right seats.&rdquo;</p>
-        <p class="who">Hannah <span>&middot; Co-founder, Thoughtful</span></p>
-        <p class="win">$70k to $100k MRR, founders out of day to day</p>
+        <div class="who-row">
+          <img class="face" src="face-hannah.jpg" alt="Hannah, Co-founder of Thoughtful" width="240" height="240">
+          <div>
+            <p class="who">Hannah <span>&middot; Co-founder, Thoughtful</span></p>
+            <p class="win">$70k to $100k MRR, founders out of day to day</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
