@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAELSURBVDhP1ZExS8NgEIafa9XUfoNRB8FJMP0LupnVUdF/4NDflED/gBSSsSAIuomj6+ckOEnpopLacg4hafLFDB194Zbn7t6D9+BfSgCub2Z7y+7mOyIeqlnRVOEpH5KzKgdIYtPrAIxH/rS7/DlENUPEKwvZTiMTomprXMQD6BRO45E/fbm/2nEvkF8ZKDy7vFwGsHaSJbHpAbMqB0ij/omij1VWWy6URP3dvw1M6Bq06nL4desyKnyV9sbWqzsE3Cl6IMopIt8lVf1IYjNYpb2YHwN+tRSO0siEwFutJxLgpt1dzPfb0kbVurwW2LrvaqRt7SRrM8jf1fx3Q0Fw7rWlfTH8fHDZ2voFpB91hXvwHvgAAAAASUVORK5CYII=">
+<title>NSY Measurement Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+/* NSY Measurement Board.
+   Dark product surface, committed to a single theme: it paints its own
+   ground rather than following the host light or dark setting. */
+
+:root {
+  --bg: #08090A;
+  --panel: #101113;
+  --panel-hi: #17191C;
+  --line: rgba(255, 255, 255, 0.07);
+  --line-hi: rgba(255, 255, 255, 0.12);
+
+  --text: #ECEDEE;
+  --muted: #8B9099;
+  --faint: #5A606A;
+
+  --pos: #3FB950;
+  --neg: #F0603D;
+  --hold: #D9A036;
+  --plot: #5B8DEF;
+
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --rail: 268px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  background-image: radial-gradient(120% 70% at 50% -10%, #12151A 0%, rgba(8, 9, 10, 0) 62%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.num { font-variant-numeric: tabular-nums; }
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+:focus-visible {
+  outline: 1px solid var(--plot);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+/* ---------- Rail ---------- */
+
+.rail {
+  border-right: 1px solid var(--line);
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+}
+
+.rail::-webkit-scrollbar { width: 8px; }
+.rail::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+.rail::-webkit-scrollbar-track { background: transparent; }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px 24px;
+}
+
+/* The NSY mark, which carries its own blue and holds on a near black
+   ground. The name beside it is typeset, not part of the image. */
+.brand-mark { height: 22px; width: auto; display: block; flex: none; }
+
+.brand .name {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.avatar {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav { display: flex; flex-direction: column; gap: 1px; }
+
+.nav button {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--muted);
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.nav button:hover { background: var(--panel); color: var(--text); }
+
+.nav button[aria-current="page"] {
+  background: var(--panel-hi);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.nav svg { flex: none; }
+
+.rail-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 2px;
+  border-top: 1px solid var(--line);
+}
+
+.user .who { line-height: 1.3; }
+.user .who b { display: block; font-size: 13px; font-weight: 500; }
+.user .who span { font-size: 12px; color: var(--faint); }
+
+/* ---------- Main ---------- */
+
+.main { padding: 30px 48px 88px; min-width: 0; }
+
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 26px;
+}
+
+.head-left { display: flex; align-items: flex-start; gap: 14px; }
+
+.menu {
+  display: none;
+  flex: none;
+  padding: 7px;
+  margin: -3px 0 0 -7px;
+  border-radius: 7px;
+  color: var(--muted);
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.menu:hover { background: var(--panel); color: var(--text); }
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.24s ease;
+}
+
+h1 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.page-head .sub {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.head-right { text-align: right; }
+
+.periods {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.periods button {
+  padding: 5px 13px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.periods button:hover { color: var(--text); }
+.periods button[aria-pressed="true"] { background: var(--panel-hi); color: var(--text); }
+
+.stamp { margin: 9px 0 0; font-size: 13px; color: var(--faint); }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--faint);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 10px;
+  vertical-align: 4px;
+  margin-left: 12px;
+  font-weight: 400;
+}
+
+.pill::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--hold);
+}
+
+/* ---------- Tile grid ---------- */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: 0 -22px;
+}
+
+.tile {
+  display: block;
+  width: 100%;
+  padding: 22px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.tile:hover {
+  background: rgba(255, 255, 255, 0.028);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+.tile:hover .t-label { color: var(--text); }
+
+.t-label {
+  display: block;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.t-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.t-value {
+  font-size: 41px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.t-value .unit {
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--muted);
+  margin-left: 3px;
+}
+
+.t-foot {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--faint);
+}
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+}
+
+.delta.up { color: var(--pos); }
+.delta.down { color: var(--neg); }
+.delta.flat { color: var(--muted); }
+
+.spark { flex: none; }
+
+/* ---------- Detail block ---------- */
+
+.detail {
+  margin-top: 34px;
+  padding-top: 34px;
+  border-top: 1px solid var(--line);
+}
+
+.detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+
+.detail-head h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--faint);
+}
+
+.legend .dash {
+  width: 22px;
+  height: 0;
+  border-top: 1px dashed var(--line-hi);
+}
+
+/* ---------- Chart ---------- */
+
+.chart {
+  position: relative;
+  padding-left: 62px;
+  padding-right: 124px;
+}
+
+.plot { position: relative; height: 280px; }
+
+.gridline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--line);
+}
+
+.gridline.target { border-top: 1px dashed var(--line-hi); }
+
+.ylabel {
+  position: absolute;
+  left: -62px;
+  width: 50px;
+  text-align: right;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.plot svg { display: block; width: 100%; height: 100%; }
+
+.endpoint {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--plot);
+  transform: translate(50%, -50%);
+  right: 0;
+}
+
+.callout {
+  position: absolute;
+  left: calc(100% + 16px);
+  transform: translateY(-50%);
+  background: var(--panel-hi);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.xaxis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.xaxis span:last-child { color: var(--muted); }
+
+/* ---------- Supporting measures ---------- */
+
+.behind {
+  margin-top: 42px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+
+.behind h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.behind .note {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 76ch;
+}
+
+.support {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 48px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.support li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.support .s-owner { display: block; font-size: 12px; color: var(--faint); margin-top: 2px; }
+.support .s-fig { text-align: right; white-space: nowrap; font-weight: 500; }
+.support .s-fig small { display: block; font-size: 12px; font-weight: 400; color: var(--faint); }
+.support .s-fig.miss small { color: var(--neg); }
+.support .s-fig.hit small { color: var(--pos); }
+
+.method {
+  margin-top: 26px;
+  padding: 16px 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.method p { margin: 0 0 8px; font-size: 13px; line-height: 1.65; max-width: 84ch; color: var(--muted); }
+.method p:last-child { margin-bottom: 0; }
+.method p b { color: var(--text); font-weight: 500; }
+
+/* ---------- Definition state ---------- */
+
+.state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--faint);
+  white-space: nowrap;
+}
+
+.state::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.state.agreed { color: var(--pos); }
+.state.drafting { color: var(--hold); }
+.state.manual { color: var(--faint); }
+
+/* ---------- Team ---------- */
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.tabs button {
+  padding: 6px 13px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.tabs button:hover { background: var(--panel); color: var(--text); }
+.tabs button[aria-selected="true"] { background: var(--panel-hi); color: var(--text); }
+
+.role-note {
+  margin: 18px 0 22px;
+  font-size: 14px;
+  color: var(--muted);
+  max-width: 78ch;
+}
+
+.mrow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 116px 132px 78px;
+  gap: 10px 28px;
+  align-items: center;
+  padding: 15px 0;
+  border-top: 1px solid var(--line);
+}
+
+.mrow:last-of-type { border-bottom: 1px solid var(--line); }
+
+.m-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+.m-def { margin: 4px 0 0; font-size: 13px; color: var(--muted); max-width: 64ch; }
+
+.bar {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.bar i { display: block; height: 100%; border-radius: 999px; background: var(--pos); }
+.bar.miss i { background: var(--neg); }
+
+.m-fig { text-align: right; white-space: nowrap; }
+.m-fig .v { font-size: 19px; font-weight: 500; letter-spacing: -0.02em; }
+.m-fig .v.miss { color: var(--neg); }
+.m-fig .t { display: block; font-size: 12px; color: var(--faint); }
+
+.src {
+  font-size: 13px;
+  color: var(--faint);
+  justify-self: end;
+}
+
+.src:hover { color: var(--text); }
+.src[aria-expanded="true"] { color: var(--plot); }
+
+.src-panel {
+  grid-column: 1 / -1;
+  padding: 2px 0 6px 14px;
+  border-left: 1px solid var(--line-hi);
+}
+
+.src-panel p { margin: 0 0 6px; font-size: 13px; line-height: 1.6; color: var(--muted); max-width: 84ch; }
+.src-panel p:last-child { margin-bottom: 0; }
+.src-panel .open { color: var(--hold); }
+
+.open-question {
+  margin-top: 34px;
+  padding: 20px 22px;
+  background: var(--panel);
+  border: 1px solid rgba(217, 160, 54, 0.26);
+  border-radius: 8px;
+}
+
+.open-question h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--hold);
+}
+
+.open-question p { margin: 0 0 10px; font-size: 14px; line-height: 1.65; max-width: 80ch; color: var(--muted); }
+.open-question p:last-child { margin-bottom: 0; }
+.open-question p b { color: var(--text); font-weight: 500; }
+
+.cadence {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 26px;
+}
+
+.cadence article {
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.cadence h4 { margin: 0 0 3px; font-size: 12px; font-weight: 500; color: var(--faint); }
+.cadence .when { margin: 0 0 7px; font-size: 15px; font-weight: 500; }
+.cadence p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--muted); }
+
+/* ---------- Stub pages ---------- */
+
+.stub {
+  padding: 56px 0;
+  max-width: 62ch;
+}
+
+.stub h2 { margin: 0 0 8px; font-size: 19px; font-weight: 500; }
+.stub p { margin: 0; font-size: 14px; line-height: 1.7; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+
+@media (max-width: 1180px) {
+  .support { grid-template-columns: 1fr; }
+  .cadence { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 980px) {
+  .app { grid-template-columns: 1fr; }
+
+  .rail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 272px;
+    z-index: 40;
+    background: var(--bg);
+    transform: translateX(-100%);
+    transition: transform 0.26s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  body.nav-open .rail { transform: none; }
+  body.nav-open .scrim { opacity: 1; pointer-events: auto; }
+  body.nav-open { overflow: hidden; }
+
+  .menu { display: inline-flex; }
+
+  .main { padding: 22px 20px 56px; }
+  .tiles { grid-template-columns: 1fr; margin: 0; }
+  .chart { padding-right: 20px; }
+  .callout { display: none; }
+  .mrow { grid-template-columns: minmax(0, 1fr) 110px; }
+  .mrow .bar { grid-column: 1; }
+  .src { justify-self: start; grid-column: 1 / -1; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="scrim" id="scrim"></div>
+
+  <nav class="rail" id="rail" aria-label="Sections">
+    <div class="brand">
+      <img class="brand-mark" src="data:image/png;base64,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" alt="">
+      <span class="name">NSY Digital</span>
+    </div>
+
+    <div class="nav" id="nav"></div>
+
+    <div class="rail-foot">
+      <div class="nav" id="navFoot"></div>
+      <div class="user">
+        <span class="avatar">N</span>
+        <span class="who"><b>Nativ</b><span>Owner</span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="page-head">
+      <div class="head-left">
+        <button type="button" class="menu" id="menu" aria-label="Open menu" aria-expanded="false" aria-controls="rail">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <div>
+          <h1 id="pageTitle">Performance</h1>
+          <p class="sub" id="pageSub"></p>
+        </div>
+      </div>
+      <div class="head-right">
+        <div class="periods" id="periods"></div>
+        <p class="stamp" id="stamp">Updated today at 09:12</p>
+      </div>
+    </div>
+
+    <div id="view"></div>
+  </main>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   Placeholder data. Every figure is illustrative and set to show the
+   shape of the board. Nothing is read from Notion yet.
+   ------------------------------------------------------------------ */
+
+var STATE = {
+  agreed: 'Definition agreed',
+  drafting: 'Being defined',
+  manual: 'Entered by hand'
+};
+
+var KPIS = [
+  {
+    id: 'mrr',
+    label: 'Monthly recurring revenue',
+    value: '£170,400',
+    unit: '',
+    delta: { dir: 'up', text: '12.1%', good: true },
+    context: 'vs August',
+    series: [92, 96, 94, 103, 110, 118, 121, 119, 128, 141, 152, 170.4],
+    domain: [85, 180],
+    ticks: [90, 120, 150, 180],
+    fmt: function (v) { return '£' + v + 'k'; },
+    target: 150,
+    targetLabel: 'Target £150,000 a month',
+    chartTitle: 'Monthly recurring revenue, last 12 months',
+    owner: 'Nativ and Creative Lead',
+    def: 'agreed',
+    definition: 'Contracted retainer value invoiced in the calendar month. Project fees, one off edits and paused accounts are excluded.',
+    capture: 'Captured by the fractional CFO at month end close, read straight from the invoicing ledger.',
+    support: [
+      { name: 'New retainers signed', owner: 'Creative Lead', v: '2', t: 'Target 3', hit: false },
+      { name: 'Upsell conversations had', owner: 'Creative Lead', v: '3', t: 'Target 4', hit: false },
+      { name: 'Accounts churned this month', owner: 'Creative Lead', v: '1', t: 'Target 0', hit: false },
+      { name: 'Average retainer value', owner: 'Nativ', v: '£6,100', t: 'Target £5,500', hit: true }
+    ]
+  },
+  {
+    id: 'retention',
+    label: 'Client retention rate',
+    value: '86',
+    unit: '%',
+    delta: { dir: 'down', text: '1 pt', good: false },
+    context: 'Target 90%',
+    series: [91, 90, 89, 91, 90, 88, 89, 88, 87, 88, 87, 86],
+    domain: [80, 95],
+    ticks: [80, 85, 90, 95],
+    fmt: function (v) { return v + '%'; },
+    target: 90,
+    targetLabel: 'Target 90% at six months',
+    chartTitle: 'Client retention rate, last 12 months',
+    owner: 'Creative Lead',
+    def: 'agreed',
+    definition: 'Share of accounts that started six months ago and are still on a live retainer today. A paused account counts as churned until it restarts.',
+    capture: 'Derived from contract start dates in Notion. No manual entry.',
+    support: [
+      { name: 'Client check ins held', owner: 'Creative Lead', v: '11 of 12', t: 'Weekly', hit: true },
+      { name: 'At risk signals flagged early', owner: 'Creative Lead', v: '2', t: 'Flagged in week', hit: true },
+      { name: 'Founder touch rate on calls', owner: 'Nativ', v: '34%', t: 'Target under 20%', hit: false },
+      { name: 'Accounts scoring under 7 on any question', owner: 'Creative Lead', v: '1', t: 'Target 0', hit: false }
+    ]
+  },
+  {
+    id: 'ltv',
+    label: 'Average client LTV',
+    value: '£58,200',
+    unit: '',
+    delta: { dir: 'up', text: '13.2%', good: true },
+    context: 'vs last quarter',
+    series: [44.1, 45.2, 46.8, 47.9, 49.1, 50.2, 51.4, 53.0, 54.1, 55.8, 57.0, 58.2],
+    domain: [40, 60],
+    ticks: [40, 45, 50, 55, 60],
+    fmt: function (v) { return '£' + v + 'k'; },
+    target: null,
+    targetLabel: 'Target: grow every quarter',
+    chartTitle: 'Average client LTV, last 12 months',
+    owner: 'Creative Lead',
+    def: 'drafting',
+    definition: 'Average retainer value multiplied by average months retained. The open question is whether a paused account that later restarts counts as one life or two.',
+    capture: 'Calculated from the invoicing ledger each quarter. Waiting on the pause rule before it can be trusted.',
+    support: [
+      { name: 'Average retainer value', owner: 'Nativ', v: '£6,100', t: 'Target £5,500', hit: true },
+      { name: 'Months to first upsell', owner: 'Creative Lead', v: '4.2', t: 'Target 3', hit: false },
+      { name: 'Accounts on a second service line', owner: 'Creative Lead', v: '5 of 14', t: 'Target 7', hit: false },
+      { name: 'Retention at six months', owner: 'Creative Lead', v: '86%', t: 'Target 90%', hit: false }
+    ]
+  },
+  {
+    id: 'delivery',
+    label: 'On time delivery rate',
+    value: '82',
+    unit: '%',
+    delta: { dir: 'down', text: '1 pt', good: false },
+    context: 'Target 90%',
+    series: [88, 89, 87, 90, 88, 86, 87, 85, 84, 86, 83, 82],
+    domain: [78, 94],
+    ticks: [80, 85, 90],
+    fmt: function (v) { return v + '%'; },
+    target: 90,
+    targetLabel: 'Target 90% by the agreed date',
+    chartTitle: 'On time delivery rate, last 12 months',
+    owner: 'Editing Lead',
+    def: 'drafting',
+    definition: 'Share of edits marked Delivered on or before the date agreed with the client.',
+    capture: 'Read from the Notion pipeline once tiering is settled. Until then the rate treats every edit as equal, so a five minute ad and a one minute cut weigh the same.',
+    support: [
+      { name: 'Edits shipped on time', owner: 'Editing Lead', v: '82%', t: 'Target 90%', hit: false },
+      { name: 'Edits sitting unassigned', owner: 'Editing Lead', v: '9', t: 'Target 3 or fewer', hit: false },
+      { name: 'Editor blockers cleared same day', owner: 'Editing Lead', v: '74%', t: 'Target 90%', hit: false },
+      { name: 'Revision turnaround', owner: 'Video Editor', v: '26h', t: 'Target 24h', hit: false }
+    ]
+  },
+  {
+    id: 'satisfaction',
+    label: 'Client satisfaction',
+    value: '8.8',
+    unit: '/10',
+    delta: { dir: 'up', text: '0.3', good: true },
+    context: '9 of 14 clients responded',
+    series: [8.2, 8.3, 8.1, 8.4, 8.5, 8.4, 8.6, 8.5, 8.7, 8.6, 8.5, 8.8],
+    domain: [7.8, 9.2],
+    ticks: [8, 8.5, 9],
+    fmt: function (v) { return v.toFixed(1); },
+    target: 8.5,
+    targetLabel: 'Target 8.5 out of 10',
+    chartTitle: 'Client satisfaction, last 12 months',
+    owner: 'Creative Lead',
+    def: 'agreed',
+    definition: 'Average of the six scored questions on the monthly client form. A score of 8.8 reads as 88% on the business review.',
+    capture: 'Google Form, sent monthly to every account lead. Answers land in the same table as everything else.',
+    support: [
+      { name: 'Forms returned', owner: 'Creative Lead', v: '9 of 14', t: 'Target 12', hit: false },
+      { name: 'Average score across six questions', owner: 'Creative Lead', v: '8.8', t: 'Target 8.5', hit: true },
+      { name: 'Lowest scoring question', owner: 'Creative Lead', v: '7.6', t: 'Communication', hit: false },
+      { name: 'Negative comments raised on a call first', owner: 'Creative Lead', v: '2 of 3', t: 'Target 3 of 3', hit: false }
+    ]
+  },
+  {
+    id: 'capacity',
+    label: 'Team capacity utilisation',
+    value: '91',
+    unit: '%',
+    delta: { dir: 'up', text: '2 pts', good: false },
+    context: 'Target band 75 to 85%',
+    series: [78, 80, 79, 82, 81, 83, 84, 86, 88, 87, 89, 91],
+    domain: [74, 94],
+    ticks: [75, 80, 85, 90],
+    fmt: function (v) { return v + '%'; },
+    target: 85,
+    targetLabel: 'Top of band, 85%',
+    chartTitle: 'Team capacity utilisation, last 12 months',
+    owner: 'Both leads',
+    def: 'drafting',
+    definition: 'Booked hours against available hours across strategists and editors.',
+    capture: 'Would come from assignment counts in Notion. Nativ is right that this misreads a strategist holding three large accounts as under capacity, so account weight has to go into the calculation before the number means anything.',
+    support: [
+      { name: 'Edits shipped per editor per day', owner: 'Editing Lead', v: '3.8', t: 'Target 5', hit: false },
+      { name: 'Strategists holding four or more accounts', owner: 'Creative Lead', v: '3 of 8', t: 'Target 6', hit: false },
+      { name: 'Editors above 90% booked', owner: 'Editing Lead', v: '6 of 16', t: 'Target 0', hit: false },
+      { name: 'Strategists still ramping', owner: 'Creative Lead', v: '5', t: 'Of 8', hit: false }
+    ]
+  }
+];
+
+var MONTHS = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+
+var ROLES = [
+  {
+    id: 'creative-lead',
+    name: 'Creative Lead',
+    blurb: 'Owns the client relationship, retention and the revenue line. Reads this on a Monday morning.',
+    metrics: [
+      { name: 'Client check ins held', v: '11', t: 'of 12 accounts', pct: 92, def: 'manual', hit: true,
+        definition: 'One scheduled call with the account lead, held and logged in the week.',
+        capture: 'Ticked off by the Creative Lead on Friday. Four fields a week, not a daily form.' },
+      { name: 'Pod lead one to ones held', v: '6', t: 'of 8 strategists', pct: 75, def: 'manual', hit: false,
+        definition: 'A thirty minute one to one with each creative strategist, held in the week.',
+        capture: 'Entered by hand. Nothing in Notion records whether a one to one actually happened.' },
+      { name: 'Upsell conversations had', v: '3', t: 'target 4', pct: 75, def: 'drafting', hit: false,
+        definition: 'A conversation where a second service line was put to the client with a price.',
+        capture: 'Open question. A mention on a call is not the same as a proposal sent, and the two need separating.' },
+      { name: 'At risk signals flagged early', v: '2', t: 'flagged in week', pct: 100, def: 'manual', hit: true,
+        definition: 'An account marked at risk before the client raises it, with the reason written down.',
+        capture: 'Flagged by hand in the client record. The value is in the reason, not the count.' },
+      { name: 'Founder touch rate on calls', v: '34%', t: 'target under 20%', pct: 59, def: 'agreed', hit: false,
+        definition: 'Share of client calls in the week that Nativ personally attended. Lower is better.',
+        capture: 'Read from the calendar. This is the bottleneck measure, and it is the one to watch.' }
+    ]
+  },
+  {
+    id: 'editing-lead',
+    name: 'Editing Lead',
+    blurb: 'Owns throughput and on time delivery across sixteen editors. Three of these five are not yet objective.',
+    metrics: [
+      { name: 'Edits shipped on time', v: '82%', t: 'target 90%', pct: 91, def: 'drafting', hit: false,
+        definition: 'Edits marked Delivered on or before the agreed date, as a share of everything due that week.',
+        capture: 'From the Notion pipeline. Reliable only once an edit has a single agreed definition.',
+        open: 'Blocked by tiering. A five minute ad and a one minute cut both count as one.' },
+      { name: 'Editor blockers cleared same day', v: '74%', t: 'target 90%', pct: 82, def: 'drafting', hit: false,
+        definition: 'A blocker raised by an editor and resolved before the end of the same working day.',
+        capture: 'Needs a Blocked status in Notion with a timestamp. Not there yet.',
+        open: 'Where does an editor raise a blocker today. Slack messages cannot be counted.' },
+      { name: 'Edits sitting unassigned', v: '9', t: 'target 3 or fewer', pct: 33, def: 'agreed', hit: false,
+        definition: 'Edits in Ready to Edit with no editor against them at 09:00 on any weekday.',
+        capture: 'Straight from the pipeline. Objective today, and it could go live now.' },
+      { name: 'Editor one to ones held', v: '11', t: 'of 16 editors', pct: 69, def: 'manual', hit: false,
+        definition: 'A one to one with each editor in the week, held and logged.',
+        capture: 'Entered by hand each Friday.' },
+      { name: 'Own edits shipped', v: '6', t: 'target 5', pct: 120, def: 'drafting', hit: true,
+        definition: 'Edits the head editor cuts personally, on top of running the team.',
+        capture: 'From the pipeline. Same tiering question as everything else in editing.',
+        open: 'If the head editor is still cutting six a week, the lead role is not yet a lead role.' }
+    ]
+  },
+  {
+    id: 'pod-lead',
+    name: 'Pod Lead',
+    blurb: 'The creative strategist running a pod. Five of the eight are still ramping, so these are read per person, never averaged.',
+    metrics: [
+      { name: 'Daily stand ups held', v: '5', t: 'of 5 days', pct: 100, def: 'manual', hit: true,
+        definition: 'A stand up with the pod, held on each working day.',
+        capture: 'Ticked by the pod lead. One field a day.' },
+      { name: 'Concepts shipped', v: '14', t: 'target 12', pct: 117, def: 'drafting', hit: true,
+        definition: 'A concept handed to editing with a brief, a reference and a hook written.',
+        capture: 'From the pipeline.',
+        open: 'A concept with three hook variants. One concept or three.' },
+      { name: 'Edits signed off first pass', v: '61%', t: 'target 75%', pct: 81, def: 'agreed', hit: false,
+        definition: 'Edits approved by the pod lead without a revision request, as a share of edits reviewed.',
+        capture: 'From the pipeline. Objective today.' },
+      { name: 'Client touchpoints', v: '9', t: 'target 8', pct: 113, def: 'manual', hit: true,
+        definition: 'Any direct contact with the client in the week that is not the scheduled call.',
+        capture: 'Entered by hand.' }
+    ]
+  },
+  {
+    id: 'video-editor',
+    name: 'Video Editor',
+    blurb: 'Sixteen editors, each seeing only their own row. This is the view the tiering question matters most for.',
+    metrics: [
+      { name: 'Edits shipped', v: '21', t: 'target 25', pct: 84, def: 'drafting', hit: false,
+        definition: 'Five a day across a five day week. Currently any export marked Delivered.',
+        capture: 'From the pipeline.',
+        open: 'This is the number the whole tiering question hangs on. Nobody should be measured on it until it is settled.' },
+      { name: 'Revision turnaround', v: '26h', t: 'target 24h', pct: 92, def: 'agreed', hit: false,
+        definition: 'Hours between a revision request landing and the new cut going back. Lower is better.',
+        capture: 'From status timestamps in the pipeline. Objective today.' },
+      { name: 'First time right rate', v: '68%', t: 'target 80%', pct: 85, def: 'agreed', hit: false,
+        definition: 'Edits approved with no revision request, as a share of edits delivered.',
+        capture: 'From the pipeline. Objective today.' },
+      { name: 'Stand ups attended', v: '5', t: 'of 5 days', pct: 100, def: 'manual', hit: true,
+        definition: 'Attendance at the pod stand up on each working day.',
+        capture: 'Ticked by the pod lead.' }
+    ]
+  }
+];
+
+var PERIODS = [
+  { id: 'WTD', sub: 'Week to date, 1 to 5 September 2026' },
+  { id: 'MTD', sub: 'Month to date, 1 to 5 September 2026' },
+  { id: 'QTD', sub: 'Quarter to date, 1 July to 5 September 2026' },
+  { id: 'YTD', sub: 'Year to date, 1 January to 5 September 2026' }
+];
+
+var STUBS = {
+  clients: ['Clients', 'The account list, one row per client, with retention, satisfaction and the last check in date. Reads from the same Notion sync as the board.'],
+  delivery: ['Delivery', 'The edit pipeline. Throughput, on time rate and the queue by editor. This is the page that cannot be built until an edit has one agreed definition.'],
+  finance: ['Finance', 'Retainer value, delivery margin and cash runway. Owned by the fractional CFO rather than pulled from Notion.'],
+  reports: ['Reports', 'The Friday report and the month end roll up, written once and shared rather than rebuilt each time.'],
+  search: ['Search', 'Search across clients, edits and people. Not wired up in the prototype.']
+};
+
+var ICONS = {
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  overview: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  clients: '<rect x="2.5" y="7" width="19" height="13" rx="2"/><path d="M8.5 7V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2V7"/>',
+  team: '<circle cx="9" cy="8" r="3.2"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M16.5 5.2a3.2 3.2 0 0 1 0 6"/><path d="M18 14.4a6.2 6.2 0 0 1 3.2 5.6"/>',
+  delivery: '<path d="M12 3 4 7v10l8 4 8-4V7Z"/><path d="m4 7 8 4 8-4"/><path d="M12 11v10"/>',
+  finance: '<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19"/>',
+  reports: '<path d="M6 3h8l4 4v14H6Z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h4"/>',
+  settings: '<path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="17" r="2"/>'
+};
+
+/* ---------- Helpers ---------- */
+
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function icon(name) {
+  return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+    + ' stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + ICONS[name] + '</svg>';
+}
+
+function arrow(dir) {
+  if (dir === 'up') return '<svg width="9" height="9" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1 9 8H1Z" fill="currentColor"/></svg>';
+  if (dir === 'down') return '<svg width="9" height="9" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 9 1 2h8Z" fill="currentColor"/></svg>';
+  return '';
+}
+
+/* A soft curve through the points, in the manner of the reference. */
+function curve(points) {
+  if (points.length < 2) return '';
+  var d = 'M' + points[0][0].toFixed(2) + ' ' + points[0][1].toFixed(2);
+  for (var i = 0; i < points.length - 1; i++) {
+    var p0 = points[i > 0 ? i - 1 : 0];
+    var p1 = points[i];
+    var p2 = points[i + 1];
+    var p3 = points[i + 2 < points.length ? i + 2 : i + 1];
+    var c1x = p1[0] + (p2[0] - p0[0]) / 6;
+    var c1y = p1[1] + (p2[1] - p0[1]) / 6;
+    var c2x = p2[0] - (p3[0] - p1[0]) / 6;
+    var c2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ' C' + c1x.toFixed(2) + ' ' + c1y.toFixed(2)
+      + ',' + c2x.toFixed(2) + ' ' + c2y.toFixed(2)
+      + ',' + p2[0].toFixed(2) + ' ' + p2[1].toFixed(2);
+  }
+  return d;
+}
+
+function sparkline(series) {
+  var w = 104, h = 30, pad = 3;
+  var min = Math.min.apply(null, series);
+  var max = Math.max.apply(null, series);
+  var span = max - min || 1;
+  var pts = series.map(function (v, i) {
+    return [
+      (i / (series.length - 1)) * w,
+      pad + (1 - (v - min) / span) * (h - pad * 2)
+    ];
+  });
+  var last = pts[pts.length - 1];
+  return '<svg class="spark" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" aria-hidden="true">'
+    + '<path d="' + curve(pts) + '" fill="none" stroke="#6E747E" stroke-width="1.25"'
+    + ' stroke-linecap="round" stroke-linejoin="round"/>'
+    + '<circle cx="' + last[0].toFixed(2) + '" cy="' + last[1].toFixed(2) + '" r="2.1" fill="#ECEDEE"/>'
+    + '</svg>';
+}
+
+function chart(k) {
+  var h = 280;
+  var lo = k.domain[0], hi = k.domain[1];
+  var span = hi - lo || 1;
+  var yOf = function (v) { return (1 - (v - lo) / span) * 100; };
+
+  var pts = k.series.map(function (v, i) {
+    return [(i / (k.series.length - 1)) * 1000, (1 - (v - lo) / span) * h];
+  });
+  var line = curve(pts);
+  var area = line + ' L1000 ' + h + ' L0 ' + h + ' Z';
+
+  var grid = k.ticks.map(function (t) {
+    return '<div class="gridline" style="top:' + yOf(t).toFixed(2) + '%"></div>'
+      + '<div class="ylabel" style="top:' + yOf(t).toFixed(2) + '%">' + esc(k.fmt(t)) + '</div>';
+  }).join('');
+
+  var targetLine = k.target === null ? ''
+    : '<div class="gridline target" style="top:' + yOf(k.target).toFixed(2) + '%"></div>';
+
+  var endTop = yOf(k.series[k.series.length - 1]);
+
+  return '<div class="detail-head">'
+    + '<h2>' + esc(k.chartTitle) + '</h2>'
+    + '<span class="legend">' + (k.target === null ? '' : '<span class="dash"></span>')
+    + esc(k.targetLabel) + '</span>'
+    + '</div>'
+    + '<div class="chart">'
+    + '<div class="plot">'
+    + grid + targetLine
+    + '<svg viewBox="0 0 1000 ' + h + '" preserveAspectRatio="none" aria-hidden="true">'
+    + '<defs><linearGradient id="fill-' + k.id + '" x1="0" y1="0" x2="0" y2="1">'
+    + '<stop offset="0%" stop-color="#5B8DEF" stop-opacity="0.24"/>'
+    + '<stop offset="100%" stop-color="#5B8DEF" stop-opacity="0"/>'
+    + '</linearGradient></defs>'
+    + '<path d="' + area + '" fill="url(#fill-' + k.id + ')"/>'
+    + '<path d="' + line + '" fill="none" stroke="#5B8DEF" stroke-width="2"'
+    + ' stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>'
+    + '</svg>'
+    + '<span class="endpoint" style="top:' + endTop.toFixed(2) + '%"></span>'
+    + '<span class="callout num" style="top:' + endTop.toFixed(2) + '%">'
+    + esc(k.value + k.unit) + '</span>'
+    + '</div>'
+    + '<div class="xaxis">' + MONTHS.map(function (m) { return '<span>' + m + '</span>'; }).join('') + '</div>'
+    + '</div>';
+}
+
+function behind(k) {
+  return '<div class="behind">'
+    + '<h3>Behind ' + esc(k.label.toLowerCase()) + '</h3>'
+    + '<p class="note">Owned by ' + esc(k.owner) + '. '
+    + 'These are the weekly inputs the team controls. The KPI above moves when these move.</p>'
+    + '<ul class="support">'
+    + k.support.map(function (s) {
+        return '<li><span>' + esc(s.name) + '<span class="s-owner">' + esc(s.owner) + '</span></span>'
+          + '<span class="s-fig num ' + (s.hit ? 'hit' : 'miss') + '">' + esc(s.v)
+          + '<small>' + esc(s.t) + '</small></span></li>';
+      }).join('')
+    + '</ul>'
+    + '<div class="method">'
+    + '<p><b>How this is counted.</b> ' + esc(k.definition) + '</p>'
+    + '<p>' + esc(k.capture) + '</p>'
+    + '<p><span class="state ' + k.def + '">' + esc(STATE[k.def]) + '</span></p>'
+    + '</div>'
+    + '</div>';
+}
+
+/* ---------- Views ---------- */
+
+var selectedKpi = 'mrr';
+var currentRole = ROLES[0].id;
+var currentPeriod = 'MTD';
+var page = 'overview';
+
+var view = document.getElementById('view');
+var titleEl = document.getElementById('pageTitle');
+var subEl = document.getElementById('pageSub');
+var headRight = document.querySelector('.head-right');
+
+function overview() {
+  var k = KPIS.filter(function (x) { return x.id === selectedKpi; })[0];
+
+  return '<div class="tiles">'
+    + KPIS.map(function (t) {
+        return '<button type="button" class="tile" data-kpi="' + t.id + '">'
+          + '<span class="t-label">' + esc(t.label) + '</span>'
+          + '<span class="t-row">'
+          + '<span class="t-value num">' + esc(t.value)
+          + (t.unit ? '<span class="unit">' + esc(t.unit) + '</span>' : '') + '</span>'
+          + sparkline(t.series)
+          + '</span>'
+          + '<span class="t-foot">'
+          + '<span class="delta ' + t.delta.dir + (t.delta.good ? '' : ' bad') + '"'
+          + ' style="color:' + (t.delta.good ? 'var(--pos)' : 'var(--neg)') + '">'
+          + arrow(t.delta.dir) + esc(t.delta.text) + '</span>'
+          + '<span>' + esc(t.context) + '</span>'
+          + '</span>'
+          + '</button>';
+      }).join('')
+    + '</div>'
+    + '<div class="detail">' + chart(k) + behind(k) + '</div>';
+}
+
+function team() {
+  var r = ROLES.filter(function (x) { return x.id === currentRole; })[0];
+
+  return '<div class="tabs" role="tablist" aria-label="Role">'
+    + ROLES.map(function (x) {
+        return '<button type="button" role="tab" data-role="' + x.id + '"'
+          + ' aria-selected="' + (x.id === currentRole) + '">' + esc(x.name) + '</button>';
+      }).join('')
+    + '</div>'
+    + '<p class="role-note">' + esc(r.blurb) + '</p>'
+    + '<div id="rows">'
+    + r.metrics.map(function (m, i) {
+        var w = Math.min(m.pct, 100);
+        return '<div class="mrow" data-row="' + i + '">'
+          + '<div><p class="m-name">' + esc(m.name)
+          + '<span class="state ' + m.def + '">' + esc(STATE[m.def]) + '</span></p>'
+          + '<p class="m-def">' + esc(m.definition) + '</p></div>'
+          + '<span class="bar' + (m.hit ? '' : ' miss') + '"><i style="width:' + w + '%"></i></span>'
+          + '<span class="m-fig"><span class="v num' + (m.hit ? '' : ' miss') + '">' + esc(m.v) + '</span>'
+          + '<span class="t num">' + esc(m.t) + '</span></span>'
+          + '<button type="button" class="src" data-src="' + i + '" aria-expanded="false">Source</button>'
+          + '</div>';
+      }).join('')
+    + '</div>'
+    + '<div class="open-question">'
+    + '<h3>Open before this goes live</h3>'
+    + '<p>An edit is currently anything an editor marks Delivered in Notion. A sixty second cut and a five minute cut count the same, so the five a day target means different work for different people.</p>'
+    + '<p><b>Three tiers, or two. Where does a tier stop. Who assigns it, and at what point in the pipeline.</b> Answer those and the editing numbers become objective.</p>'
+    + '</div>'
+    + '<div class="cadence">'
+    + '<article><h4>Monday</h4><p class="when">Plan</p>'
+    + '<p>Leads open this view, read last week against target, and set the week. Fifteen minutes, no deck.</p></article>'
+    + '<article><h4>Friday</h4><p class="when">Report</p>'
+    + '<p>Each lead files the week. Anything below target carries one line on what changes next week.</p></article>'
+    + '<article><h4>Month end</h4><p class="when">Roll up</p>'
+    + '<p>Weekly inputs roll into the business KPIs. Nativ and the fractional CFO review the six.</p></article>'
+    + '</div>';
+}
+
+function stub(id) {
+  return '<div class="stub"><h2>' + esc(STUBS[id][0]) + '</h2><p>' + esc(STUBS[id][1]) + '</p></div>';
+}
+
+function openDefs() {
+  var n = KPIS.filter(function (k) { return k.def === 'drafting'; }).length;
+  var total = KPIS.length;
+  ROLES.forEach(function (r) {
+    total += r.metrics.length;
+    n += r.metrics.filter(function (m) { return m.def === 'drafting'; }).length;
+  });
+  return n + ' of ' + total + ' measures still being defined';
+}
+
+function render() {
+  var period = PERIODS.filter(function (p) { return p.id === currentPeriod; })[0];
+
+  if (page === 'overview') {
+    titleEl.innerHTML = 'Performance <span class="pill">Placeholder data</span>';
+    subEl.textContent = period.sub;
+    headRight.hidden = false;
+    view.innerHTML = overview();
+  } else if (page === 'team') {
+    titleEl.innerHTML = 'Team <span class="pill">Placeholder data</span>';
+    subEl.textContent = 'Weekly leading indicators. ' + openDefs() + '.';
+    headRight.hidden = false;
+    view.innerHTML = team();
+  } else {
+    titleEl.textContent = STUBS[page][0];
+    subEl.textContent = 'Not built yet.';
+    headRight.hidden = true;
+    view.innerHTML = stub(page);
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.nav button'), function (b) {
+    if (b.getAttribute('data-page') === page) b.setAttribute('aria-current', 'page');
+    else b.removeAttribute('aria-current');
+  });
+}
+
+/* ---------- Rail ---------- */
+
+var NAV = [
+  { id: 'search', label: 'Search', icon: 'search' },
+  { id: 'overview', label: 'Overview', icon: 'overview' },
+  { id: 'clients', label: 'Clients', icon: 'clients' },
+  { id: 'team', label: 'Team', icon: 'team' },
+  { id: 'delivery', label: 'Delivery', icon: 'delivery' },
+  { id: 'finance', label: 'Finance', icon: 'finance' },
+  { id: 'reports', label: 'Reports', icon: 'reports' }
+];
+
+function navButton(item) {
+  return '<button type="button" data-page="' + item.id + '">'
+    + icon(item.icon) + '<span>' + esc(item.label) + '</span></button>';
+}
+
+document.getElementById('nav').innerHTML = NAV.map(navButton).join('');
+document.getElementById('navFoot').innerHTML = navButton({ id: 'settings', label: 'Settings', icon: 'settings' });
+STUBS.settings = ['Settings', 'Workspace, people and permissions. Editors see their own row, leads see their team, Nativ sees everything.'];
+
+var menuBtn = document.getElementById('menu');
+
+function setNav(open) {
+  document.body.classList.toggle('nav-open', open);
+  menuBtn.setAttribute('aria-expanded', String(open));
+  menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+}
+
+menuBtn.addEventListener('click', function () {
+  setNav(!document.body.classList.contains('nav-open'));
+});
+
+document.getElementById('scrim').addEventListener('click', function () { setNav(false); });
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') setNav(false);
+});
+
+document.querySelector('.rail').addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-page]');
+  if (!btn) return;
+  page = btn.getAttribute('data-page');
+  setNav(false);
+  render();
+});
+
+/* ---------- Periods ---------- */
+
+document.getElementById('periods').innerHTML = PERIODS.map(function (p) {
+  return '<button type="button" aria-pressed="' + (p.id === currentPeriod) + '">' + p.id + '</button>';
+}).join('');
+
+document.getElementById('periods').addEventListener('click', function (e) {
+  var btn = e.target.closest('button');
+  if (!btn) return;
+  currentPeriod = btn.textContent.trim();
+  Array.prototype.forEach.call(this.querySelectorAll('button'), function (b) {
+    b.setAttribute('aria-pressed', String(b === btn));
+  });
+  var period = PERIODS.filter(function (p) { return p.id === currentPeriod; })[0];
+  if (page === 'overview') subEl.textContent = period.sub;
+});
+
+/* ---------- View interaction ---------- */
+
+view.addEventListener('click', function (e) {
+  var tile = e.target.closest('.tile');
+  if (tile) {
+    selectedKpi = tile.getAttribute('data-kpi');
+    render();
+    return;
+  }
+
+  var tab = e.target.closest('button[data-role]');
+  if (tab) {
+    currentRole = tab.getAttribute('data-role');
+    render();
+    return;
+  }
+
+  var src = e.target.closest('.src');
+  if (src) {
+    var row = src.closest('.mrow');
+    var existing = row.querySelector('.src-panel');
+    if (existing) {
+      existing.remove();
+      src.setAttribute('aria-expanded', 'false');
+      src.textContent = 'Source';
+      return;
+    }
+    var role = ROLES.filter(function (x) { return x.id === currentRole; })[0];
+    var m = role.metrics[Number(src.getAttribute('data-src'))];
+    var panel = document.createElement('div');
+    panel.className = 'src-panel';
+    panel.innerHTML = '<p>' + esc(m.capture) + '</p>'
+      + (m.open ? '<p class="open">Open. ' + esc(m.open) + '</p>' : '');
+    row.appendChild(panel);
+    src.setAttribute('aria-expanded', 'true');
+    src.textContent = 'Hide';
+  }
+});
+
+render();
+</script>
+</body>
+</html>
