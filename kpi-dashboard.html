@@ -37,6 +37,8 @@
 body {
   margin: 0;
   background: var(--bg);
+  background-image: radial-gradient(120% 70% at 50% -10%, #12151A 0%, rgba(8, 9, 10, 0) 62%);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font);
   font-size: 14px;
@@ -77,34 +79,39 @@ button {
   gap: 4px;
 }
 
-.workspace {
+.brand {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 8px 10px;
-  border-radius: 6px;
-  margin-bottom: 12px;
+  align-items: baseline;
+  gap: 7px;
+  padding: 10px 10px 22px;
 }
 
-.workspace:hover { background: var(--panel); }
+/* Swap this block for <img class="brand-mark" src="nsy-logo.svg" alt="NSY Digital">
+   when the real mark lands. */
+.brand .mark {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.brand .sub { font-size: 13px; color: var(--faint); font-weight: 400; }
+
+.brand-mark { height: 22px; width: auto; display: block; }
 
 .avatar {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   flex: none;
-  border-radius: 5px;
-  background: var(--text);
-  color: var(--bg);
-  font-size: 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 11px;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
-.workspace .name { font-size: 14px; font-weight: 500; flex: 1; }
-.workspace .chev { color: var(--faint); flex: none; }
 
 .nav { display: flex; flex-direction: column; gap: 1px; }
 
@@ -151,7 +158,7 @@ button {
 
 /* ---------- Main ---------- */
 
-.main { padding: 26px 40px 72px; min-width: 0; }
+.main { padding: 30px 48px 88px; min-width: 0; }
 
 .page-head {
   display: flex;
@@ -159,15 +166,15 @@ button {
   gap: 20px;
   align-items: flex-start;
   justify-content: space-between;
-  padding-bottom: 22px;
+  padding-bottom: 26px;
 }
 
 h1 {
   margin: 0;
-  font-size: 27px;
+  font-size: 28px;
   line-height: 1.2;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
 }
 
 .page-head .sub {
@@ -206,13 +213,13 @@ h1 {
   align-items: center;
   gap: 7px;
   font-size: 12px;
-  color: var(--hold);
-  border: 1px solid rgba(217, 160, 54, 0.32);
+  color: var(--faint);
+  border: 1px solid var(--line);
   border-radius: 999px;
   padding: 2px 10px;
-  vertical-align: 3px;
+  vertical-align: 4px;
   margin-left: 12px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .pill::before {
@@ -220,7 +227,7 @@ h1 {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: currentColor;
+  background: var(--hold);
 }
 
 /* ---------- Tile grid ---------- */
@@ -228,23 +235,26 @@ h1 {
 .tiles {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--line);
+  gap: 6px;
+  margin: 0 -22px;
 }
 
 .tile {
   display: block;
   width: 100%;
-  padding: 22px 26px 24px;
-  border-bottom: 1px solid var(--line);
-  border-right: 1px solid var(--line);
-  transition: background 0.12s ease;
+  padding: 22px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.tile:nth-child(3n) { border-right: none; }
-.tile:hover { background: var(--panel); }
+.tile:hover {
+  background: rgba(255, 255, 255, 0.028);
+  border-color: rgba(255, 255, 255, 0.09);
+}
 
-.tile[aria-pressed="true"] { background: var(--panel); }
-.tile[aria-pressed="true"] .t-label { color: var(--text); }
+.tile:hover .t-label { color: var(--text); }
 
 .t-label {
   display: block;
@@ -261,10 +271,10 @@ h1 {
 }
 
 .t-value {
-  font-size: 40px;
+  font-size: 41px;
   line-height: 1;
   font-weight: 500;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.04em;
   white-space: nowrap;
 }
 
@@ -301,7 +311,11 @@ h1 {
 
 /* ---------- Detail block ---------- */
 
-.detail { padding-top: 30px; }
+.detail {
+  margin-top: 34px;
+  padding-top: 34px;
+  border-top: 1px solid var(--line);
+}
 
 .detail-head {
   display: flex;
@@ -631,8 +645,7 @@ h1 {
   .rail-foot { margin-top: 0; }
   .user { border-top: none; padding-top: 0; }
   .main { padding: 22px 20px 56px; }
-  .tiles { grid-template-columns: 1fr; }
-  .tile { border-right: none; }
+  .tiles { grid-template-columns: 1fr; margin: 0; }
   .chart { padding-right: 20px; }
   .callout { display: none; }
   .mrow { grid-template-columns: minmax(0, 1fr) 110px; }
@@ -644,11 +657,10 @@ h1 {
 <body>
 <div class="app">
   <nav class="rail" aria-label="Sections">
-    <button type="button" class="workspace">
-      <span class="avatar">N</span>
-      <span class="name">NSY Digital</span>
-      <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
-    </button>
+    <div class="brand">
+      <span class="mark">NSY</span>
+      <span class="sub">Digital</span>
+    </div>
 
     <div class="nav" id="nav"></div>
 
@@ -1101,8 +1113,7 @@ function overview() {
 
   return '<div class="tiles">'
     + KPIS.map(function (t) {
-        return '<button type="button" class="tile" data-kpi="' + t.id + '"'
-          + ' aria-pressed="' + (t.id === selectedKpi) + '">'
+        return '<button type="button" class="tile" data-kpi="' + t.id + '">'
           + '<span class="t-label">' + esc(t.label) + '</span>'
           + '<span class="t-row">'
           + '<span class="t-value num">' + esc(t.value)
