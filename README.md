@@ -19,8 +19,9 @@ actually run the floor.
 | `tokens.json` | Every token, with usage notes and contrast ratios |
 | `src/theme.css` | CSS custom properties, type scale, layout and signature devices |
 | `tailwind.config.js` | The same system as a Tailwind theme |
-| `src/components/` | React components: Button, Card, StatBlock, Testimonial, FormField, CtaBand, Eyebrow, Highlight, DotGrid |
+| `src/components/` | React components: Button, Card, StatBlock, Testimonial, FormField, CtaBand, Eyebrow, Highlight, DotGrid, OverflowRing |
 | `preview.html` | A finished page using the system, open it in a browser |
+| `kpi-dashboard.html` | The KPI board prototype on ink, founder and team views, open it in a browser |
 
 ## Colour
 
@@ -95,6 +96,36 @@ Use one or two per view, never all five.
 3. **Big number.** Black weight, ink numeral, accent unit. One per section.
 4. **Warm glow.** Soft accent halo behind portraits on ink. Never behind text.
 5. **Proof row.** Client marks in ink at 55 percent opacity, one quiet line under the hero.
+
+## Product surfaces on ink
+
+Marketing pages run light. The product runs on ink, so the system needs a dark set. The
+rules do not change, the values do.
+
+| Role | Value | Note |
+| --- | --- | --- |
+| Ground | `#00232F` | Ink, the page itself |
+| Well | `#001A23` | Ink deep, recessed panels |
+| Card | Cream at 4.5 percent | A lift off the ground, never a new colour |
+| Line | Cream at 14 percent | Borders, 1px only |
+| Body | Cream at 62 percent | Secondary text, 7 to 1 on ink |
+| Success | `#5FBF9B` | Success lifted so it reads on ink |
+| Warning | `#E9A13B` | Warning, unchanged |
+| Error | `#F0705A` | Error lifted so it reads on ink |
+
+Accent text stays `#E97132` on ink. Accent text `#A84A16` is for light grounds only.
+
+### The overflow ring
+
+The one new component. A ring showing progress against target, where beating the target
+looks different from meeting it. Below 100 the accent ring partly fills. At 100 it closes.
+Above 100 a second cream ring orbits inside showing the surplus.
+
+Pass progress against target, not the raw figure. £170.4k against a £150k target is 114.
+
+```jsx
+<OverflowRing percent={114} size={96} />
+```
 
 ## Voice
 

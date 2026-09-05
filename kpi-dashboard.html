@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSY Measurement Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap">
+<style>
+/* NSY Measurement Board.
+   Built on the LEAD design system. Ink ground, cream type, one accent.
+   Deliberately single theme: this is a dark product surface, so it paints
+   its own ground and does not follow the host light or dark setting. */
+
+:root {
+  --ink: #00232F;
+  --ink-deep: #001A23;
+  --cream: #E9DDC7;
+  --accent: #E97132;
+
+  --card: rgba(233, 221, 199, 0.045);
+  --card-hover: rgba(233, 221, 199, 0.075);
+  --line: rgba(233, 221, 199, 0.14);
+  --line-strong: rgba(233, 221, 199, 0.30);
+  --muted: rgba(233, 221, 199, 0.62);
+  --faint: rgba(233, 221, 199, 0.42);
+
+  /* Status tokens lifted off the LEAD light values so they read on ink. */
+  --ok: #5FBF9B;
+  --warn: #E9A13B;
+  --risk: #F0705A;
+
+  --font: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius: 8px;
+  --radius-lg: 16px;
+  --container: 1240px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 28px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.num { font-variant-numeric: tabular-nums; }
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.shell {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px 96px;
+}
+
+/* ---------- Top bar ---------- */
+
+.topbar {
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(circle, rgba(233, 221, 199, 0.16) 1.6px, transparent 1.6px) 0 0 / 22px 22px,
+    var(--ink-deep);
+}
+
+.topbar-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 18px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.wordmark {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.wordmark span { color: var(--accent); }
+
+.workspace {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-left: 14px;
+  border-left: 1px solid var(--line-strong);
+  line-height: 1.4;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.period {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 7px 12px;
+}
+
+.flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--warn);
+  background: rgba(233, 161, 59, 0.12);
+  border: 1px solid rgba(233, 161, 59, 0.34);
+  border-radius: 999px;
+  padding: 6px 14px;
+}
+
+.flag::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--warn);
+}
+
+/* ---------- View switch and page head ---------- */
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 48px 0 32px;
+}
+
+.switch {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--ink-deep);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.switch button {
+  padding: 9px 22px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.switch button:hover { color: var(--cream); }
+
+.switch button[aria-selected="true"] {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+h1 {
+  margin: 0 0 10px;
+  font-size: 44px;
+  line-height: 46px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.head-copy p {
+  margin: 0;
+  max-width: 58ch;
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--muted);
+}
+
+/* ---------- Definition state chips ---------- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 4px 11px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.chip.agreed { color: var(--ok); background: rgba(95, 191, 155, 0.12); border: 1px solid rgba(95, 191, 155, 0.3); }
+.chip.drafting { color: var(--warn); background: rgba(233, 161, 59, 0.12); border: 1px solid rgba(233, 161, 59, 0.3); }
+.chip.manual { color: var(--faint); background: var(--card); border: 1px solid var(--line); }
+
+/* ---------- Status line ---------- */
+
+.status {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.status.on { color: var(--ok); }
+.status.below { color: var(--risk); }
+.status.band { color: var(--warn); }
+
+/* ---------- Founder grid ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+  width: 100%;
+  padding: 24px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.kpi:hover { background: var(--card-hover); border-color: var(--line-strong); }
+
+.kpi[aria-expanded="true"] {
+  border-color: var(--accent);
+  background: var(--card-hover);
+}
+
+.kpi-body { display: block; }
+
+.kpi-name {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.kpi-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.kpi-value {
+  font-size: 42px;
+  line-height: 44px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  margin: 0 0 6px;
+  display: block;
+}
+
+.kpi-target {
+  display: block;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted);
+}
+
+.kpi-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  margin-top: auto;
+}
+
+.behind {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: var(--faint);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kpi:hover .behind { color: var(--cream); }
+
+.behind .caret { transition: transform 0.2s ease; }
+.kpi[aria-expanded="true"] .behind { color: var(--accent); }
+.kpi[aria-expanded="true"] .behind .caret { transform: rotate(180deg); }
+
+/* ---------- Drill panel ---------- */
+
+.drill {
+  margin-top: 16px;
+  background: var(--ink-deep);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+}
+
+.drill-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.drill-head h2 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.drill-head .owner {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.support {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 40px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.support li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.support .s-name { font-size: 14px; line-height: 22px; }
+.support .s-owner { display: block; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--faint); }
+
+.support .s-fig {
+  font-size: 18px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.support .s-fig small {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  text-align: right;
+}
+
+.support .s-fig.miss { color: var(--risk); }
+.support .s-fig.hit { color: var(--ok); }
+
+.method {
+  margin-top: 28px;
+  padding: 20px 22px;
+  background: var(--card);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.method h3 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.method p { margin: 0 0 10px; font-size: 14px; line-height: 24px; max-width: 70ch; }
+.method p:last-child { margin-bottom: 0; }
+.method .capture { color: var(--muted); font-size: 13px; }
+
+/* ---------- Team view ---------- */
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0;
+  margin-bottom: 8px;
+}
+
+.tabs button {
+  padding: 12px 20px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.tabs button:hover { color: var(--cream); }
+
+.tabs button[aria-selected="true"] {
+  color: var(--cream);
+  border-bottom-color: var(--accent);
+}
+
+.role-head { padding: 28px 0 12px; }
+
+.role-head h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+}
+
+.role-head p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--muted);
+  max-width: 66ch;
+}
+
+.rows { display: flex; flex-direction: column; }
+
+.row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 160px 74px;
+  gap: 8px 28px;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.row-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+  margin: 0;
+}
+
+.row-def {
+  margin: 5px 0 0;
+  font-size: 13px;
+  line-height: 21px;
+  color: var(--muted);
+  max-width: 62ch;
+}
+
+.row-fig { text-align: right; }
+
+.row-fig .v { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; line-height: 28px; }
+.row-fig .t { display: block; font-size: 12px; color: var(--muted); letter-spacing: 0.4px; }
+.row-fig .v.miss { color: var(--risk); }
+.row-fig .v.hit { color: var(--ok); }
+
+.how {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: var(--faint);
+  white-space: nowrap;
+}
+
+.how:hover { color: var(--cream); }
+.how[aria-expanded="true"] { color: var(--accent); }
+
+.how-panel {
+  grid-column: 2 / -1;
+  padding: 4px 0 8px;
+  border-left: 2px solid var(--line-strong);
+  padding-left: 18px;
+}
+
+.how-panel p { margin: 0 0 8px; font-size: 13px; line-height: 22px; max-width: 70ch; }
+.how-panel p:last-child { margin-bottom: 0; }
+.how-panel .capture { color: var(--muted); }
+.how-panel .open { color: var(--warn); }
+
+/* ---------- Open question band ---------- */
+
+.question {
+  margin: 32px 0 0;
+  padding: 28px 32px;
+  background: var(--ink-deep);
+  border: 1px solid rgba(233, 161, 59, 0.34);
+  border-radius: var(--radius-lg);
+}
+
+.question h3 {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--warn);
+}
+
+.question p { margin: 0 0 12px; font-size: 15px; line-height: 26px; max-width: 74ch; }
+.question p:last-child { margin-bottom: 0; }
+.question .ask { color: var(--cream); font-weight: 600; }
+
+/* ---------- Cadence strip ---------- */
+
+.cadence {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.cadence article {
+  padding: 22px 24px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.cadence h3 {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cadence .when { font-size: 17px; font-weight: 700; margin: 0 0 6px; }
+.cadence p { margin: 0; font-size: 13px; line-height: 22px; color: var(--muted); }
+
+/* ---------- Foot ---------- */
+
+.foot {
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  justify-content: space-between;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: var(--faint);
+}
+
+.foot strong { color: var(--muted); font-weight: 600; }
+
+/* ---------- Ring ---------- */
+
+.ring { display: block; flex: none; }
+.ring circle { fill: none; }
+
+.ring-label {
+  fill: var(--cream);
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.ring .track { stroke: rgba(233, 221, 199, 0.12); }
+.ring .main { stroke: var(--accent); stroke-linecap: round; }
+.ring .over { stroke: var(--cream); stroke-linecap: round; }
+
+@keyframes draw {
+  from { stroke-dashoffset: var(--from); }
+}
+
+.ring .main, .ring .over {
+  animation: draw 0.6s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1080px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .support { grid-template-columns: 1fr; }
+  .cadence { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 720px) {
+  .shell { padding: 0 20px 64px; }
+  h1 { font-size: 30px; line-height: 34px; }
+  .grid { grid-template-columns: 1fr; }
+  .head { padding: 32px 0 24px; gap: 24px; }
+  .drill { padding: 24px 20px; }
+  .row {
+    grid-template-columns: 48px 1fr;
+    gap: 8px 16px;
+  }
+  .row-fig { grid-column: 2; text-align: left; }
+  .how { grid-column: 2; text-align: left; }
+  .how-panel { grid-column: 1 / -1; padding-left: 14px; }
+  .question { padding: 22px 20px; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="mark">
+      <div class="wordmark">LEAD<span>.</span></div>
+      <div class="workspace">NSY Digital<br>Operations</div>
+    </div>
+    <div class="topbar-right">
+      <div class="period num">Week 36 · September 2026</div>
+      <div class="flag" id="flag">Placeholder data</div>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <div class="head">
+    <div class="head-copy">
+      <h1 id="viewTitle">Business KPIs</h1>
+      <p id="viewBlurb"></p>
+    </div>
+    <div class="switch" role="tablist" aria-label="Dashboard view">
+      <button type="button" role="tab" id="tab-founder" aria-selected="true" data-view="founder">Founder</button>
+      <button type="button" role="tab" id="tab-team" aria-selected="false" data-view="team">Team</button>
+    </div>
+  </div>
+
+  <section id="founder" aria-labelledby="tab-founder">
+    <div class="grid" id="kpiGrid"></div>
+    <div id="drill"></div>
+  </section>
+
+  <section id="team" aria-labelledby="tab-team" hidden>
+    <div class="tabs" role="tablist" aria-label="Role"></div>
+    <div id="rolePanel"></div>
+
+    <div class="question">
+      <h3>Open before this goes live</h3>
+      <p>An edit is currently anything an editor marks Delivered in Notion. A sixty second cut and a five minute cut count the same, so the five a day target means different work for different people.</p>
+      <p class="ask">Three tiers, or two. Where does a tier stop. Who assigns it, and at what point in the pipeline. Answer those and the editing numbers become objective.</p>
+    </div>
+
+    <div class="cadence">
+      <article>
+        <h3>Monday</h3>
+        <p class="when">Plan</p>
+        <p>Leads open this view, read last week against target, and set the week. Fifteen minutes, no deck.</p>
+      </article>
+      <article>
+        <h3>Friday</h3>
+        <p class="when">Report</p>
+        <p>Each lead files the week. Anything below target carries one line on what changes next week.</p>
+      </article>
+      <article>
+        <h3>Month end</h3>
+        <p class="when">Roll up</p>
+        <p>Weekly inputs roll into the business KPIs. Nativ and the fractional CFO review the six.</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="foot">
+    <span><strong>Source.</strong> Notion pipeline, synced nightly at 02:00. Satisfaction from the client form. One to ones and at risk flags entered by hand.</span>
+    <span id="defCount"></span>
+  </div>
+</main>
+
+<script>
+/* ------------------------------------------------------------------
+   Placeholder data. Every figure here is illustrative and set to show
+   the shape of the board. Nothing is read from Notion yet.
+   ------------------------------------------------------------------ */
+
+var DEF = {
+  agreed:   { cls: 'agreed',   label: 'Definition agreed' },
+  drafting: { cls: 'drafting', label: 'Being defined' },
+  manual:   { cls: 'manual',   label: 'Entered by hand' }
+};
+
+var BUSINESS = [
+  {
+    id: 'mrr',
+    name: 'Monthly recurring revenue',
+    value: '£170.4k',
+    target: 'Target £150k a month within 24 months',
+    pct: 114,
+    status: 'on',
+    statusLabel: 'On target',
+    owner: 'Nativ and Creative Lead',
+    def: 'agreed',
+    definition: 'Contracted retainer value invoiced in the calendar month. Project fees, one off edits and paused accounts are excluded.',
+    capture: 'Captured by the fractional CFO at month end close. Read straight from the invoicing ledger.',
+    support: [
+      { name: 'New retainers signed', owner: 'Creative Lead', v: '2', t: 'Target 3', hit: false },
+      { name: 'Upsell conversations had', owner: 'Creative Lead', v: '3', t: 'Target 4', hit: false },
+      { name: 'Accounts churned this month', owner: 'Creative Lead', v: '1', t: 'Target 0', hit: false },
+      { name: 'Average retainer value', owner: 'Nativ', v: '£6.1k', t: 'Target £5.5k', hit: true }
+    ]
+  },
+  {
+    id: 'retention',
+    name: 'Client retention rate',
+    value: '86%',
+    target: 'Target 90% still with us at six months',
+    pct: 96,
+    status: 'below',
+    statusLabel: 'Below target',
+    owner: 'Creative Lead',
+    def: 'agreed',
+    definition: 'Share of accounts that started six months ago and are still on a live retainer today. A paused account counts as churned until it restarts.',
+    capture: 'Derived from contract start dates in Notion. No manual entry.',
+    support: [
+      { name: 'Client check ins held', owner: 'Creative Lead', v: '11 of 12', t: 'Weekly', hit: true },
+      { name: 'At risk signals flagged early', owner: 'Creative Lead', v: '2', t: 'Flagged in week', hit: true },
+      { name: 'Founder touch rate on calls', owner: 'Nativ', v: '34%', t: 'Target under 20%', hit: false },
+      { name: 'Accounts scoring under 7 on any question', owner: 'Creative Lead', v: '1', t: 'Target 0', hit: false }
+    ]
+  },
+  {
+    id: 'ltv',
+    name: 'Average client LTV',
+    value: '£58.2k',
+    target: 'Grow quarter on quarter, £51.4k last quarter',
+    pct: 113,
+    status: 'on',
+    statusLabel: 'On target',
+    owner: 'Creative Lead',
+    def: 'drafting',
+    definition: 'Average retainer value multiplied by average months retained. The open question is whether paused accounts that later restart count as one life or two.',
+    capture: 'Calculated from the invoicing ledger each quarter. Waiting on the pause rule before it can be trusted.',
+    support: [
+      { name: 'Average retainer value', owner: 'Nativ', v: '£6.1k', t: 'Target £5.5k', hit: true },
+      { name: 'Months to first upsell', owner: 'Creative Lead', v: '4.2', t: 'Target 3', hit: false },
+      { name: 'Accounts on a second service line', owner: 'Creative Lead', v: '5 of 14', t: 'Target 7', hit: false },
+      { name: 'Retention at six months', owner: 'Creative Lead', v: '86%', t: 'Target 90%', hit: false }
+    ]
+  },
+  {
+    id: 'delivery',
+    name: 'On time delivery rate',
+    value: '82%',
+    target: 'Target 90% delivered by the agreed date',
+    pct: 91,
+    status: 'below',
+    statusLabel: 'Below target',
+    owner: 'Editing Lead',
+    def: 'drafting',
+    definition: 'Share of edits marked Delivered on or before the date agreed with the client. Blocked by the same question as everything else in editing: what counts as one edit.',
+    capture: 'Read from the Notion pipeline once tiering is settled. Until then the rate treats every edit as equal.',
+    support: [
+      { name: 'Edits shipped on time', owner: 'Editing Lead', v: '82%', t: 'Target 90%', hit: false },
+      { name: 'Edits sitting unassigned', owner: 'Editing Lead', v: '9', t: 'Target 3 or fewer', hit: false },
+      { name: 'Editor blockers cleared same day', owner: 'Editing Lead', v: '74%', t: 'Target 90%', hit: false },
+      { name: 'Revision turnaround', owner: 'Video Editor', v: '26h', t: 'Target 24h', hit: false }
+    ]
+  },
+  {
+    id: 'satisfaction',
+    name: 'Client satisfaction',
+    value: '88%',
+    target: 'Target 85% across the six scored questions',
+    pct: 104,
+    status: 'on',
+    statusLabel: 'On target',
+    owner: 'Creative Lead',
+    def: 'agreed',
+    definition: 'Average of the six scored questions on the monthly client form, converted to a percentage. A score of 8.8 out of 10 reads as 88%.',
+    capture: 'Google Form, sent monthly to every account lead. Answers land in the same table as everything else.',
+    support: [
+      { name: 'Forms returned', owner: 'Creative Lead', v: '9 of 14', t: 'Target 12', hit: false },
+      { name: 'Average score across six questions', owner: 'Creative Lead', v: '8.8', t: 'Target 8.5', hit: true },
+      { name: 'Lowest scoring question', owner: 'Creative Lead', v: '7.6', t: 'Communication', hit: false },
+      { name: 'Negative comments raised on a call first', owner: 'Creative Lead', v: '2 of 3', t: 'Target 3 of 3', hit: false }
+    ]
+  },
+  {
+    id: 'capacity',
+    name: 'Team capacity utilisation',
+    value: '91%',
+    target: 'Target band 75% to 85%',
+    pct: 107,
+    status: 'band',
+    statusLabel: 'Above the band',
+    owner: 'Both leads',
+    def: 'drafting',
+    definition: 'Booked hours against available hours across strategists and editors. Nativ is right that this misreads a strategist holding three large accounts as under capacity, so account weight has to go into the calculation before the number means anything.',
+    capture: 'Would come from assignment counts in Notion. Not yet trusted, and not yet driving any decision.',
+    support: [
+      { name: 'Edits shipped per editor per day', owner: 'Editing Lead', v: '3.8', t: 'Target 5', hit: false },
+      { name: 'Strategists holding four or more accounts', owner: 'Creative Lead', v: '3 of 8', t: 'Target 6', hit: false },
+      { name: 'Editors above 90% booked', owner: 'Editing Lead', v: '6 of 16', t: 'Target 0', hit: false },
+      { name: 'Strategists still ramping', owner: 'Creative Lead', v: '5', t: 'Of 8', hit: false }
+    ]
+  }
+];
+
+var ROLES = [
+  {
+    id: 'creative-lead',
+    name: 'Creative Lead',
+    blurb: 'Owns the client relationship, retention and the revenue line. Checks this every Monday morning.',
+    metrics: [
+      { name: 'Client check ins held', v: '11', t: 'of 12 accounts', pct: 92, def: 'manual', hit: true,
+        definition: 'One scheduled call with the account lead, held and logged in the week.',
+        capture: 'Ticked off by the Creative Lead on Friday. Four fields a week, not a daily form.' },
+      { name: 'Pod lead one to ones held', v: '6', t: 'of 8 strategists', pct: 75, def: 'manual', hit: false,
+        definition: 'A thirty minute one to one with each creative strategist, held in the week.',
+        capture: 'Entered by hand. Nothing in Notion records whether a one to one actually happened.' },
+      { name: 'Upsell conversations had', v: '3', t: 'target 4', pct: 75, def: 'drafting', hit: false,
+        definition: 'A conversation where a second service line was put to the client with a price.',
+        capture: 'Open question. A mention on a call is not the same as a proposal sent, and the two need separating.' },
+      { name: 'At risk signals flagged early', v: '2', t: 'flagged in week', pct: 100, def: 'manual', hit: true,
+        definition: 'An account marked at risk before the client raises it, with the reason written down.',
+        capture: 'Flagged by hand in the client record. The value is in the reason, not the count.' },
+      { name: 'Founder touch rate on calls', v: '34%', t: 'target under 20%', pct: 59, def: 'agreed', hit: false,
+        definition: 'Share of client calls in the week that Nativ personally attended. Lower is better.',
+        capture: 'Read from the calendar. This is the bottleneck measure, and it is the one to watch.' }
+    ]
+  },
+  {
+    id: 'editing-lead',
+    name: 'Editing Lead',
+    blurb: 'Owns throughput and on time delivery across sixteen editors. Three of the five measures here are not yet objective.',
+    metrics: [
+      { name: 'Edits shipped on time', v: '82%', t: 'target 90%', pct: 91, def: 'drafting', hit: false,
+        definition: 'Edits marked Delivered on or before the agreed date, as a share of everything due that week.',
+        capture: 'From the Notion pipeline. Reliable only once an edit has a single agreed definition.',
+        open: 'Blocked by tiering. A five minute ad and a one minute cut both count as one.' },
+      { name: 'Editor blockers cleared same day', v: '74%', t: 'target 90%', pct: 82, def: 'drafting', hit: false,
+        definition: 'A blocker raised by an editor and resolved before the end of the same working day.',
+        capture: 'Needs a Blocked status in Notion with a timestamp. Not there yet.',
+        open: 'Where does an editor raise a blocker today. Slack messages cannot be counted.' },
+      { name: 'Edits sitting unassigned', v: '9', t: 'target 3 or fewer', pct: 33, def: 'agreed', hit: false,
+        definition: 'Edits in Ready to Edit with no editor against them at 09:00 on any weekday.',
+        capture: 'Straight from the pipeline. This one is objective today and can go live now.' },
+      { name: 'Editor one to ones held', v: '11', t: 'of 16 editors', pct: 69, def: 'manual', hit: false,
+        definition: 'A one to one with each editor in the week, held and logged.',
+        capture: 'Entered by hand each Friday.' },
+      { name: 'Own edits shipped', v: '6', t: 'target 5', pct: 120, def: 'drafting', hit: true,
+        definition: 'Edits the head editor cuts personally, on top of running the team.',
+        capture: 'From the pipeline. Same tiering question as everything else in editing.',
+        open: 'If the head editor is still cutting six a week, the lead role is not yet a lead role.' }
+    ]
+  },
+  {
+    id: 'pod-lead',
+    name: 'Pod Lead',
+    blurb: 'The creative strategist running a pod. Five of the eight are still ramping, so these are read per person, not averaged.',
+    metrics: [
+      { name: 'Daily stand ups held', v: '5', t: 'of 5 days', pct: 100, def: 'manual', hit: true,
+        definition: 'A stand up with the pod, held on each working day.',
+        capture: 'Ticked by the pod lead. One field a day.' },
+      { name: 'Concepts shipped', v: '14', t: 'target 12', pct: 117, def: 'drafting', hit: true,
+        definition: 'A concept handed to editing with a brief, a reference and a hook written.',
+        capture: 'From the pipeline.',
+        open: 'A concept with three hook variants. One concept or three.' },
+      { name: 'Edits signed off first pass', v: '61%', t: 'target 75%', pct: 81, def: 'agreed', hit: false,
+        definition: 'Edits approved by the pod lead without a revision request, as a share of edits reviewed.',
+        capture: 'From the pipeline. Objective today.' },
+      { name: 'Client touchpoints', v: '9', t: 'target 8', pct: 113, def: 'manual', hit: true,
+        definition: 'Any direct contact with the client in the week that is not the scheduled call.',
+        capture: 'Entered by hand.' }
+    ]
+  },
+  {
+    id: 'video-editor',
+    name: 'Video Editor',
+    blurb: 'Sixteen editors, each seeing only their own row. This is the view the tiering question matters most for.',
+    metrics: [
+      { name: 'Edits shipped', v: '21', t: 'target 25', pct: 84, def: 'drafting', hit: false,
+        definition: 'Five a day across a five day week. Currently any export marked Delivered.',
+        capture: 'From the pipeline.',
+        open: 'This is the number the whole tiering question hangs on. Nobody should be measured on it until it is settled.' },
+      { name: 'Revision turnaround', v: '26h', t: 'target 24h', pct: 92, def: 'agreed', hit: false,
+        definition: 'Hours between a revision request landing and the new cut going back. Lower is better.',
+        capture: 'From status timestamps in the pipeline. Objective today.' },
+      { name: 'First time right rate', v: '68%', t: 'target 80%', pct: 85, def: 'agreed', hit: false,
+        definition: 'Edits approved with no revision request, as a share of edits delivered.',
+        capture: 'From the pipeline. Objective today.' },
+      { name: 'Stand ups attended', v: '5', t: 'of 5 days', pct: 100, def: 'manual', hit: true,
+        definition: 'Attendance at the pod stand up on each working day.',
+        capture: 'Ticked by the pod lead.' }
+    ]
+  }
+];
+
+var BLURBS = {
+  founder: 'Six measures, reviewed monthly. Each one is built from weekly inputs the team already controls. Open a card to see what sits behind it and how it is counted.',
+  team: 'Leading indicators, checked every Monday. These move in the week. The business KPIs above them do not.'
+};
+
+/* ---------- The ring ---------- */
+
+function ring(percent, size, strokeWidth) {
+  strokeWidth = strokeWidth || 6;
+  var padding = 8;
+  var mainR = size / 2 - padding;
+  var c = size / 2;
+  var circ = 2 * Math.PI * mainR;
+  var mainOffset = circ * (1 - Math.min(percent, 100) / 100);
+  var showOver = percent > 100;
+  var overR = mainR - strokeWidth - 3;
+  var overCirc = 2 * Math.PI * overR;
+  var overOffset = overCirc * (1 - Math.min(Math.max(0, percent - 100), 100) / 100);
+  var label = size >= 80;
+
+  var svg = '<svg class="ring" width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '"'
+    + ' role="img" aria-label="' + percent + ' per cent of target">'
+    + '<g transform="rotate(-90 ' + c + ' ' + c + ')">'
+    + '<circle class="track" cx="' + c + '" cy="' + c + '" r="' + mainR + '" stroke-width="' + strokeWidth + '"></circle>'
+    + '<circle class="main" cx="' + c + '" cy="' + c + '" r="' + mainR + '" stroke-width="' + strokeWidth + '"'
+    + ' stroke-dasharray="' + circ.toFixed(2) + '" stroke-dashoffset="' + mainOffset.toFixed(2) + '"'
+    + ' style="--from:' + circ.toFixed(2) + 'px"></circle>';
+
+  if (showOver) {
+    svg += '<circle class="over" cx="' + c + '" cy="' + c + '" r="' + overR + '" stroke-width="' + (strokeWidth * 0.7) + '"'
+      + ' stroke-dasharray="' + overCirc.toFixed(2) + '" stroke-dashoffset="' + overOffset.toFixed(2) + '"'
+      + ' style="--from:' + overCirc.toFixed(2) + 'px; animation-delay:0.15s"></circle>';
+  }
+
+  svg += '</g>';
+  if (label) {
+    svg += '<text class="ring-label num" x="' + c + '" y="' + c + '">' + percent + '%</text>';
+  }
+  return svg + '</svg>';
+}
+
+function chip(key) {
+  var d = DEF[key];
+  return '<span class="chip ' + d.cls + '">' + d.label + '</span>';
+}
+
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/* ---------- Founder view ---------- */
+
+var grid = document.getElementById('kpiGrid');
+var drill = document.getElementById('drill');
+var openId = null;
+
+grid.innerHTML = BUSINESS.map(function (k) {
+  return '<button type="button" class="kpi" data-id="' + k.id + '" aria-expanded="false" aria-controls="drill">'
+    + '<span class="kpi-name">' + esc(k.name) + '</span>'
+    + '<span class="kpi-top">'
+    + '<span class="kpi-body">'
+    + '<span class="kpi-value num">' + esc(k.value) + '</span>'
+    + '<span class="kpi-target">' + esc(k.target) + '</span>'
+    + '</span>'
+    + ring(k.pct, 96)
+    + '</span>'
+    + '<span class="kpi-foot">'
+    + '<span class="status ' + k.status + '">' + esc(k.statusLabel) + '</span>'
+    + '<span class="behind">Behind this <span class="caret" aria-hidden="true">▾</span></span>'
+    + '</span>'
+    + '</button>';
+}).join('');
+
+function renderDrill(k) {
+  drill.innerHTML = '<div class="drill" tabindex="-1" id="drillPanel">'
+    + '<div class="drill-head">'
+    + '<h2>' + esc(k.name) + '</h2>'
+    + '<span class="owner">Owner · ' + esc(k.owner) + ' &nbsp; ' + chip(k.def) + '</span>'
+    + '</div>'
+    + '<ul class="support">'
+    + k.support.map(function (s) {
+        return '<li><span class="s-name">' + esc(s.name) + '<span class="s-owner">' + esc(s.owner) + '</span></span>'
+          + '<span class="s-fig num ' + (s.hit ? 'hit' : 'miss') + '">' + esc(s.v)
+          + '<small>' + esc(s.t) + '</small></span></li>';
+      }).join('')
+    + '</ul>'
+    + '<div class="method">'
+    + '<h3>How this is counted</h3>'
+    + '<p>' + esc(k.definition) + '</p>'
+    + '<p class="capture">' + esc(k.capture) + '</p>'
+    + '</div>'
+    + '</div>';
+}
+
+grid.addEventListener('click', function (e) {
+  var btn = e.target.closest('.kpi');
+  if (!btn) return;
+  var id = btn.getAttribute('data-id');
+
+  Array.prototype.forEach.call(grid.querySelectorAll('.kpi'), function (b) {
+    b.setAttribute('aria-expanded', 'false');
+  });
+
+  if (openId === id) {
+    openId = null;
+    drill.innerHTML = '';
+    return;
+  }
+
+  openId = id;
+  btn.setAttribute('aria-expanded', 'true');
+  var k = BUSINESS.filter(function (x) { return x.id === id; })[0];
+  renderDrill(k);
+  document.getElementById('drillPanel').focus({ preventScroll: true });
+});
+
+/* ---------- Team view ---------- */
+
+var tabs = document.querySelector('.tabs');
+var rolePanel = document.getElementById('rolePanel');
+var openRow = null;
+
+tabs.innerHTML = ROLES.map(function (r, i) {
+  return '<button type="button" role="tab" data-role="' + r.id + '" aria-selected="' + (i === 0) + '">'
+    + esc(r.name) + '</button>';
+}).join('');
+
+function renderRole(r) {
+  openRow = null;
+  rolePanel.innerHTML = '<div class="role-head"><h2>' + esc(r.name) + '</h2><p>' + esc(r.blurb) + '</p></div>'
+    + '<div class="rows">'
+    + r.metrics.map(function (m, i) {
+        return '<div class="row" data-row="' + i + '">'
+          + ring(m.pct, 56, 4)
+          + '<div class="row-main">'
+          + '<p class="row-name">' + esc(m.name) + chip(m.def) + '</p>'
+          + '<p class="row-def">' + esc(m.definition) + '</p></div>'
+          + '<div class="row-fig"><span class="v num ' + (m.hit ? 'hit' : 'miss') + '">' + esc(m.v) + '</span>'
+          + '<span class="t num">' + esc(m.t) + '</span></div>'
+          + '<button type="button" class="how" data-how="' + i + '" aria-expanded="false">Source</button>'
+          + '</div>';
+      }).join('')
+    + '</div>';
+}
+
+rolePanel.addEventListener('click', function (e) {
+  var how = e.target.closest('.how');
+  if (!how) return;
+  var i = Number(how.getAttribute('data-how'));
+  var role = ROLES.filter(function (x) { return x.id === currentRole; })[0];
+  var row = how.closest('.row');
+  var existing = row.querySelector('.how-panel');
+
+  if (existing) {
+    existing.remove();
+    how.setAttribute('aria-expanded', 'false');
+    how.textContent = 'Source';
+    return;
+  }
+
+  var m = role.metrics[i];
+  var panel = document.createElement('div');
+  panel.className = 'how-panel';
+  panel.innerHTML = '<p class="capture">' + esc(m.capture) + '</p>'
+    + (m.open ? '<p class="open">Open · ' + esc(m.open) + '</p>' : '');
+  row.appendChild(panel);
+  how.setAttribute('aria-expanded', 'true');
+  how.textContent = 'Hide';
+});
+
+var currentRole = ROLES[0].id;
+renderRole(ROLES[0]);
+
+tabs.addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-role]');
+  if (!btn) return;
+  currentRole = btn.getAttribute('data-role');
+  Array.prototype.forEach.call(tabs.querySelectorAll('button'), function (b) {
+    b.setAttribute('aria-selected', String(b === btn));
+  });
+  renderRole(ROLES.filter(function (x) { return x.id === currentRole; })[0]);
+});
+
+/* ---------- View switch ---------- */
+
+var views = {
+  founder: document.getElementById('founder'),
+  team: document.getElementById('team')
+};
+var titleEl = document.getElementById('viewTitle');
+var blurbEl = document.getElementById('viewBlurb');
+blurbEl.textContent = BLURBS.founder;
+
+document.querySelector('.switch').addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-view]');
+  if (!btn) return;
+  var v = btn.getAttribute('data-view');
+  Array.prototype.forEach.call(document.querySelectorAll('.switch button'), function (b) {
+    b.setAttribute('aria-selected', String(b === btn));
+  });
+  views.founder.hidden = v !== 'founder';
+  views.team.hidden = v !== 'team';
+  titleEl.textContent = v === 'founder' ? 'Business KPIs' : 'Weekly leading indicators';
+  blurbEl.textContent = BLURBS[v];
+});
+
+/* ---------- Definition count ---------- */
+
+(function () {
+  var total = BUSINESS.length;
+  var teamTotal = 0;
+  var open = BUSINESS.filter(function (k) { return k.def === 'drafting'; }).length;
+  ROLES.forEach(function (r) {
+    teamTotal += r.metrics.length;
+    open += r.metrics.filter(function (m) { return m.def === 'drafting'; }).length;
+  });
+  document.getElementById('defCount').innerHTML =
+    '<strong>Definitions.</strong> ' + open + ' of ' + (total + teamTotal) + ' measures are still being defined.';
+})();
+</script>
+</body>
+</html>
