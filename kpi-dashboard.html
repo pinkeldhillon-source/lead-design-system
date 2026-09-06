@@ -58,6 +58,8 @@ body {
 
 .num { font-variant-numeric: tabular-nums; }
 
+[hidden] { display: none !important; }
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -641,6 +643,183 @@ h1 {
   .mrow .bar { grid-column: 1; }
   .src { justify-self: start; grid-column: 1 / -1; }
 }
+
+/* ---------- KPI detail pages ---------- */
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 18px;
+  padding: 6px 12px 6px 9px;
+  font-size: 13px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  transition: color 0.14s ease, border-color 0.14s ease, background 0.14s ease;
+}
+
+.back:hover { color: var(--text); border-color: var(--line-hi); background: var(--card); }
+.back svg { flex: none; }
+
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px 22px;
+  padding: 26px 30px 24px;
+}
+
+.hero .h-val {
+  font-size: 52px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.hero .h-val .unit {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: -0.02em;
+  margin-left: 4px;
+}
+
+.hero .h-meta { display: flex; flex-direction: column; gap: 5px; padding-bottom: 4px; }
+.hero .h-meta .delta { font-size: 14px; }
+.hero .h-meta .h-tgt { font-size: 13px; color: var(--faint); }
+.hero .h-intro {
+  flex: 1 1 320px;
+  margin: 0;
+  padding-bottom: 4px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 58ch;
+}
+
+.statstrip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.stat { padding: 18px 20px 17px; }
+.stat .s-lab { display: block; font-size: 13px; color: var(--muted); margin-bottom: 9px; }
+.stat .s-val { display: block; font-size: 26px; font-weight: 500; letter-spacing: -0.025em; }
+.stat .s-sub { display: block; margin-top: 6px; font-size: 12.5px; color: var(--faint); }
+.stat.pos .s-sub { color: var(--pos); }
+.stat.neg .s-sub { color: var(--neg); }
+
+.sect { margin-top: 26px; }
+.sect > h3 { margin: 0 0 4px; font-size: 15px; font-weight: 500; letter-spacing: -0.01em; }
+.sect > .s-note { margin: 0 0 14px; font-size: 13px; line-height: 1.6; color: var(--muted); max-width: 80ch; }
+.sect > h3 + .card, .sect > h3 + .scroll-x { margin-top: 14px; }
+
+.scroll-x { overflow-x: auto; border-radius: var(--r-card); }
+.scroll-x::-webkit-scrollbar { height: 8px; }
+.scroll-x::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+.scroll-x::-webkit-scrollbar-track { background: transparent; }
+
+table.dt {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  background: var(--card);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  font-size: 13.5px;
+}
+
+table.dt th,
+table.dt td {
+  padding: 12px 16px;
+  text-align: left;
+  border-top: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+table.dt thead th {
+  border-top: none;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--faint);
+  letter-spacing: 0.02em;
+  padding-top: 15px;
+  padding-bottom: 11px;
+}
+
+table.dt tbody tr:hover td { background: var(--card-hi); }
+table.dt th.r, table.dt td.r { text-align: right; }
+table.dt td.name { color: var(--text); }
+table.dt td.dim { color: var(--muted); }
+table.dt td.pos { color: var(--pos); }
+table.dt td.neg { color: var(--neg); }
+
+table.dt tr.total td {
+  border-top: 1px solid var(--line-hi);
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.022);
+}
+
+table.dt tr.rule td { border-top: 1px solid var(--line-hi); font-weight: 500; }
+
+.sub-lab { display: block; margin-top: 3px; font-size: 11.5px; color: var(--faint); }
+
+/* The score grid. Three bands rather than a continuous ramp, because the
+   point is to find the bad ones at a glance, not to admire a gradient. */
+table.dt td.cell { text-align: right; color: var(--muted); }
+table.dt td.cell.good { color: var(--pos); background: rgba(62, 194, 122, 0.09); }
+table.dt td.cell.bad { color: var(--neg); background: rgba(239, 93, 74, 0.10); }
+table.dt td.cell.none { color: var(--faint); }
+table.dt td.avg { text-align: right; font-weight: 500; color: var(--text); }
+
+.trendrows { padding: 4px 24px; }
+
+.trow {
+  display: grid;
+  grid-template-columns: minmax(160px, 1.5fr) minmax(90px, auto) minmax(84px, auto) minmax(120px, 1.1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 15px 0;
+  border-top: 1px solid var(--line);
+}
+
+.trow:first-child { border-top: none; }
+.trow .tr-name { font-size: 13.5px; }
+.trow .tr-val { font-size: 19px; font-weight: 500; letter-spacing: -0.02em; text-align: right; }
+.trow .tr-d { font-size: 13px; justify-self: end; }
+.trow .tr-spark { height: 34px; }
+.trow .tr-spark svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+.caveat {
+  margin-top: 12px;
+  padding: 14px 18px;
+  border: 1px solid rgba(217, 160, 54, 0.28);
+  border-radius: 12px;
+  background: rgba(217, 160, 54, 0.05);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 82ch;
+}
+
+.caveat b { color: var(--hold); font-weight: 500; }
+
+.tile { cursor: pointer; }
+
+@media (max-width: 860px) {
+  .hero { padding: 22px 22px 20px; }
+  .hero .h-val { font-size: 40px; }
+  .trow {
+    grid-template-columns: 1fr auto;
+    gap: 8px 14px;
+  }
+  .trow .tr-spark { grid-column: 1 / -1; }
+  .trow .tr-d { grid-column: 2; justify-self: end; }
+}
+
 </style>
 </head>
 <body>
@@ -686,6 +865,98 @@ h1 {
 </div>
 
 <script>
+/* ---------- The shared spine ----------
+   Pods, people and clients appear on four of the six KPI pages. They are
+   declared once here so the pages cannot contradict each other. Every
+   name is invented. Headcount is 30, which is what the pulse and the
+   grading counts on the board already assume. */
+
+var PODS = [
+  { id: 'p1', name: 'Pod 1', lead: 'Maya R' },
+  { id: 'p2', name: 'Pod 2', lead: 'Callum B' },
+  { id: 'p3', name: 'Pod 3', lead: 'Priya N' },
+  { id: 'p4', name: 'Pod 4', lead: 'Tom H' }
+];
+
+/* role: strategist | editor | lead | ops
+   Eight creative strategists, four of whom lead a pod. Sixteen video
+   editors, four to a pod. Six people sit outside the pods. Thirty in
+   total, and the fractional CFO is a contractor so is not counted. */
+var PEOPLE = [
+  { name: 'Maya R',    role: 'strategist', pod: 'p1', podLead: true },
+  { name: 'Jonah P',   role: 'strategist', pod: 'p1' },
+  { name: 'Callum B',  role: 'strategist', pod: 'p2', podLead: true },
+  { name: 'Sofia L',   role: 'strategist', pod: 'p2' },
+  { name: 'Priya N',   role: 'strategist', pod: 'p3', podLead: true },
+  { name: 'Dan W',     role: 'strategist', pod: 'p3' },
+  { name: 'Tom H',     role: 'strategist', pod: 'p4', podLead: true },
+  { name: 'Grace A',   role: 'strategist', pod: 'p4' },
+
+  { name: 'Leo B',     role: 'editor', pod: 'p1' },
+  { name: 'Amira D',   role: 'editor', pod: 'p1' },
+  { name: 'Kit F',     role: 'editor', pod: 'p1' },
+  { name: 'Rosa M',    role: 'editor', pod: 'p1' },
+  { name: 'Sam O',     role: 'editor', pod: 'p2' },
+  { name: 'Yusuf A',   role: 'editor', pod: 'p2' },
+  { name: 'Bea C',     role: 'editor', pod: 'p2' },
+  { name: 'Niall G',   role: 'editor', pod: 'p2' },
+  { name: 'Iris T',    role: 'editor', pod: 'p3' },
+  { name: 'Hugo L',    role: 'editor', pod: 'p3' },
+  { name: 'Freya J',   role: 'editor', pod: 'p3' },
+  { name: 'Otto K',    role: 'editor', pod: 'p3' },
+  { name: 'Nina S',    role: 'editor', pod: 'p4' },
+  { name: 'Marcus E',  role: 'editor', pod: 'p4' },
+  { name: 'Lena H',    role: 'editor', pod: 'p4' },
+  { name: 'Arun V',    role: 'editor', pod: 'p4' },
+
+  { name: 'Nativ',     role: 'lead', pod: null, title: 'Owner' },
+  { name: 'Aisha K',   role: 'lead', pod: null, title: 'Creative Lead' },
+  { name: 'Rhys M',    role: 'lead', pod: null, title: 'Editing Lead' },
+  { name: 'Elena V',   role: 'ops',  pod: null, title: 'Ops Manager' },
+  { name: 'Oscar T',   role: 'ops',  pod: null, title: 'Motion Designer' },
+  { name: 'Nadia S',   role: 'ops',  pod: null, title: 'Creative Producer' }
+];
+
+/* Fourteen active retainers. Health and wellness DTC, which is the
+   book NSY actually sells into. */
+var CLIENTS = [
+  { name: 'Northlight Nutrition', pod: 'p1' },
+  { name: 'Ovis Skin',            pod: 'p1' },
+  { name: 'Halcyon Sleep',        pod: 'p1' },
+  { name: 'Braemar Supplements',  pod: 'p1' },
+  { name: 'Fernway Wellness',     pod: 'p2' },
+  { name: 'Tonic and Thorn',      pod: 'p2' },
+  { name: 'Vireo Health',         pod: 'p2' },
+  { name: 'Sable Labs',           pod: 'p2' },
+  { name: 'Kestrel Fitness',      pod: 'p3' },
+  { name: 'Lumen Greens',         pod: 'p3' },
+  { name: 'Marrow and Co',        pod: 'p3' },
+  { name: 'Ridgeline Protein',    pod: 'p4' },
+  { name: 'Sonder Skincare',      pod: 'p4' },
+  { name: 'Wildroot Botanics',    pod: 'p4' }
+];
+
+/* The six scored questions on each monthly form. */
+var CLIENT_Q = [
+  'Creative quality',
+  'Communication',
+  'Speed of delivery',
+  'Results against goals',
+  'Understanding of our brand',
+  'Value for money'
+];
+
+var COLLEAGUE_Q = [
+  'Workload',
+  'Clarity of role',
+  'Support from my lead',
+  'Growth and progression',
+  'Tools and process',
+  'Would recommend NSY'
+];
+
+/* The five behaviours every person is graded against each week. */
+var BEHAVIOURS = ['Ownership', 'Proactive', 'Performance driven', 'Reliable', 'Speed'];
 var STATE = {
   agreed: 'Definition agreed',
   drafting: 'Being defined',
@@ -716,7 +987,7 @@ var KPIS = [
       { name: 'New retainers signed', owner: 'Creative Lead', v: '2', t: 'Target 3', hit: false },
       { name: 'Upsell conversations had', owner: 'Creative Lead', v: '3', t: 'Target 4', hit: false },
       { name: 'Accounts churned this month', owner: 'Creative Lead', v: '1', t: 'Target 0', hit: false },
-      { name: 'Average retainer value', owner: 'Nativ', v: '£6,100', t: 'Target £5,500', hit: true }
+      { name: 'Average retainer value', owner: 'Nativ', v: '£12,171', t: 'Target £11,000', hit: true }
     ]
   },
   {
@@ -829,13 +1100,13 @@ var KPIS = [
     value: '78',
     unit: '%',
     delta: { dir: 'up', text: '2 pts', good: true },
-    context: 'Target 95%',
+    context: 'Target 100%',
     series: [62, 65, 68, 71, 69, 74, 76, 73, 78, 80, 76, 78],
-    domain: [55, 100],
-    ticks: [60, 75, 90],
+    domain: [55, 106],
+    ticks: [60, 80, 100],
     fmt: function (v) { return v + '%'; },
-    target: 95,
-    targetLabel: 'Target 95% filed every day',
+    target: 100,
+    targetLabel: 'Target 100% filed every day',
     fmtPoint: function (v) { return v + '%'; },
     chartTitle: 'End of day checklist completion, last 12 months',
     owner: 'the Ops Manager',
@@ -843,8 +1114,8 @@ var KPIS = [
     definition: 'Share of the team who filed their end of day checklist before leaving, across every working day in the period.',
     capture: 'Filed in Notion. Open question is whether a checklist filed the next morning counts as filed, and whether a blank one counts at all.',
     support: [
-      { name: 'Editors filing by 18:00', owner: 'Editing Lead', v: '71%', t: 'Target 95%', hit: false },
-      { name: 'Strategists filing by 18:00', owner: 'Creative Lead', v: '86%', t: 'Target 95%', hit: false },
+      { name: 'Editors filing by 18:00', owner: 'Editing Lead', v: '71%', t: 'Target 100%', hit: false },
+      { name: 'Strategists filing by 18:00', owner: 'Creative Lead', v: '86%', t: 'Target 100%', hit: false },
       { name: 'Checklists naming a blocker', owner: 'Ops Manager', v: '44%', t: 'Target 80%', hit: false },
       { name: 'Days with the full team filed', owner: 'Ops Manager', v: '2 of 5', t: 'Target 4', hit: false }
     ]
@@ -859,7 +1130,7 @@ var ROLES = [
     name: 'Creative Lead',
     blurb: 'Owns the client relationship, retention and the revenue line. Reads this on a Monday morning.',
     metrics: [
-      { name: 'Client check-ins held', v: '11', t: 'Of 12 accounts', pct: 92, def: 'manual', hit: true,
+      { name: 'Client check-ins held', v: '13', t: 'Of 14 accounts', pct: 93, def: 'manual', hit: true,
         definition: 'One scheduled call with the account lead, held and logged in the week.',
         capture: 'Ticked off by the Creative Lead on Friday. Four fields a week, not a daily form.' },
       { name: 'Pod lead one-to-ones held', v: '6', t: 'Of 8 strategists', pct: 75, def: 'manual', hit: false,
@@ -970,7 +1241,3063 @@ var ICONS = {
 };
 
 /* ---------- Helpers ---------- */
-
+/* Detail page data. Placeholder throughout, but it reconciles. */
+var DETAIL = {
+ "mrr": {
+  "id": "mrr",
+  "intro": "Where the £170,400 comes from: fourteen retainers, what was signed and lost this month, and which accounts look shaky.",
+  "stats": [
+   {
+    "label": "Active clients",
+    "value": "14",
+    "sub": "2 signed, 1 lost this month",
+    "tone": "pos"
+   },
+   {
+    "label": "Average retainer",
+    "value": "£12,171",
+    "sub": "Up £479 on August",
+    "tone": "pos"
+   },
+   {
+    "label": "Net new MRR",
+    "value": "£18,400",
+    "sub": "Best month of the year",
+    "tone": "pos"
+   },
+   {
+    "label": "Client churn",
+    "value": "7.7%",
+    "sub": "1 of 13 accounts, £6,200 gone",
+    "tone": "neg"
+   },
+   {
+    "label": "MRR at risk",
+    "value": "£17,700",
+    "sub": "2 accounts flagged, 10.4% of the book",
+    "tone": "neg"
+   }
+  ],
+  "sections": [
+   {
+    "title": "Twelve months of movement",
+    "kind": "trends",
+    "note": "Money in the sparklines is in thousands, apart from average retainer which is in pounds. September net new MRR is £17,300 new business plus £9,600 expansion, less £6,200 churned and £2,300 cut back, which is £18,400.",
+    "trends": [
+     {
+      "name": "MRR",
+      "value": "£170,400",
+      "deltaDir": "up",
+      "deltaText": "12.1%",
+      "deltaGood": true,
+      "series": [
+       92,
+       96,
+       94,
+       103,
+       110,
+       118,
+       121,
+       119,
+       128,
+       141,
+       152,
+       170.4
+      ],
+      "lo": 80,
+      "hi": 180
+     },
+     {
+      "name": "New clients signed",
+      "value": "2",
+      "deltaDir": "up",
+      "deltaText": "1",
+      "deltaGood": true,
+      "series": [
+       1,
+       1,
+       0,
+       2,
+       1,
+       1,
+       1,
+       0,
+       1,
+       2,
+       1,
+       2
+      ],
+      "lo": 0,
+      "hi": 3
+     },
+     {
+      "name": "Clients churned",
+      "value": "1",
+      "deltaDir": "up",
+      "deltaText": "1",
+      "deltaGood": false,
+      "series": [
+       1,
+       0,
+       1,
+       1,
+       0,
+       1,
+       1,
+       1,
+       0,
+       1,
+       0,
+       1
+      ],
+      "lo": 0,
+      "hi": 2
+     },
+     {
+      "name": "Net new MRR",
+      "value": "£18,400",
+      "deltaDir": "up",
+      "deltaText": "£7,400",
+      "deltaGood": true,
+      "series": [
+       5,
+       4,
+       -2,
+       9,
+       7,
+       8,
+       3,
+       -2,
+       9,
+       13,
+       11,
+       18.4
+      ],
+      "lo": -4,
+      "hi": 21
+     },
+     {
+      "name": "Average retainer",
+      "value": "£12,171",
+      "deltaDir": "up",
+      "deltaText": "£479",
+      "deltaGood": true,
+      "series": [
+       10222,
+       9600,
+       10444,
+       10300,
+       10000,
+       10727,
+       11000,
+       11900,
+       11636,
+       11750,
+       11692,
+       12171
+      ],
+      "lo": 9000,
+      "hi": 12800
+     },
+     {
+      "name": "New business won, monthly value",
+      "value": "£17,300",
+      "deltaDir": "up",
+      "deltaText": "£9,500",
+      "deltaGood": true,
+      "series": [
+       8.4,
+       4.4,
+       0,
+       12.8,
+       7.6,
+       10.4,
+       6.8,
+       0,
+       7.8,
+       16.2,
+       7.8,
+       17.3
+      ],
+      "lo": 0,
+      "hi": 19
+     },
+     {
+      "name": "Expansion from existing clients",
+      "value": "£9,600",
+      "deltaDir": "up",
+      "deltaText": "£4,800",
+      "deltaGood": true,
+      "series": [
+       1.5,
+       1.1,
+       2.6,
+       1.9,
+       0.6,
+       1.8,
+       1.2,
+       4,
+       3.4,
+       1.6,
+       4.8,
+       9.6
+      ],
+      "lo": 0,
+      "hi": 11
+     },
+     {
+      "name": "MRR lost to churn",
+      "value": "£6,200",
+      "deltaDir": "up",
+      "deltaText": "£6,200",
+      "deltaGood": false,
+      "series": [
+       4.1,
+       0,
+       3.8,
+       4.6,
+       0,
+       2.9,
+       4.2,
+       5.4,
+       0,
+       3.3,
+       0,
+       6.2
+      ],
+      "lo": 0,
+      "hi": 7
+     }
+    ]
+   },
+   {
+    "title": "Every client on the book",
+    "kind": "table",
+    "note": "The two at risk accounts carry £17,700 between them, 10.4% of MRR. The account that left in September was signed in June and lasted four months.",
+    "columns": [
+     "Client",
+     "Pod",
+     "Monthly retainer",
+     "Months with NSY",
+     "Status"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Northlight Nutrition",
+       "Pod 1",
+       "£18,500",
+       "34",
+       "Growing"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Ovis Skin",
+       "Pod 1",
+       "£14,200",
+       "22",
+       "Steady"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Halcyon Sleep",
+       "Pod 1",
+       "£12,400",
+       "9",
+       "Growing"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Braemar Supplements",
+       "Pod 1",
+       "£9,500",
+       "6",
+       "At risk"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Fernway Wellness",
+       "Pod 2",
+       "£16,800",
+       "28",
+       "Steady"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Tonic and Thorn",
+       "Pod 2",
+       "£13,500",
+       "12",
+       "Growing"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Vireo Health",
+       "Pod 2",
+       "£11,200",
+       "8",
+       "Steady"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Sable Labs",
+       "Pod 2",
+       "£9,800",
+       "1",
+       "Growing"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Kestrel Fitness",
+       "Pod 3",
+       "£15,400",
+       "16",
+       "Growing"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Lumen Greens",
+       "Pod 3",
+       "£12,100",
+       "7",
+       "Steady"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Marrow and Co",
+       "Pod 3",
+       "£8,200",
+       "3",
+       "At risk"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Ridgeline Protein",
+       "Pod 4",
+       "£11,900",
+       "3",
+       "Steady"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Sonder Skincare",
+       "Pod 4",
+       "£9,400",
+       "2",
+       "Steady"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Wildroot Botanics",
+       "Pod 4",
+       "£7,500",
+       "1",
+       "Steady"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Total",
+       "14 clients",
+       "£170,400",
+       "",
+       ""
+      ],
+      "tone": "none"
+     }
+    ]
+   },
+   {
+    "title": "MRR by pod",
+    "kind": "table",
+    "note": "Pod 1 and Pod 2 hold 62% of the book. Northlight Nutrition on its own is 10.9% of MRR, and Maya also carries Ovis Skin at £14,200, so two of the four largest accounts sit in one pod.",
+    "columns": [
+     "Pod",
+     "Lead",
+     "Clients",
+     "MRR",
+     "Share of total"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Pod 1",
+       "Maya R",
+       "4",
+       "£54,600",
+       "32.0%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Pod 2",
+       "Callum B",
+       "4",
+       "£51,300",
+       "30.1%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Pod 3",
+       "Priya N",
+       "3",
+       "£35,700",
+       "21.0%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Pod 4",
+       "Tom H",
+       "3",
+       "£28,800",
+       "16.9%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Total",
+       "",
+       "14",
+       "£170,400",
+       "100%"
+      ],
+      "tone": "none"
+     }
+    ]
+   }
+  ]
+ },
+ "profit": {
+  "id": "operating-profit",
+  "intro": "Where September's £170,400 of revenue went, from delivery cost through every overhead line down to £38,200 of operating profit.",
+  "stats": [
+   {
+    "label": "Operating profit margin",
+    "value": "22.4%",
+    "sub": "Up from 21.1% in August",
+    "tone": "pos"
+   },
+   {
+    "label": "Delivery margin",
+    "value": "61.8%",
+    "sub": "5.4 points up on last October",
+    "tone": "pos"
+   },
+   {
+    "label": "Delivery margin in pounds",
+    "value": "£105,307",
+    "sub": "£3,759 more than August",
+    "tone": "pos"
+   },
+   {
+    "label": "Total overheads",
+    "value": "£67,107",
+    "sub": "39.4% of revenue, up £659",
+    "tone": "neg"
+   }
+  ],
+  "sections": [
+   {
+    "title": "The profit bridge, September",
+    "kind": "table",
+    "note": "Every percentage is of revenue. Take the six overhead lines off 61.8% and you land on 22.4%.",
+    "columns": [
+     "Line",
+     "Pounds",
+     "% of revenue"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Revenue",
+       "£170,400",
+       "100.0%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Less delivery cost",
+       "£65,093",
+       "38.2%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Delivery margin (subtotal)",
+       "£105,307",
+       "61.8%"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Less leadership and ops payroll",
+       "£34,300",
+       "20.1%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Less software and tooling",
+       "£6,240",
+       "3.7%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Less office and equipment",
+       "£11,400",
+       "6.7%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Less marketing and new business",
+       "£8,600",
+       "5.0%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Less professional fees",
+       "£4,250",
+       "2.5%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Less other overheads",
+       "£2,317",
+       "1.4%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Total overheads, the six lines above",
+       "£67,107",
+       "39.4%"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Operating profit (total)",
+       "£38,200",
+       "22.4%"
+      ],
+      "tone": "pos"
+     }
+    ]
+   },
+   {
+    "title": "What delivery cost is made of",
+    "kind": "table",
+    "note": "The four pods, plus freelance help. These two payroll lines cover the 24 people working on client accounts, and what they cost is most of why the margin holds.",
+    "columns": [
+     "Delivery cost line",
+     "Pounds",
+     "% of revenue",
+     "Share of delivery cost"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Editor payroll, 16 people",
+       "£33,180",
+       "19.5%",
+       "51.0%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Strategist payroll, 8 people",
+       "£20,620",
+       "12.1%",
+       "31.7%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Contractor spend",
+       "£9,400",
+       "5.5%",
+       "14.4%"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Software and licences used in delivery",
+       "£1,893",
+       "1.1%",
+       "2.9%"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Total delivery cost",
+       "£65,093",
+       "38.2%",
+       "100.0%"
+      ],
+      "tone": "none"
+     }
+    ]
+   },
+   {
+    "title": "What overheads are made of",
+    "kind": "table",
+    "note": "Six people sit in that payroll line, you included. The £1,640 cut in marketing is most of the reason overheads did not rise further this month.",
+    "columns": [
+     "Overhead line",
+     "Pounds",
+     "% of revenue",
+     "Change on August"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Leadership and ops payroll, 6 people",
+       "£34,300",
+       "20.1%",
+       "Up £1,150"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Software and tooling",
+       "£6,240",
+       "3.7%",
+       "Up £260"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Office and equipment",
+       "£11,400",
+       "6.7%",
+       "Up £1,540"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Marketing and new business",
+       "£8,600",
+       "5.0%",
+       "Down £1,640"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Professional fees",
+       "£4,250",
+       "2.5%",
+       "Down £630"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Other",
+       "£2,317",
+       "1.4%",
+       "Down £21"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Total overheads",
+       "£67,107",
+       "39.4%",
+       "Up £659"
+      ],
+      "tone": "neg"
+     }
+    ]
+   },
+   {
+    "title": "Twelve months to September",
+    "kind": "trends",
+    "note": "Revenue per head falls every time you add a head and takes a month or two to come back. May and August both show it.",
+    "trends": [
+     {
+      "name": "Operating profit",
+      "value": "£38,200",
+      "deltaDir": "up",
+      "deltaText": "8.8%",
+      "deltaGood": true,
+      "series": [
+       18.2,
+       19.4,
+       18.8,
+       21.6,
+       23.1,
+       25.4,
+       26.2,
+       24.8,
+       28.6,
+       31.2,
+       35.1,
+       38.2
+      ],
+      "lo": 15,
+      "hi": 42
+     },
+     {
+      "name": "Delivery margin",
+      "value": "61.8%",
+      "deltaDir": "up",
+      "deltaText": "0.7 pts",
+      "deltaGood": true,
+      "series": [
+       56.4,
+       56.9,
+       55.8,
+       57.2,
+       58.1,
+       58.6,
+       59,
+       58.2,
+       59.7,
+       60.4,
+       61.1,
+       61.8
+      ],
+      "lo": 54,
+      "hi": 63
+     },
+     {
+      "name": "Payroll as a share of revenue",
+      "value": "51.7%",
+      "deltaDir": "down",
+      "deltaText": "0.7 pts",
+      "deltaGood": true,
+      "series": [
+       57.8,
+       57.2,
+       58.1,
+       56.4,
+       55.9,
+       55.1,
+       54.6,
+       55.3,
+       53.8,
+       53.1,
+       52.4,
+       51.7
+      ],
+      "lo": 50,
+      "hi": 60
+     },
+     {
+      "name": "Overheads",
+      "value": "£67,107",
+      "deltaDir": "up",
+      "deltaText": "£659",
+      "deltaGood": false,
+      "series": [
+       54,
+       55.4,
+       52,
+       57.6,
+       60.5,
+       62,
+       63.8,
+       61.5,
+       65.7,
+       67.5,
+       66.4,
+       67.1
+      ],
+      "lo": 48,
+      "hi": 70
+     },
+     {
+      "name": "Revenue per head",
+      "value": "£5,680",
+      "deltaDir": "up",
+      "deltaText": "£140",
+      "deltaGood": true,
+      "series": [
+       4923,
+       5058,
+       4696,
+       5126,
+       5139,
+       5329,
+       5450,
+       5114,
+       5445,
+       5634,
+       5540,
+       5680
+      ],
+      "lo": 4500,
+      "hi": 5900
+     }
+    ]
+   }
+  ]
+ },
+ "client-sat": {
+  "id": "client-satisfaction",
+  "intro": "Where the 8.8 comes from: nine of fourteen clients returned a form this month, and the five who did not are listed below.",
+  "stats": [
+   {
+    "label": "Company score",
+    "value": "8.8 / 10",
+    "sub": "Target 8.5, best month of the year",
+    "tone": "pos"
+   },
+   {
+    "label": "Forms returned",
+    "value": "9 of 14",
+    "sub": "Two fewer than August, lowest since December",
+    "tone": "neg"
+   },
+   {
+    "label": "Lowest question",
+    "value": "7.6",
+    "sub": "Communication, down from 7.8 last month",
+    "tone": "neg"
+   },
+   {
+    "label": "Clients below target",
+    "value": "2",
+    "sub": "Fernway Wellness and Vireo Health, both Pod 2",
+    "tone": "neg"
+   },
+   {
+    "label": "Retainer value not scored",
+    "value": "£48,500",
+    "sub": "Monthly fees of the five who did not reply",
+    "tone": "neg"
+   }
+  ],
+  "sections": [
+   {
+    "title": "Satisfaction by pod",
+    "kind": "table",
+    "note": "Score is the plain average of the clients in that pod who returned a form. The nine returns average 8.8 across the company.",
+    "columns": [
+     "Pod",
+     "Lead",
+     "Clients",
+     "Forms returned",
+     "Score",
+     "Against target"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Pod 1",
+       "Maya R",
+       "4",
+       "3 of 4",
+       "9.2",
+       "+0.7"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Pod 2",
+       "Callum B",
+       "4",
+       "2 of 4",
+       "8.1",
+       "-0.4"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Pod 3",
+       "Priya N",
+       "3",
+       "2 of 3",
+       "8.8",
+       "+0.3"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Pod 4",
+       "Tom H",
+       "3",
+       "2 of 3",
+       "8.9",
+       "+0.4"
+      ],
+      "tone": "pos"
+     }
+    ]
+   },
+   {
+    "title": "Five clients did not return the form",
+    "kind": "table",
+    "note": "No score has been assumed for these five. Two of them signed this month and have not been sent a form yet. Pod 2 holds the two biggest retainers on the list.",
+    "columns": [
+     "Client",
+     "Pod",
+     "Retainer per month",
+     "Last returned a form"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Tonic and Thorn",
+       "Pod 2",
+       "£13,500",
+       "June, three months ago"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Sable Labs",
+       "Pod 2",
+       "£9,800",
+       "Not yet, signed this month"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Wildroot Botanics",
+       "Pod 4",
+       "£7,500",
+       "Not yet, signed this month"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Braemar Supplements",
+       "Pod 1",
+       "£9,500",
+       "August, last month"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Marrow and Co",
+       "Pod 3",
+       "£8,200",
+       "August, last month"
+      ],
+      "tone": "none"
+     }
+    ]
+   },
+   {
+    "title": "Question scores by client",
+    "kind": "grid",
+    "note": "The nine clients who returned a form. Communication is the weakest column at 7.6 and the two Pod 2 clients are pulling it down hardest.",
+    "columns": [
+     "Client",
+     "Creative quality",
+     "Communication",
+     "Speed of delivery",
+     "Results against goals",
+     "Understanding of our brand",
+     "Value for money",
+     "Average"
+    ],
+    "rowLabels": [
+     "Northlight Nutrition",
+     "Ovis Skin",
+     "Halcyon Sleep",
+     "Fernway Wellness",
+     "Vireo Health",
+     "Kestrel Fitness",
+     "Lumen Greens",
+     "Ridgeline Protein",
+     "Sonder Skincare"
+    ],
+    "sublabels": [
+     "Pod 1",
+     "Pod 1",
+     "Pod 1",
+     "Pod 2",
+     "Pod 2",
+     "Pod 3",
+     "Pod 3",
+     "Pod 4",
+     "Pod 4"
+    ],
+    "values": [
+     [
+      9.7,
+      8.4,
+      9.1,
+      9.4,
+      9.5,
+      9.1,
+      9.2
+     ],
+     [
+      9.8,
+      8.6,
+      9.2,
+      9.5,
+      9.6,
+      9.1,
+      9.3
+     ],
+     [
+      9.6,
+      8.2,
+      9,
+      9.3,
+      9.5,
+      9,
+      9.1
+     ],
+     [
+      9,
+      5.8,
+      7.8,
+      8.4,
+      8.6,
+      8.4,
+      8
+     ],
+     [
+      9.1,
+      6.2,
+      7.8,
+      8.8,
+      8.8,
+      8.5,
+      8.2
+     ],
+     [
+      9.4,
+      7.8,
+      8.5,
+      9.2,
+      9.3,
+      9.2,
+      8.9
+     ],
+     [
+      9.2,
+      7.6,
+      8.4,
+      8.9,
+      9.1,
+      9,
+      8.7
+     ],
+     [
+      9.5,
+      8.3,
+      9,
+      9.3,
+      9.4,
+      9.1,
+      9.1
+     ],
+     [
+      9.3,
+      7.5,
+      8.6,
+      9.1,
+      9,
+      8.7,
+      8.7
+     ]
+    ],
+    "bad": 8.0,
+    "good": 9.0
+   },
+   {
+    "title": "Twelve month view",
+    "kind": "trends",
+    "note": "Creative quality has held all year while Communication has fallen every month since February. The complaint is about how we handle clients, not about the work.",
+    "trends": [
+     {
+      "name": "Company score",
+      "value": "8.8",
+      "deltaDir": "up",
+      "deltaText": "0.3",
+      "deltaGood": true,
+      "series": [
+       8.2,
+       8.3,
+       8.1,
+       8.4,
+       8.5,
+       8.4,
+       8.6,
+       8.5,
+       8.7,
+       8.6,
+       8.5,
+       8.8
+      ],
+      "lo": 7.5,
+      "hi": 9.5
+     },
+     {
+      "name": "Forms returned",
+      "value": "9 of 14",
+      "deltaDir": "down",
+      "deltaText": "2",
+      "deltaGood": false,
+      "series": [
+       12,
+       11,
+       9,
+       12,
+       13,
+       12,
+       12,
+       11,
+       11,
+       10,
+       11,
+       9
+      ],
+      "lo": 6,
+      "hi": 14
+     },
+     {
+      "name": "Creative quality",
+      "value": "9.4",
+      "deltaDir": "up",
+      "deltaText": "0.1",
+      "deltaGood": true,
+      "series": [
+       9,
+       9.1,
+       8.9,
+       9.1,
+       9.2,
+       9.2,
+       9.3,
+       9.2,
+       9.4,
+       9.3,
+       9.3,
+       9.4
+      ],
+      "lo": 8.5,
+      "hi": 10
+     },
+     {
+      "name": "Communication",
+      "value": "7.6",
+      "deltaDir": "down",
+      "deltaText": "0.2",
+      "deltaGood": false,
+      "series": [
+       8.4,
+       8.3,
+       8.2,
+       8.4,
+       8.5,
+       8.3,
+       8.2,
+       8.1,
+       8,
+       7.9,
+       7.8,
+       7.6
+      ],
+      "lo": 7,
+      "hi": 9
+     },
+     {
+      "name": "Speed of delivery",
+      "value": "8.6",
+      "deltaDir": "up",
+      "deltaText": "0.2",
+      "deltaGood": true,
+      "series": [
+       8.1,
+       8.2,
+       7.9,
+       8.3,
+       8.5,
+       8.4,
+       8.6,
+       8.5,
+       8.7,
+       8.6,
+       8.4,
+       8.6
+      ],
+      "lo": 7.5,
+      "hi": 9.5
+     }
+    ]
+   }
+  ]
+ },
+ "colleague-perf": {
+  "id": "colleague-performance",
+  "intro": "Every person is graded 1 to 5 each week on five behaviours. September, broken down by pod and then by role.",
+  "stats": [
+   {
+    "label": "Company average",
+    "value": "4.3",
+    "sub": "Target 4.0. Up from 4.2 in August.",
+    "tone": "pos"
+   },
+   {
+    "label": "People graded this week",
+    "value": "26 of 30",
+    "sub": "All four gaps sit outside the pods",
+    "tone": "neg"
+   },
+   {
+    "label": "Graded below 3",
+    "value": "2",
+    "sub": "Sofia L in Pod 2, Marcus E in Pod 4",
+    "tone": "neg"
+   },
+   {
+    "label": "At 4.5 or above",
+    "value": "13",
+    "sub": "Half of everyone who was graded",
+    "tone": "flat"
+   }
+  ],
+  "sections": [
+   {
+    "title": "By pod",
+    "kind": "table",
+    "note": "Pod 2 and Pod 4 each carry one person below 3, which is what keeps them near target rather than above it. The outside average is two people, so do not read much into it.",
+    "columns": [
+     "Pod",
+     "Lead",
+     "People",
+     "Graded this week",
+     "Average",
+     "Against target"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Pod 1",
+       "Maya R",
+       "6",
+       "6",
+       "4.5",
+       "+0.5"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Pod 2",
+       "Callum B",
+       "6",
+       "6",
+       "4.1",
+       "+0.1"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Pod 3",
+       "Priya N",
+       "6",
+       "6",
+       "4.4",
+       "+0.4"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Pod 4",
+       "Tom H",
+       "6",
+       "6",
+       "4.1",
+       "+0.1"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Outside the pods",
+       "No pod lead",
+       "6",
+       "2",
+       "4.6",
+       "+0.6 on 2 people"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Company",
+       "",
+       "30",
+       "26",
+       "4.3",
+       "+0.3"
+      ],
+      "tone": "pos"
+     }
+    ]
+   },
+   {
+    "title": "Creative strategists",
+    "kind": "grid",
+    "note": "All eight were graded. Sofia L is the one strategist below 3 and has now been under target for three weeks running. Speed is the lowest behaviour for seven of the eight.",
+    "columns": [
+     "Strategist",
+     "Ownership",
+     "Proactive",
+     "Performance driven",
+     "Reliable",
+     "Speed",
+     "Overall"
+    ],
+    "rowLabels": [
+     "Maya R",
+     "Jonah P",
+     "Callum B",
+     "Sofia L",
+     "Priya N",
+     "Dan W",
+     "Tom H",
+     "Grace A"
+    ],
+    "sublabels": [
+     "Pod 1 lead",
+     "Pod 1",
+     "Pod 2 lead",
+     "Pod 2",
+     "Pod 3 lead",
+     "Pod 3",
+     "Pod 4 lead",
+     "Pod 4"
+    ],
+    "values": [
+     [
+      5,
+      4.9,
+      4.8,
+      5,
+      4.3,
+      4.8
+     ],
+     [
+      4.8,
+      4.7,
+      4.6,
+      4.8,
+      4.1,
+      4.6
+     ],
+     [
+      4.7,
+      4.5,
+      4.8,
+      4.8,
+      4.2,
+      4.6
+     ],
+     [
+      2.9,
+      2.6,
+      2.8,
+      3.1,
+      2.6,
+      2.8
+     ],
+     [
+      4.9,
+      4.8,
+      4.7,
+      4.9,
+      4.2,
+      4.7
+     ],
+     [
+      4.6,
+      4.8,
+      4.6,
+      4.7,
+      4.3,
+      4.6
+     ],
+     [
+      4.8,
+      4.6,
+      4.7,
+      4.7,
+      4.2,
+      4.6
+     ],
+     [
+      4.4,
+      4.1,
+      4.4,
+      4.6,
+      4,
+      4.3
+     ]
+    ],
+    "bad": 3.5,
+    "good": 4.5
+   },
+   {
+    "title": "Video editors",
+    "kind": "grid",
+    "note": "All sixteen were graded. Marcus E is below 3 on three of the five behaviours, with Speed at 2.6 the weakest. After him the lowest editors are Otto K at 3.9 and Bea C at 4.0, in Pods 3 and 2. Speed is the weakest column in all four pods.",
+    "columns": [
+     "Editor",
+     "Ownership",
+     "Proactive",
+     "Performance driven",
+     "Reliable",
+     "Speed",
+     "Overall"
+    ],
+    "rowLabels": [
+     "Leo B",
+     "Amira D",
+     "Kit F",
+     "Rosa M",
+     "Sam O",
+     "Yusuf A",
+     "Bea C",
+     "Niall G",
+     "Iris T",
+     "Hugo L",
+     "Freya J",
+     "Otto K",
+     "Nina S",
+     "Marcus E",
+     "Lena H",
+     "Arun V"
+    ],
+    "sublabels": [
+     "Pod 1",
+     "Pod 1",
+     "Pod 1",
+     "Pod 1",
+     "Pod 2",
+     "Pod 2",
+     "Pod 2",
+     "Pod 2",
+     "Pod 3",
+     "Pod 3",
+     "Pod 3",
+     "Pod 3",
+     "Pod 4",
+     "Pod 4",
+     "Pod 4",
+     "Pod 4"
+    ],
+    "values": [
+     [
+      4.7,
+      4.5,
+      4.7,
+      4.8,
+      4.3,
+      4.6
+     ],
+     [
+      4.5,
+      4.3,
+      4.4,
+      4.7,
+      4.1,
+      4.4
+     ],
+     [
+      4.2,
+      3.9,
+      4.1,
+      4.5,
+      3.8,
+      4.1
+     ],
+     [
+      4.6,
+      4.4,
+      4.5,
+      4.8,
+      4.2,
+      4.5
+     ],
+     [
+      4.6,
+      4.4,
+      4.6,
+      4.7,
+      4.2,
+      4.5
+     ],
+     [
+      4.4,
+      4.2,
+      4.3,
+      4.6,
+      4,
+      4.3
+     ],
+     [
+      4.1,
+      3.8,
+      4,
+      4.4,
+      3.7,
+      4
+     ],
+     [
+      4.5,
+      4.2,
+      4.4,
+      4.7,
+      4.2,
+      4.4
+     ],
+     [
+      4.7,
+      4.6,
+      4.6,
+      4.8,
+      4.3,
+      4.6
+     ],
+     [
+      4.2,
+      4,
+      4.1,
+      4.4,
+      3.8,
+      4.1
+     ],
+     [
+      4.6,
+      4.4,
+      4.5,
+      4.7,
+      4.3,
+      4.5
+     ],
+     [
+      4,
+      3.7,
+      3.9,
+      4.3,
+      3.6,
+      3.9
+     ],
+     [
+      4.3,
+      4.1,
+      4.2,
+      4.5,
+      3.9,
+      4.2
+     ],
+     [
+      3,
+      2.8,
+      2.9,
+      3.2,
+      2.6,
+      2.9
+     ],
+     [
+      4.5,
+      4.3,
+      4.4,
+      4.6,
+      4.2,
+      4.4
+     ],
+     [
+      4.3,
+      4,
+      4.2,
+      4.5,
+      4,
+      4.2
+     ]
+    ],
+    "bad": 3.5,
+    "good": 4.5
+   },
+   {
+    "title": "Outside the pods",
+    "kind": "grid",
+    "note": "A blank row means no grade was taken this week, not a low score. Nativ does the grading so is not graded himself. Elena V, Oscar T and Nadia S have no lead who owns their weekly grade, so nothing was recorded. That is four of these six people, and it is the whole of the company gap.",
+    "columns": [
+     "Name",
+     "Ownership",
+     "Proactive",
+     "Performance driven",
+     "Reliable",
+     "Speed",
+     "Overall"
+    ],
+    "rowLabels": [
+     "Nativ",
+     "Aisha K",
+     "Rhys M",
+     "Elena V",
+     "Oscar T",
+     "Nadia S"
+    ],
+    "sublabels": [
+     "Owner, grades others",
+     "Creative Lead",
+     "Editing Lead",
+     "Ops Manager, not graded",
+     "Motion Designer, not graded",
+     "Creative Producer, not graded"
+    ],
+    "values": [
+     [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ],
+     [
+      4.9,
+      4.8,
+      4.7,
+      4.8,
+      4.3,
+      4.7
+     ],
+     [
+      4.6,
+      4.4,
+      4.5,
+      4.8,
+      4.2,
+      4.5
+     ],
+     [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ],
+     [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ],
+     [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    ],
+    "bad": 3.5,
+    "good": 4.5,
+    "nullLabel": "Not graded"
+   },
+   {
+    "title": "Twelve months",
+    "kind": "trends",
+    "note": "October to September. People graded and grades below 3 are the average week in each month.",
+    "trends": [
+     {
+      "name": "Company average",
+      "value": "4.3",
+      "deltaDir": "up",
+      "deltaText": "0.1",
+      "deltaGood": true,
+      "series": [
+       3.8,
+       3.9,
+       3.9,
+       4,
+       4.1,
+       4,
+       4.2,
+       4.1,
+       4.2,
+       4.3,
+       4.2,
+       4.3
+      ],
+      "lo": 3.5,
+      "hi": 4.6
+     },
+     {
+      "name": "People graded each week",
+      "value": "26",
+      "deltaDir": "up",
+      "deltaText": "2",
+      "deltaGood": true,
+      "series": [
+       22,
+       24,
+       19,
+       25,
+       27,
+       26,
+       28,
+       27,
+       25,
+       29,
+       24,
+       26
+      ],
+      "lo": 16,
+      "hi": 30
+     },
+     {
+      "name": "Grades below 3",
+      "value": "2",
+      "deltaDir": "down",
+      "deltaText": "1",
+      "deltaGood": true,
+      "series": [
+       5,
+       4,
+       3,
+       4,
+       3,
+       3,
+       2,
+       3,
+       2,
+       1,
+       3,
+       2
+      ],
+      "lo": 0,
+      "hi": 6
+     },
+     {
+      "name": "Strategist average",
+      "value": "4.4",
+      "deltaDir": "up",
+      "deltaText": "0.1",
+      "deltaGood": true,
+      "series": [
+       3.9,
+       4,
+       4,
+       4.1,
+       4.2,
+       4.1,
+       4.3,
+       4.2,
+       4.3,
+       4.4,
+       4.3,
+       4.4
+      ],
+      "lo": 3.6,
+      "hi": 4.7
+     },
+     {
+      "name": "Editor average",
+      "value": "4.2",
+      "deltaDir": "up",
+      "deltaText": "0.1",
+      "deltaGood": true,
+      "series": [
+       3.7,
+       3.8,
+       3.8,
+       3.9,
+       4,
+       3.9,
+       4.1,
+       4,
+       4.1,
+       4.2,
+       4.1,
+       4.2
+      ],
+      "lo": 3.4,
+      "hi": 4.5
+     }
+    ]
+   }
+  ]
+ },
+ "colleague-sat": {
+  "id": "colleague-satisfaction",
+  "intro": "Where the 8.1 comes from, broken to pod and then to the 24 people who answered, with the six who did not.",
+  "stats": [
+   {
+    "label": "Company score",
+    "value": "8.1 / 10",
+    "sub": "Target 8.0. Down 0.2 on August.",
+    "tone": "pos"
+   },
+   {
+    "label": "Responses returned",
+    "value": "24 of 30",
+    "sub": "80 per cent. Two fewer than August.",
+    "tone": "neg"
+   },
+   {
+    "label": "Lowest scoring question",
+    "value": "Workload 6.9",
+    "sub": "Lowest of the six questions.",
+    "tone": "neg"
+   },
+   {
+    "label": "People below 7",
+    "value": "4",
+    "sub": "All four are in Pod 3.",
+    "tone": "neg"
+   }
+  ],
+  "sections": [
+   {
+    "title": "By pod",
+    "kind": "table",
+    "note": "Each pod score is the average of the people in that pod who answered. Pod 3's 6.7 rests on four replies out of six, so the two who stayed quiet are not in it.",
+    "columns": [
+     "Pod",
+     "Lead",
+     "People",
+     "Responded",
+     "Score",
+     "Against target"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Pod 1",
+       "Maya R",
+       "6",
+       "6 of 6",
+       "8.6",
+       "+0.6"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Pod 2",
+       "Callum B",
+       "6",
+       "5 of 6",
+       "8.2",
+       "+0.2"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Pod 3",
+       "Priya N",
+       "6",
+       "4 of 6",
+       "6.7",
+       "-1.3"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Pod 4",
+       "Tom H",
+       "6",
+       "6 of 6",
+       "8.4",
+       "+0.4"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Outside pods",
+       "Nativ",
+       "6",
+       "3 of 6",
+       "8.2",
+       "+0.2"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Company",
+       "",
+       "30",
+       "24 of 30",
+       "8.1",
+       "+0.1"
+      ],
+      "tone": "pos"
+     }
+    ]
+   },
+   {
+    "title": "The six questions, by group",
+    "kind": "grid",
+    "note": "Workload is the lowest score in all five groups, and Pod 3 is the lowest group on all six questions.",
+    "columns": [
+     "Group",
+     "Workload",
+     "Clarity of role",
+     "Support from my lead",
+     "Growth and progression",
+     "Tools and process",
+     "Would recommend NSY",
+     "Average"
+    ],
+    "rowLabels": [
+     "Pod 1",
+     "Pod 2",
+     "Pod 3",
+     "Pod 4",
+     "Outside pods"
+    ],
+    "sublabels": [
+     "Maya R, 6 of 6",
+     "Callum B, 5 of 6",
+     "Priya N, 4 of 6",
+     "Tom H, 6 of 6",
+     "Nativ, 3 of 6"
+    ],
+    "values": [
+     [
+      7.5,
+      9,
+      9.1,
+      8.2,
+      8.8,
+      9,
+      8.6
+     ],
+     [
+      7,
+      8.6,
+      8.5,
+      8.1,
+      8.5,
+      8.5,
+      8.2
+     ],
+     [
+      5.2,
+      7.1,
+      6.7,
+      6.3,
+      7.3,
+      7.6,
+      6.7
+     ],
+     [
+      7.4,
+      8.8,
+      8.9,
+      7.9,
+      8.6,
+      8.8,
+      8.4
+     ],
+     [
+      6.8,
+      8.6,
+      8.1,
+      8.3,
+      8.5,
+      8.9,
+      8.2
+     ]
+    ],
+    "bad": 7.5,
+    "good": 8.5
+   },
+   {
+    "title": "Every person",
+    "kind": "table",
+    "columns": [
+     "Person",
+     "Pod",
+     "Role",
+     "Score",
+     "Against target"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Maya R",
+       "Pod 1",
+       "Strategist, pod lead",
+       "9.0",
+       "+1.0"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Jonah P",
+       "Pod 1",
+       "Strategist",
+       "8.8",
+       "+0.8"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Leo B",
+       "Pod 1",
+       "Editor",
+       "8.7",
+       "+0.7"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Amira D",
+       "Pod 1",
+       "Editor",
+       "8.5",
+       "+0.5"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Kit F",
+       "Pod 1",
+       "Editor",
+       "8.3",
+       "+0.3"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Rosa M",
+       "Pod 1",
+       "Editor",
+       "8.3",
+       "+0.3"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Callum B",
+       "Pod 2",
+       "Strategist, pod lead",
+       "8.8",
+       "+0.8"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Sofia L",
+       "Pod 2",
+       "Strategist",
+       "8.5",
+       "+0.5"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Sam O",
+       "Pod 2",
+       "Editor",
+       "8.2",
+       "+0.2"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Yusuf A",
+       "Pod 2",
+       "Editor",
+       "7.9",
+       "-0.1"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Bea C",
+       "Pod 2",
+       "Editor",
+       "7.6",
+       "-0.4"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Niall G",
+       "Pod 2",
+       "Editor",
+       "Not returned",
+       "n/a"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Priya N",
+       "Pod 3",
+       "Strategist, pod lead",
+       "6.9",
+       "-1.1"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Dan W",
+       "Pod 3",
+       "Strategist",
+       "6.9",
+       "-1.1"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Iris T",
+       "Pod 3",
+       "Editor",
+       "6.6",
+       "-1.4"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Freya J",
+       "Pod 3",
+       "Editor",
+       "6.4",
+       "-1.6"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Hugo L",
+       "Pod 3",
+       "Editor",
+       "Not returned",
+       "n/a"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Otto K",
+       "Pod 3",
+       "Editor",
+       "Not returned",
+       "n/a"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Tom H",
+       "Pod 4",
+       "Strategist, pod lead",
+       "8.9",
+       "+0.9"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Grace A",
+       "Pod 4",
+       "Strategist",
+       "8.7",
+       "+0.7"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Nina S",
+       "Pod 4",
+       "Editor",
+       "8.5",
+       "+0.5"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Marcus E",
+       "Pod 4",
+       "Editor",
+       "8.3",
+       "+0.3"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Lena H",
+       "Pod 4",
+       "Editor",
+       "8.1",
+       "+0.1"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Arun V",
+       "Pod 4",
+       "Editor",
+       "7.9",
+       "-0.1"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Aisha K",
+       "Outside pods",
+       "Creative Lead",
+       "8.6",
+       "+0.6"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Elena V",
+       "Outside pods",
+       "Ops Manager",
+       "8.2",
+       "+0.2"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Nadia S",
+       "Outside pods",
+       "Creative Producer",
+       "7.8",
+       "-0.2"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Nativ",
+       "Outside pods",
+       "Owner",
+       "Not returned",
+       "n/a"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Rhys M",
+       "Outside pods",
+       "Editing Lead",
+       "Not returned",
+       "n/a"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Oscar T",
+       "Outside pods",
+       "Motion Designer",
+       "Not returned",
+       "n/a"
+      ],
+      "tone": "none"
+     }
+    ],
+    "caveat": "Putting a name against a score ends the anonymous pulse: from here people are filling in a form they know you will read next to their name, and named answers come back higher and blander than anonymous ones."
+   },
+   {
+    "title": "Twelve months",
+    "kind": "trends",
+    "note": "All four measures moved the wrong way in September. Workload has fallen every month since February.",
+    "trends": [
+     {
+      "name": "Company score",
+      "value": "8.1",
+      "deltaDir": "down",
+      "deltaText": "0.2",
+      "deltaGood": false,
+      "series": [
+       7.6,
+       7.8,
+       7.9,
+       8,
+       8.2,
+       8.3,
+       8.4,
+       8.5,
+       8.4,
+       8.3,
+       8.3,
+       8.1
+      ],
+      "lo": 7,
+      "hi": 9
+     },
+     {
+      "name": "Responses returned",
+      "value": "24",
+      "deltaDir": "down",
+      "deltaText": "2",
+      "deltaGood": false,
+      "series": [
+       27,
+       26,
+       22,
+       28,
+       27,
+       26,
+       27,
+       26,
+       25,
+       23,
+       26,
+       24
+      ],
+      "lo": 18,
+      "hi": 30
+     },
+     {
+      "name": "Workload score",
+      "value": "6.9",
+      "deltaDir": "down",
+      "deltaText": "0.2",
+      "deltaGood": false,
+      "series": [
+       7.9,
+       8,
+       7.8,
+       7.9,
+       8,
+       7.9,
+       7.8,
+       7.6,
+       7.4,
+       7.2,
+       7.1,
+       6.9
+      ],
+      "lo": 6,
+      "hi": 9
+     },
+     {
+      "name": "Would recommend NSY score",
+      "value": "8.6",
+      "deltaDir": "down",
+      "deltaText": "0.2",
+      "deltaGood": false,
+      "series": [
+       8.2,
+       8.3,
+       8.4,
+       8.5,
+       8.7,
+       8.8,
+       8.9,
+       9,
+       8.9,
+       8.8,
+       8.8,
+       8.6
+      ],
+      "lo": 7.5,
+      "hi": 9.5
+     }
+    ]
+   }
+  ]
+ },
+ "checklist": {
+  "id": "eod-checklist-completion",
+  "intro": "Thirty people file a checklist at the end of each working day. In September 515 of 660 arrived, so 145 did not.",
+  "stats": [
+   {
+    "label": "September completion",
+    "value": "78%",
+    "sub": "Target 100%",
+    "tone": "neg"
+   },
+   {
+    "label": "Checklists missed",
+    "value": "145",
+    "sub": "515 filed of 660 due",
+    "tone": "neg"
+   },
+   {
+    "label": "Days the full team filed",
+    "value": "2 of 22",
+    "sub": "Same as August",
+    "tone": "neg"
+   },
+   {
+    "label": "Checklists naming a blocker",
+    "value": "96",
+    "sub": "19% of the 515 filed",
+    "tone": "flat"
+   },
+   {
+    "label": "Weakest pod",
+    "value": "Pod 4 at 59%",
+    "sub": "Tom H, 78 filed of 132",
+    "tone": "neg"
+   }
+  ],
+  "sections": [
+   {
+    "title": "By pod",
+    "kind": "table",
+    "note": "Six people in each pod, plus the six who sit outside them. Twenty-two working days each, so 132 checklists due per group. No pod hits 100%, so the flag marks anything more than 20 points short.",
+    "columns": [
+     "Pod",
+     "Lead",
+     "People",
+     "Due",
+     "Filed",
+     "Completion",
+     "Against 100%"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Pod 3",
+       "Priya N",
+       "6",
+       "132",
+       "117",
+       "89%",
+       "-11 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "No pod",
+       "Nativ",
+       "6",
+       "132",
+       "114",
+       "86%",
+       "-14 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Pod 1",
+       "Maya R",
+       "6",
+       "132",
+       "106",
+       "80%",
+       "-20 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Pod 2",
+       "Callum B",
+       "6",
+       "132",
+       "100",
+       "76%",
+       "-24 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Pod 4",
+       "Tom H",
+       "6",
+       "132",
+       "78",
+       "59%",
+       "-41 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "All 30",
+       "",
+       "30",
+       "660",
+       "515",
+       "78%",
+       "-22 pts"
+      ],
+      "tone": "neg"
+     }
+    ]
+   },
+   {
+    "title": "By person, all 30",
+    "kind": "table",
+    "note": "Grouped by pod, weakest at the foot of each block. Flagged good only at 100%, flagged bad under 80%. Fourteen of the thirty are under 80%.",
+    "columns": [
+     "Person",
+     "Pod",
+     "Role",
+     "Filed of due",
+     "Completion",
+     "Against 100%"
+    ],
+    "rows": [
+     {
+      "cells": [
+       "Maya R",
+       "Pod 1",
+       "Strategist, pod lead",
+       "21 of 22",
+       "95%",
+       "-5 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Jonah P",
+       "Pod 1",
+       "Strategist",
+       "19 of 22",
+       "86%",
+       "-14 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Leo B",
+       "Pod 1",
+       "Editor",
+       "18 of 22",
+       "82%",
+       "-18 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Amira D",
+       "Pod 1",
+       "Editor",
+       "17 of 22",
+       "77%",
+       "-23 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Kit F",
+       "Pod 1",
+       "Editor",
+       "16 of 22",
+       "73%",
+       "-27 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Rosa M",
+       "Pod 1",
+       "Editor",
+       "15 of 22",
+       "68%",
+       "-32 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Callum B",
+       "Pod 2",
+       "Strategist, pod lead",
+       "20 of 22",
+       "91%",
+       "-9 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Sofia L",
+       "Pod 2",
+       "Strategist",
+       "18 of 22",
+       "82%",
+       "-18 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Sam O",
+       "Pod 2",
+       "Editor",
+       "17 of 22",
+       "77%",
+       "-23 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Yusuf A",
+       "Pod 2",
+       "Editor",
+       "16 of 22",
+       "73%",
+       "-27 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Niall G",
+       "Pod 2",
+       "Editor",
+       "15 of 22",
+       "68%",
+       "-32 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Bea C",
+       "Pod 2",
+       "Editor",
+       "14 of 22",
+       "64%",
+       "-36 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Priya N",
+       "Pod 3",
+       "Strategist, pod lead",
+       "22 of 22",
+       "100%",
+       "On target"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Dan W",
+       "Pod 3",
+       "Strategist",
+       "20 of 22",
+       "91%",
+       "-9 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Iris T",
+       "Pod 3",
+       "Editor",
+       "20 of 22",
+       "91%",
+       "-9 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Hugo L",
+       "Pod 3",
+       "Editor",
+       "19 of 22",
+       "86%",
+       "-14 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Freya J",
+       "Pod 3",
+       "Editor",
+       "18 of 22",
+       "82%",
+       "-18 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Otto K",
+       "Pod 3",
+       "Editor",
+       "18 of 22",
+       "82%",
+       "-18 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Tom H",
+       "Pod 4",
+       "Strategist, pod lead",
+       "16 of 22",
+       "73%",
+       "-27 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Grace A",
+       "Pod 4",
+       "Strategist",
+       "15 of 22",
+       "68%",
+       "-32 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Nina S",
+       "Pod 4",
+       "Editor",
+       "13 of 22",
+       "59%",
+       "-41 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Marcus E",
+       "Pod 4",
+       "Editor",
+       "12 of 22",
+       "55%",
+       "-45 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Lena H",
+       "Pod 4",
+       "Editor",
+       "11 of 22",
+       "50%",
+       "-50 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Arun V",
+       "Pod 4",
+       "Editor",
+       "11 of 22",
+       "50%",
+       "-50 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "Elena V",
+       "Outside pods",
+       "Ops Manager",
+       "22 of 22",
+       "100%",
+       "On target"
+      ],
+      "tone": "pos"
+     },
+     {
+      "cells": [
+       "Rhys M",
+       "Outside pods",
+       "Editing Lead",
+       "21 of 22",
+       "95%",
+       "-5 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Aisha K",
+       "Outside pods",
+       "Creative Lead",
+       "20 of 22",
+       "91%",
+       "-9 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Oscar T",
+       "Outside pods",
+       "Motion Designer",
+       "20 of 22",
+       "91%",
+       "-9 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Nadia S",
+       "Outside pods",
+       "Creative Producer",
+       "19 of 22",
+       "86%",
+       "-14 pts"
+      ],
+      "tone": "none"
+     },
+     {
+      "cells": [
+       "Nativ",
+       "Outside pods",
+       "Owner",
+       "12 of 22",
+       "55%",
+       "-45 pts"
+      ],
+      "tone": "neg"
+     },
+     {
+      "cells": [
+       "All 30",
+       "",
+       "",
+       "515 of 660",
+       "78%",
+       "-22 pts"
+      ],
+      "tone": "neg"
+     }
+    ]
+   },
+   {
+    "title": "Twelve months to September",
+    "kind": "trends",
+    "note": "Editors have sat below strategists in every one of the twelve months. Blockers named is a count of filed checklists, not a percentage, and more of them means the checklist is doing the job it exists for.",
+    "trends": [
+     {
+      "name": "Company completion",
+      "value": "78%",
+      "deltaDir": "up",
+      "deltaText": "2 pts",
+      "deltaGood": true,
+      "series": [
+       62,
+       65,
+       68,
+       71,
+       69,
+       74,
+       76,
+       73,
+       78,
+       80,
+       76,
+       78
+      ],
+      "lo": 55,
+      "hi": 100
+     },
+     {
+      "name": "Editor completion",
+      "value": "71%",
+      "deltaDir": "up",
+      "deltaText": "2 pts",
+      "deltaGood": true,
+      "series": [
+       54,
+       57,
+       60,
+       64,
+       62,
+       67,
+       69,
+       66,
+       71,
+       74,
+       69,
+       71
+      ],
+      "lo": 45,
+      "hi": 100
+     },
+     {
+      "name": "Strategist completion",
+      "value": "86%",
+      "deltaDir": "up",
+      "deltaText": "1 pt",
+      "deltaGood": true,
+      "series": [
+       72,
+       76,
+       79,
+       81,
+       79,
+       84,
+       85,
+       83,
+       88,
+       90,
+       85,
+       86
+      ],
+      "lo": 65,
+      "hi": 100
+     },
+     {
+      "name": "Checklists naming a blocker",
+      "value": "96",
+      "deltaDir": "up",
+      "deltaText": "17",
+      "deltaGood": true,
+      "series": [
+       41,
+       48,
+       52,
+       61,
+       58,
+       70,
+       74,
+       69,
+       83,
+       88,
+       79,
+       96
+      ],
+      "lo": 30,
+      "hi": 110
+     },
+     {
+      "name": "Days with the full team filed",
+      "value": "2 of 22",
+      "deltaDir": "flat",
+      "deltaText": "0",
+      "deltaGood": false,
+      "series": [
+       0,
+       0,
+       1,
+       1,
+       0,
+       2,
+       3,
+       1,
+       3,
+       4,
+       2,
+       2
+      ],
+      "lo": 0,
+      "hi": 6
+     }
+    ]
+   }
+  ]
+ }
+};
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
@@ -1027,21 +4354,18 @@ function monotone(pts) {
 
 /* Sparklines are scaled to the metric's own range, not to the series'
    extremes, so a small drift reads as small and a large climb as large. */
-function drawSpark(el, k) {
-  var W = el.clientWidth, H = el.clientHeight;
-  if (!W || !H) return;
-  var lo = k.domain[0], hi = k.domain[1], span = hi - lo || 1;
+function sparkMarkup(series, lo, hi, W, H, gid) {
+  var span = (hi - lo) || 1;
   var padT = 8, padB = 6, padR = 6;
-  var n = k.series.length;
-  var pts = k.series.map(function (v, i) {
+  var n = series.length;
+  var pts = series.map(function (v, i) {
     return [(i / (n - 1)) * (W - padR), padT + (1 - (v - lo) / span) * (H - padT - padB)];
   });
   var last = pts[n - 1];
   var line = monotone(pts);
   var area = line + ' L' + last[0].toFixed(2) + ' ' + H + ' L0 ' + H + ' Z';
-  var gid = 'sg-' + k.id;
 
-  el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true">'
+  return '<svg viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true">'
     + '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">'
     + '<stop offset="0%" stop-color="#7A94FF" stop-opacity="0.22"/>'
     + '<stop offset="100%" stop-color="#7A94FF" stop-opacity="0"/>'
@@ -1051,6 +4375,12 @@ function drawSpark(el, k) {
     + ' stroke-linecap="round" stroke-linejoin="round"/>'
     + '<circle cx="' + last[0].toFixed(2) + '" cy="' + last[1].toFixed(2) + '" r="3" fill="#F4F6FA"/>'
     + '</svg>';
+}
+
+function drawSpark(el, k) {
+  var W = el.clientWidth, H = el.clientHeight;
+  if (!W || !H) return;
+  el.innerHTML = sparkMarkup(k.series, k.domain[0], k.domain[1], W, H, 'sg-' + k.id);
 }
 
 /* ---------- The chart ----------
@@ -1305,6 +4635,181 @@ function behind(k) {
     + '</div>';
 }
 
+/* ---------- KPI detail pages ----------
+   A page is a hero, a strip of sub figures, the twelve month chart, then
+   the sections that break the number apart. Sections come in three
+   shapes: rows carrying a sparkline, a plain table, and a score grid. */
+
+var TRENDS = [];
+
+/* Right align a column when its figures are numbers, leave it left when
+   they are words, so the tables set themselves without hand tuning. */
+function numericCol(rows, i) {
+  var seen = 0, num = 0;
+  rows.forEach(function (r) {
+    var c = r.cells[i];
+    if (c === undefined || c === null || c === '') return;
+    seen++;
+    if (/^[-+(]?[£$]?[\d.,]+%?\)?$/.test(String(c).trim())) num++;
+  });
+  return seen > 0 && num / seen > 0.6;
+}
+
+function rowClass(cells) {
+  var first = String(cells[0] || '').trim();
+  if (/^Total\b/i.test(first)) return ' class="total"';
+  if (/^(Operating profit|Delivery margin|Gross margin|Net)\b/i.test(first)) return ' class="rule"';
+  return '';
+}
+
+function tableSection(sec) {
+  var cols = sec.columns || [];
+  var rows = sec.rows || [];
+  var right = cols.map(function (c, i) { return i > 0 && numericCol(rows, i); });
+
+  return '<div class="scroll-x"><table class="dt"><thead><tr>'
+    + cols.map(function (c, i) {
+        return '<th' + (right[i] ? ' class="r"' : '') + ' scope="col">' + esc(c) + '</th>';
+      }).join('')
+    + '</tr></thead><tbody>'
+    + rows.map(function (r) {
+        var last = r.cells.length - 1;
+        return '<tr' + rowClass(r.cells) + '>'
+          + r.cells.map(function (c, i) {
+              var cls = [];
+              if (right[i]) cls.push('r');
+              if (i === 0) cls.push('name');
+              else if (!right[i]) cls.push('dim');
+              if (i === last && r.tone && r.tone !== 'none') cls.push(r.tone);
+              cls.push('num');
+              return '<td class="' + cls.join(' ') + '">' + esc(c) + '</td>';
+            }).join('')
+          + '</tr>';
+      }).join('')
+    + '</tbody></table></div>';
+}
+
+/* Three bands, not a gradient. Coloured by what the score means against
+   its target rather than by where it falls on a ramp, so a genuinely bad
+   cell cannot clamp to the floor and read as merely poor. */
+function band(v, bad, good) {
+  if (v < bad) return 'bad';
+  if (v >= good) return 'good';
+  return '';
+}
+
+function gridSection(sec) {
+  var cols = sec.columns || [];
+  var labels = sec.rowLabels || [];
+  var subs = sec.sublabels || [];
+  var vals = sec.values || [];
+  var bad = sec.bad, good = sec.good;
+  var blank = sec.nullLabel || 'Not returned';
+
+  return '<div class="scroll-x"><table class="dt"><thead><tr>'
+    + cols.map(function (c, i) {
+        return '<th' + (i > 0 ? ' class="r"' : '') + ' scope="col">' + esc(c) + '</th>';
+      }).join('')
+    + '</tr></thead><tbody>'
+    + labels.map(function (name, r) {
+        var row = vals[r] || [];
+        var last = row.length - 1;
+        return '<tr><td class="name">' + esc(name)
+          + (subs[r] ? '<span class="sub-lab">' + esc(subs[r]) + '</span>' : '') + '</td>'
+          + row.map(function (v, i) {
+              if (v === null || v === undefined) {
+                return i === last ? '<td class="cell none">' + esc(blank) + '</td>' : '<td class="cell none"></td>';
+              }
+              if (i === last) return '<td class="avg num">' + v.toFixed(1) + '</td>';
+              return '<td class="cell num ' + band(v, bad, good) + '">' + v.toFixed(1) + '</td>';
+            }).join('')
+          + '</tr>';
+      }).join('')
+    + '</tbody></table></div>';
+}
+
+function trendsSection(sec) {
+  return '<div class="card trendrows">'
+    + (sec.trends || []).map(function (t) {
+        var i = TRENDS.push({ series: t.series, lo: t.lo, hi: t.hi }) - 1;
+        return '<div class="trow">'
+          + '<span class="tr-name">' + esc(t.name) + '</span>'
+          + '<span class="tr-val num">' + esc(t.value) + '</span>'
+          + '<span class="tr-d delta ' + (t.deltaGood ? 'good' : 'bad') + '">'
+          + arrow(t.deltaDir)
+          + '<span class="sr-only">' + (t.deltaDir === 'up' ? 'Up ' : t.deltaDir === 'down' ? 'Down ' : '') + '</span>'
+          + esc(t.deltaText) + '</span>'
+          + '<span class="tr-spark" data-tr="' + i + '"></span>'
+          + '</div>';
+      }).join('')
+    + '</div>';
+}
+
+function section(sec) {
+  var body = sec.kind === 'trends' ? trendsSection(sec)
+    : sec.kind === 'grid' ? gridSection(sec)
+    : tableSection(sec);
+
+  return '<section class="sect">'
+    + '<h3>' + esc(sec.title) + '</h3>'
+    + (sec.note ? '<p class="s-note">' + esc(sec.note) + '</p>' : '')
+    + body
+    + (sec.caveat ? '<p class="caveat"><b>Worth knowing.</b> ' + esc(sec.caveat) + '</p>' : '')
+    + '</section>';
+}
+
+function kpiPage() {
+  var k = kpiById(openKpi);
+  var d = DETAIL[openKpi];
+  TRENDS = [];
+
+  var hero = '<section class="card hero">'
+    + '<span class="h-val num">' + esc(k.value)
+    + (k.unit ? '<span class="unit">' + esc(k.unit) + '</span>' : '') + '</span>'
+    + '<span class="h-meta">'
+    + '<span class="delta ' + (k.delta.good ? 'good' : 'bad') + '">' + arrow(k.delta.dir)
+    + '<span class="sr-only">' + (k.delta.dir === 'up' ? 'Up ' : 'Down ') + '</span>'
+    + esc(k.delta.text) + '</span>'
+    + '<span class="h-tgt">' + esc(k.targetLabel) + '</span>'
+    + '</span>'
+    + '<p class="h-intro">' + esc(d ? d.intro : k.definition) + '</p>'
+    + '</section>';
+
+  var stats = d && d.stats && d.stats.length
+    ? '<div class="statstrip">'
+      + d.stats.map(function (x) {
+          return '<div class="card stat ' + (x.tone === 'flat' ? '' : esc(x.tone)) + '">'
+            + '<span class="s-lab">' + esc(x.label) + '</span>'
+            + '<span class="s-val num">' + esc(x.value) + '</span>'
+            + '<span class="s-sub">' + esc(x.sub) + '</span>'
+            + '</div>';
+        }).join('')
+      + '</div>'
+    : '';
+
+  return '<button type="button" class="back" id="back">'
+    + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+    + ' stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M15 18l-6-6 6-6"/></svg>Back to overview</button>'
+    + hero
+    + stats
+    + '<section class="card detail">' + detailShell() + '</section>'
+    + (d ? d.sections.map(section).join('') : '')
+    + '<section class="card behind">' + behind(k) + '</section>';
+}
+
+function drawTrendSparks() {
+  Array.prototype.forEach.call(document.querySelectorAll('[data-tr]'), function (el) {
+    var t = TRENDS[Number(el.getAttribute('data-tr'))];
+    if (!t) return;
+    var W = el.clientWidth, H = el.clientHeight;
+    if (!W || !H) return;
+    el.innerHTML = sparkMarkup(t.series, t.lo, t.hi, W, H, 'tr-' + el.getAttribute('data-tr'));
+  });
+}
+
+var openKpi = 'mrr';
+
 var selectedKpi = 'mrr';
 var currentRole = ROLES[0].id;
 var currentPeriod = 'WTD';
@@ -1411,6 +4916,15 @@ function render() {
     view.innerHTML = overview();
     drawSparks();
     setKpi(selectedKpi, false);
+  } else if (page === 'kpi') {
+    var k = kpiById(openKpi);
+    titleEl.innerHTML = esc(k.label) + ' <span class="pill">Placeholder data</span>';
+    subEl.textContent = 'What makes this number, broken down. Twelve months to September.';
+    headRight.hidden = false;
+    periodsEl.hidden = true;
+    view.innerHTML = kpiPage();
+    drawTrendSparks();
+    setKpi(openKpi, false);
   } else if (page === 'team') {
     titleEl.innerHTML = 'Team <span class="pill">Placeholder data</span>';
     subEl.textContent = 'Weekly leading indicators, ' + openDefs();
@@ -1467,9 +4981,19 @@ document.getElementById('scrim').addEventListener('click', function () { setNav(
 
 document.addEventListener('keydown', function (e) {
   if (e.key !== 'Escape') return;
-  if (!document.body.classList.contains('nav-open')) return;
-  setNav(false);
-  menuBtn.focus();
+  if (document.body.classList.contains('nav-open')) {
+    setNav(false);
+    menuBtn.focus();
+    return;
+  }
+  /* Escape backs out of a measure the same way the button does. */
+  if (page === 'kpi') {
+    page = 'overview';
+    window.scrollTo(0, 0);
+    render();
+    var tile = view.querySelector('.tile[data-kpi="' + openKpi + '"]');
+    if (tile) tile.focus();
+  }
 });
 
 document.querySelector('.rail').addEventListener('click', function (e) {
@@ -1502,6 +5026,8 @@ document.getElementById('periods').addEventListener('click', function (e) {
 
 /* Pointing at a measure brings its chart up, and keyboard focus does the
    same, so the two routes agree. */
+function hasChart() { return page === 'overview' || page === 'kpi'; }
+
 function tileTarget(e) {
   var t = e.target && e.target.closest ? e.target.closest('.tile') : null;
   return t ? t.getAttribute('data-kpi') : null;
@@ -1522,9 +5048,22 @@ view.addEventListener('focusin', function (e) {
 view.addEventListener('click', function (e) {
   var tile = e.target.closest('.tile');
   if (tile) {
-    var id = tile.getAttribute('data-kpi');
-    if (id !== CH.id) setKpi(id, true);
-    tile.focus();
+    openKpi = tile.getAttribute('data-kpi');
+    selectedKpi = openKpi;
+    page = 'kpi';
+    window.scrollTo(0, 0);
+    render();
+    var back = document.getElementById('back');
+    if (back) back.focus();
+    return;
+  }
+
+  if (e.target.closest('#back')) {
+    page = 'overview';
+    window.scrollTo(0, 0);
+    render();
+    var tileBack = view.querySelector('.tile[data-kpi="' + openKpi + '"]');
+    if (tileBack) tileBack.focus();
     return;
   }
 
@@ -1561,7 +5100,7 @@ view.addEventListener('click', function (e) {
 
 /* The readout appears only when the pointer is near the line itself. */
 view.addEventListener('pointermove', function (e) {
-  if (page !== 'overview') return;
+  if (!hasChart()) return;
   if (!e.target || !e.target.closest || !e.target.closest('#probe')) { hideReadout(); return; }
   moveReadout(e);
 });
@@ -1574,7 +5113,9 @@ window.addEventListener('resize', function () {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(function () {
     drawSparks();
+    drawTrendSparks();
     if (page === 'overview') { CH.pts = null; setKpi(selectedKpi, false); }
+    if (page === 'kpi') { CH.pts = null; setKpi(openKpi, false); }
   }, 100);
 });
 
