@@ -380,14 +380,16 @@ h1 {
 }
 
 .xaxis {
-  display: flex;
-  justify-content: space-between;
+  position: relative;
+  height: 18px;
   margin-top: 16px;
   font-size: 12px;
   color: var(--faint);
 }
 
-.xaxis span:last-child { color: var(--muted); }
+.xaxis span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+.xaxis .x-first { transform: none; }
+.xaxis .x-last { transform: translateX(-100%); color: var(--muted); }
 
 /* ---------- Supporting measures ---------- */
 
@@ -558,6 +560,7 @@ h1 {
   .chart { padding-left: 46px; padding-right: 18px; }
   .ylabel { left: -46px; width: 36px; }
   .callout { display: none; }
+  .xaxis .x-minor { display: none; }
   .mrow { grid-template-columns: minmax(0, 1fr) 110px; }
   .mrow .bar { grid-column: 1; }
   .src { justify-self: start; grid-column: 1 / -1; }
@@ -628,7 +631,7 @@ var KPIS = [
     target: 150,
     targetLabel: 'Target £150,000 a month',
     chartTitle: 'Monthly recurring revenue, last 12 months',
-    owner: 'Nativ and Creative Lead',
+    owner: 'Nativ and the Creative Lead',
     def: 'agreed',
     definition: 'Contracted retainer value invoiced in the calendar month. Project fees, one off edits and paused accounts are excluded.',
     capture: 'Captured by the fractional CFO at month end close, read straight from the invoicing ledger.',
@@ -640,82 +643,32 @@ var KPIS = [
     ]
   },
   {
-    id: 'retention',
-    label: 'Client retention rate',
-    value: '86',
-    unit: '%',
-    delta: { dir: 'down', text: '1 pt', good: false },
-    context: 'Target 90%',
-    series: [91, 90, 89, 91, 90, 88, 89, 88, 87, 88, 87, 86],
-    domain: [80, 95],
-    ticks: [80, 85, 90, 95],
-    fmt: function (v) { return v + '%'; },
-    target: 90,
-    targetLabel: 'Target 90% at six months',
-    chartTitle: 'Client retention rate, last 12 months',
-    owner: 'Creative Lead',
-    def: 'agreed',
-    definition: 'Share of accounts that started six months ago and are still on a live retainer today. A paused account counts as churned until it restarts.',
-    capture: 'Derived from contract start dates in Notion. No manual entry.',
-    support: [
-      { name: 'Client check ins held', owner: 'Creative Lead', v: '11 of 12', t: 'Weekly', hit: true },
-      { name: 'At risk signals flagged early', owner: 'Creative Lead', v: '2', t: 'Flagged in week', hit: true },
-      { name: 'Founder touch rate on calls', owner: 'Nativ', v: '34%', t: 'Target under 20%', hit: false },
-      { name: 'Accounts scoring under 7 on any question', owner: 'Creative Lead', v: '1', t: 'Target 0', hit: false }
-    ]
-  },
-  {
-    id: 'ltv',
-    label: 'Average client LTV',
-    value: '£58,200',
+    id: 'profit',
+    label: 'Operating profit',
+    value: '£38,200',
     unit: '',
-    delta: { dir: 'up', text: '13.2%', good: true },
-    context: 'vs last quarter',
-    series: [44.1, 45.2, 46.8, 47.9, 49.1, 50.2, 51.4, 53.0, 54.1, 55.8, 57.0, 58.2],
-    domain: [40, 60],
-    ticks: [40, 45, 50, 55, 60],
+    delta: { dir: 'up', text: '8.8%', good: true },
+    context: '22.4% of revenue',
+    series: [18.2, 19.4, 18.8, 21.6, 23.1, 25.4, 26.2, 24.8, 28.6, 31.2, 35.1, 38.2],
+    domain: [15, 46],
+    ticks: [15, 25, 35, 45],
     fmt: function (v) { return '£' + v + 'k'; },
-    target: null,
-    targetLabel: 'Target: grow every quarter',
-    chartTitle: 'Average client LTV, last 12 months',
-    owner: 'Creative Lead',
-    def: 'drafting',
-    definition: 'Average retainer value multiplied by average months retained. The open question is whether a paused account that later restarts counts as one life or two.',
-    capture: 'Calculated from the invoicing ledger each quarter. Waiting on the pause rule before it can be trusted.',
+    target: 42,
+    targetLabel: 'Target £42,000 a month',
+    chartTitle: 'Operating profit, last 12 months',
+    owner: 'Nativ and the fractional CFO',
+    def: 'agreed',
+    definition: 'Revenue less all delivery cost, payroll, contractor spend, tooling and overhead in the calendar month. Before tax and before founder drawings.',
+    capture: 'Closed by the fractional CFO in the month end pack. The only figure on this board that does not come from Notion.',
     support: [
-      { name: 'Average retainer value', owner: 'Nativ', v: '£6,100', t: 'Target £5,500', hit: true },
-      { name: 'Months to first upsell', owner: 'Creative Lead', v: '4.2', t: 'Target 3', hit: false },
-      { name: 'Accounts on a second service line', owner: 'Creative Lead', v: '5 of 14', t: 'Target 7', hit: false },
-      { name: 'Retention at six months', owner: 'Creative Lead', v: '86%', t: 'Target 90%', hit: false }
+      { name: 'Delivery margin', owner: 'Editing Lead', v: '61.8%', t: 'Target 60%', hit: true },
+      { name: 'Payroll as a share of revenue', owner: 'Fractional CFO', v: '48%', t: 'Target 45%', hit: false },
+      { name: 'Revenue per head', owner: 'Nativ', v: '£5,680', t: 'Target £6,000', hit: false },
+      { name: 'Contractor spend', owner: 'Fractional CFO', v: '£9,400', t: 'Target £12,000', hit: true }
     ]
   },
   {
-    id: 'delivery',
-    label: 'On time delivery rate',
-    value: '82',
-    unit: '%',
-    delta: { dir: 'down', text: '1 pt', good: false },
-    context: 'Target 90%',
-    series: [88, 89, 87, 90, 88, 86, 87, 85, 84, 86, 83, 82],
-    domain: [78, 94],
-    ticks: [80, 85, 90],
-    fmt: function (v) { return v + '%'; },
-    target: 90,
-    targetLabel: 'Target 90% by the agreed date',
-    chartTitle: 'On time delivery rate, last 12 months',
-    owner: 'Editing Lead',
-    def: 'drafting',
-    definition: 'Share of edits marked Delivered on or before the date agreed with the client.',
-    capture: 'Read from the Notion pipeline once tiering is settled. Until then the rate treats every edit as equal, so a five minute ad and a one minute cut weigh the same.',
-    support: [
-      { name: 'Edits shipped on time', owner: 'Editing Lead', v: '82%', t: 'Target 90%', hit: false },
-      { name: 'Edits sitting unassigned', owner: 'Editing Lead', v: '9', t: 'Target 3 or fewer', hit: false },
-      { name: 'Editor blockers cleared same day', owner: 'Editing Lead', v: '74%', t: 'Target 90%', hit: false },
-      { name: 'Revision turnaround', owner: 'Video Editor', v: '26h', t: 'Target 24h', hit: false }
-    ]
-  },
-  {
-    id: 'satisfaction',
+    id: 'client-sat',
     label: 'Client satisfaction',
     value: '8.8',
     unit: '/10',
@@ -740,28 +693,78 @@ var KPIS = [
     ]
   },
   {
-    id: 'capacity',
-    label: 'Team capacity utilisation',
-    value: '91',
-    unit: '%',
-    delta: { dir: 'up', text: '2 pts', good: false },
-    context: 'Target band 75 to 85%',
-    series: [78, 80, 79, 82, 81, 83, 84, 86, 88, 87, 89, 91],
-    domain: [74, 94],
-    ticks: [75, 80, 85, 90],
-    fmt: function (v) { return v + '%'; },
-    target: 85,
-    targetLabel: 'Top of band, 85%',
-    chartTitle: 'Team capacity utilisation, last 12 months',
+    id: 'colleague-perf',
+    label: 'Colleague performance',
+    value: '4.3',
+    unit: '/5',
+    delta: { dir: 'up', text: '0.1', good: true },
+    context: 'average weekly grade',
+    series: [3.8, 3.9, 3.9, 4.0, 4.1, 4.0, 4.2, 4.1, 4.2, 4.3, 4.2, 4.3],
+    domain: [3.5, 4.7],
+    ticks: [3.6, 4.0, 4.4],
+    fmt: function (v) { return v.toFixed(1); },
+    target: 4.0,
+    targetLabel: 'Target 4.0 out of 5',
+    chartTitle: 'Colleague performance, last 12 months',
     owner: 'Both leads',
     def: 'drafting',
-    definition: 'Booked hours against available hours across strategists and editors.',
-    capture: 'Would come from assignment counts in Notion. Nativ is right that this misreads a strategist holding three large accounts as under capacity, so account weight has to go into the calculation before the number means anything.',
+    definition: 'Every person is graded one to five each week by the lead they report to, against the five behaviours: ownership, proactive, performance driven, reliable, speed.',
+    capture: 'Entered by each lead on a Friday. The open question is whether one grade covers all five behaviours or whether each is scored separately.',
     support: [
-      { name: 'Edits shipped per editor per day', owner: 'Editing Lead', v: '3.8', t: 'Target 5', hit: false },
-      { name: 'Strategists holding four or more accounts', owner: 'Creative Lead', v: '3 of 8', t: 'Target 6', hit: false },
-      { name: 'Editors above 90% booked', owner: 'Editing Lead', v: '6 of 16', t: 'Target 0', hit: false },
-      { name: 'Strategists still ramping', owner: 'Creative Lead', v: '5', t: 'Of 8', hit: false }
+      { name: 'People graded this week', owner: 'Both leads', v: '26 of 30', t: 'Target 30', hit: false },
+      { name: 'Grades below 3', owner: 'Both leads', v: '2', t: 'Target 0', hit: false },
+      { name: 'One to ones held', owner: 'Both leads', v: '17 of 24', t: 'Weekly', hit: false },
+      { name: 'Ramping strategists at 4 or above', owner: 'Creative Lead', v: '3 of 5', t: 'Target 3', hit: true }
+    ]
+  },
+  {
+    id: 'colleague-sat',
+    label: 'Colleague satisfaction',
+    value: '8.1',
+    unit: '/10',
+    delta: { dir: 'down', text: '0.2', good: false },
+    context: '24 of 30 responded',
+    series: [7.6, 7.8, 7.9, 8.0, 8.2, 8.3, 8.4, 8.5, 8.4, 8.3, 8.3, 8.1],
+    domain: [7.2, 8.9],
+    ticks: [7.4, 8.0, 8.6],
+    fmt: function (v) { return v.toFixed(1); },
+    target: 8.0,
+    targetLabel: 'Target 8.0 out of 10',
+    chartTitle: 'Colleague satisfaction, last 12 months',
+    owner: 'Nativ and the Ops Manager',
+    def: 'agreed',
+    definition: 'Average of the six scored questions on the monthly team pulse. Anonymous, and reported at company level only, never per person.',
+    capture: 'Form sent on the last Friday of the month. Anonymity is the reason it is reported at company level, and that rule does not bend.',
+    support: [
+      { name: 'Pulse responses returned', owner: 'Ops Manager', v: '24 of 30', t: 'Target 27', hit: false },
+      { name: 'Lowest scoring question', owner: 'Ops Manager', v: '6.9', t: 'Workload', hit: false },
+      { name: 'Editors working past 19:00', owner: 'Editing Lead', v: '5 of 16', t: 'Target 0', hit: false },
+      { name: 'Voluntary leavers this quarter', owner: 'Nativ', v: '1', t: 'Target 0', hit: false }
+    ]
+  },
+  {
+    id: 'checklist',
+    label: 'End of day checklist completion',
+    value: '78',
+    unit: '%',
+    delta: { dir: 'up', text: '2 pts', good: true },
+    context: 'Target 95%',
+    series: [62, 65, 68, 71, 69, 74, 76, 73, 78, 80, 76, 78],
+    domain: [55, 100],
+    ticks: [60, 75, 90],
+    fmt: function (v) { return v + '%'; },
+    target: 95,
+    targetLabel: 'Target 95% filed every day',
+    chartTitle: 'End of day checklist completion, last 12 months',
+    owner: 'Ops Manager',
+    def: 'drafting',
+    definition: 'Share of the team who filed their end of day checklist before leaving, across every working day in the period.',
+    capture: 'Filed in Notion. Open question is whether a checklist filed the next morning counts as filed, and whether a blank one counts at all.',
+    support: [
+      { name: 'Editors filing by 18:00', owner: 'Editing Lead', v: '71%', t: 'Target 95%', hit: false },
+      { name: 'Strategists filing by 18:00', owner: 'Creative Lead', v: '86%', t: 'Target 95%', hit: false },
+      { name: 'Checklists naming a blocker', owner: 'Ops Manager', v: '44%', t: 'Target 80%', hit: false },
+      { name: 'Days with the full team filed', owner: 'Ops Manager', v: '2 of 5', t: 'Target 4', hit: false }
     ]
   }
 ];
@@ -1031,7 +1034,11 @@ function chart(k) {
     + '<span class="callout num" style="top:' + endTop.toFixed(2) + '%">'
     + esc(k.value + k.unit) + '</span>'
     + '</div>'
-    + '<div class="xaxis">' + MONTHS.map(function (m) { return '<span>' + m + '</span>'; }).join('') + '</div>'
+    + '<div class="xaxis">' + MONTHS.map(function (m, i) {
+        var n = MONTHS.length - 1;
+        var cls = i === 0 ? 'x-first' : i === n ? 'x-last' : (i % 3 === 0 ? '' : 'x-minor');
+        return '<span class="' + cls + '" style="left:' + ((i / n) * 100).toFixed(3) + '%">' + m + '</span>';
+      }).join('') + '</div>'
     + '</div>';
 }
 
