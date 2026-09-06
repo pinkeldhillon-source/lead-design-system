@@ -378,6 +378,67 @@ h1 {
 .plot-svg { position: absolute; inset: 0; }
 .plot-svg svg { display: block; width: 100%; height: 100%; overflow: visible; }
 
+.grid-layer { position: absolute; inset: 0; }
+
+/* The label layer cross fades while the line morphs underneath it. */
+.grid-layer,
+#chartTitle,
+#chartLegend,
+#callout,
+#behindCard {
+  transition: opacity 0.16s ease;
+}
+
+.is-out { opacity: 0; }
+
+/* Hover readout. The probe catches the pointer; the hit test against the
+   drawn curve happens in script, so this only appears near the line. */
+.probe { position: absolute; inset: 0; cursor: crosshair; }
+
+.hover-guide,
+.hover-dot,
+.hover-tip {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+.hover-guide {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(160, 176, 210, 0.22);
+}
+
+.hover-dot {
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--blue);
+  box-shadow: 0 0 0 4px rgba(122, 148, 255, 0.16);
+}
+
+.hover-tip {
+  transform: translate(-50%, -100%);
+  margin-top: -16px;
+  background: #171B24;
+  border: 1px solid var(--line-hi);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.plot.probing .hover-guide,
+.plot.probing .hover-dot,
+.plot.probing .hover-tip { opacity: 1; }
+
+.plot.probing .callout { opacity: 0; }
+
 .callout {
   position: absolute;
   left: calc(100% + 16px);
@@ -654,6 +715,7 @@ var KPIS = [
     fmt: function (v) { return '£' + v + 'k'; },
     target: 150,
     targetLabel: 'Target £150,000 a month',
+    fmtPoint: function (v) { return '£' + Math.round(v * 1000).toLocaleString('en-GB'); },
     chartTitle: 'Monthly recurring revenue, last 12 months',
     owner: 'Nativ and the Creative Lead',
     def: 'agreed',
@@ -679,6 +741,7 @@ var KPIS = [
     fmt: function (v) { return '£' + v + 'k'; },
     target: 42,
     targetLabel: 'Target £42,000 a month',
+    fmtPoint: function (v) { return '£' + Math.round(v * 1000).toLocaleString('en-GB'); },
     chartTitle: 'Operating profit, last 12 months',
     owner: 'Nativ and the fractional CFO',
     def: 'agreed',
@@ -704,6 +767,7 @@ var KPIS = [
     fmt: function (v) { return v.toFixed(1); },
     target: 8.5,
     targetLabel: 'Target 8.5 out of 10',
+    fmtPoint: function (v) { return v.toFixed(1) + ' out of 10'; },
     chartTitle: 'Client satisfaction, last 12 months',
     owner: 'the Creative Lead',
     def: 'agreed',
@@ -729,6 +793,7 @@ var KPIS = [
     fmt: function (v) { return v.toFixed(1); },
     target: 4.0,
     targetLabel: 'Target 4.0 out of 5',
+    fmtPoint: function (v) { return v.toFixed(1) + ' out of 5'; },
     chartTitle: 'Colleague performance, last 12 months',
     owner: 'both leads',
     def: 'drafting',
@@ -754,6 +819,7 @@ var KPIS = [
     fmt: function (v) { return v.toFixed(1); },
     target: 8.0,
     targetLabel: 'Target 8.0 out of 10',
+    fmtPoint: function (v) { return v.toFixed(1) + ' out of 10'; },
     chartTitle: 'Colleague satisfaction, last 12 months',
     owner: 'Nativ and the Ops Manager',
     def: 'agreed',
@@ -779,6 +845,7 @@ var KPIS = [
     fmt: function (v) { return v + '%'; },
     target: 95,
     targetLabel: 'Target 95% filed every day',
+    fmtPoint: function (v) { return v + '%'; },
     chartTitle: 'End of day checklist completion, last 12 months',
     owner: 'the Ops Manager',
     def: 'drafting',
@@ -933,6 +1000,10 @@ function kpiById(id) {
   return KPIS.filter(function (x) { return x.id === id; })[0];
 }
 
+function reduceMotion() {
+  return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
 /* Monotone cubic through the points: smooth, but it never overshoots a
    value, so the curve does not invent a peak between two months. */
 function monotone(pts) {
@@ -991,21 +1062,27 @@ function drawSpark(el, k) {
     + '</svg>';
 }
 
-function drawChart(k) {
-  var host = document.getElementById('plotSvg');
-  if (!host) return;
-  var plot = host.parentNode;
-  var W = plot.clientWidth, H = plot.clientHeight;
-  if (!W || !H) return;
-  var lo = k.domain[0], hi = k.domain[1], span = hi - lo || 1;
-  var n = k.series.length;
-  var pts = k.series.map(function (v, i) {
+/* ---------- The chart ----------
+   Built once and updated in place, so changing measure can morph from
+   the shape already on screen rather than cutting to the new one. */
+
+var CH = { pts: null, id: null, raf: 0, token: 0, xToY: null, W: 0, H: 0 };
+
+function ptsFor(k, W, H) {
+  var lo = k.domain[0], hi = k.domain[1], span = hi - lo || 1, n = k.series.length;
+  return k.series.map(function (v, i) {
     return [(i / (n - 1)) * W, (1 - (v - lo) / span) * H];
   });
-  var last = pts[n - 1];
-  var line = monotone(pts);
-  var area = line + ' L' + W + ' ' + H + ' L0 ' + H + ' Z';
+}
 
+function ensureSvg(W, H) {
+  var host = document.getElementById('plotSvg');
+  if (!host) return null;
+  if (host.firstChild && host.getAttribute('data-w') === String(W) && host.getAttribute('data-h') === String(H)) {
+    return host;
+  }
+  host.setAttribute('data-w', W);
+  host.setAttribute('data-h', H);
   host.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true">'
     + '<defs>'
     + '<linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">'
@@ -1015,48 +1092,202 @@ function drawChart(k) {
     + '<filter id="glow" x="-10%" y="-40%" width="120%" height="180%">'
     + '<feGaussianBlur stdDeviation="6"/></filter>'
     + '</defs>'
-    + '<path d="' + area + '" fill="url(#cg)"/>'
-    + '<path d="' + line + '" fill="none" stroke="#7A94FF" stroke-opacity="0.32" stroke-width="10"'
+    + '<path class="c-area" fill="url(#cg)"/>'
+    + '<path class="c-glow" fill="none" stroke="#7A94FF" stroke-opacity="0.32" stroke-width="10"'
     + ' stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>'
-    + '<path d="' + line + '" fill="none" stroke="#7A94FF" stroke-width="2"'
+    + '<path class="c-line" fill="none" stroke="#7A94FF" stroke-width="2"'
     + ' stroke-linecap="round" stroke-linejoin="round"/>'
-    + '<circle cx="' + last[0].toFixed(2) + '" cy="' + last[1].toFixed(2) + '" r="9" fill="#7A94FF" fill-opacity="0.22"/>'
-    + '<circle cx="' + last[0].toFixed(2) + '" cy="' + last[1].toFixed(2) + '" r="5.5" fill="#0A0C10" stroke="#7A94FF" stroke-width="2"/>'
+    + '<circle class="c-halo" r="9" fill="#7A94FF" fill-opacity="0.22"/>'
+    + '<circle class="c-ring" r="5.5" fill="#0A0C10" stroke="#7A94FF" stroke-width="2"/>'
     + '</svg>';
+  return host;
 }
 
-function drawAll() {
-  Array.prototype.forEach.call(document.querySelectorAll('[data-spark]'), function (el) {
-    drawSpark(el, kpiById(el.getAttribute('data-spark')));
-  });
-  if (page === 'overview') drawChart(kpiById(selectedKpi));
+function paint(pts, W, H) {
+  var host = ensureSvg(W, H);
+  if (!host) return;
+  var line = monotone(pts);
+  var last = pts[pts.length - 1];
+  host.querySelector('.c-area').setAttribute('d', line + ' L' + W + ' ' + H + ' L0 ' + H + ' Z');
+  host.querySelector('.c-glow').setAttribute('d', line);
+  host.querySelector('.c-line').setAttribute('d', line);
+  var halo = host.querySelector('.c-halo'), ring = host.querySelector('.c-ring');
+  halo.setAttribute('cx', last[0].toFixed(2)); halo.setAttribute('cy', last[1].toFixed(2));
+  ring.setAttribute('cx', last[0].toFixed(2)); ring.setAttribute('cy', last[1].toFixed(2));
+  var cal = document.getElementById('callout');
+  if (cal) cal.style.top = last[1].toFixed(2) + 'px';
 }
 
-function chart(k) {
+/* Sample the drawn line so hovering tests against the curve itself
+   rather than against the whole plot rectangle. */
+function buildProbe(W) {
+  CH.xToY = null;
+  var host = document.getElementById('plotSvg');
+  var path = host && host.querySelector('.c-line');
+  if (!path || !path.getTotalLength) return;
+  var len = path.getTotalLength();
+  if (!len) return;
+  var table = new Float32Array(W + 1);
+  var x;
+  for (x = 0; x <= W; x++) table[x] = -1;
+  var steps = Math.max(W, 200) * 2;
+  for (var i = 0; i <= steps; i++) {
+    var p = path.getPointAtLength((i / steps) * len);
+    var xr = Math.round(p.x);
+    if (xr >= 0 && xr <= W) table[xr] = p.y;
+  }
+  var seen = -1;
+  for (x = 0; x <= W; x++) {
+    if (table[x] < 0) table[x] = seen; else seen = table[x];
+  }
+  CH.xToY = table;
+}
+
+function easeInOut(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function setKpi(id, animate) {
+  var k = kpiById(id);
+  var plot = document.getElementById('plot');
+  if (!k || !plot) return;
+  selectedKpi = id;
+
+  var W = plot.clientWidth, H = plot.clientHeight;
+  if (!W || !H) return;
+
+  var target = ptsFor(k, W, H);
+  var from = (CH.pts && CH.pts.length === target.length && CH.W === W && CH.H === H) ? CH.pts : null;
+  var token = ++CH.token;
+  var changed = CH.id !== id;
+  CH.id = id;
+  CH.W = W;
+  CH.H = H;
+
+  hideReadout();
+  if (changed) swapLabels(k, token, animate);
+
+  if (CH.raf) { cancelAnimationFrame(CH.raf); CH.raf = 0; }
+
+  if (!animate || !from || reduceMotion()) {
+    CH.pts = target;
+    paint(target, W, H);
+    buildProbe(W);
+    return;
+  }
+
+  var start = null, dur = 520;
+  function step(ts) {
+    if (token !== CH.token) return;
+    if (start === null) start = ts;
+    var t = Math.min(1, (ts - start) / dur);
+    var e = easeInOut(t);
+    var now = target.map(function (p, i) {
+      return [p[0], from[i][1] + (p[1] - from[i][1]) * e];
+    });
+    CH.pts = now;
+    paint(now, W, H);
+    if (t < 1) {
+      CH.raf = requestAnimationFrame(step);
+    } else {
+      CH.raf = 0;
+      CH.pts = target;
+      paint(target, W, H);
+      buildProbe(W);
+    }
+  }
+  CH.raf = requestAnimationFrame(step);
+}
+
+/* Title, legend, axis labels and the supporting card cross fade while
+   the line morphs underneath them. */
+function swapLabels(k, token, animate) {
+  var title = document.getElementById('chartTitle');
+  var legend = document.getElementById('chartLegend');
+  var grid = document.getElementById('gridLayer');
+  var cal = document.getElementById('callout');
+  var behindCard = document.getElementById('behindCard');
+  if (!title || !legend || !grid || !cal) return;
+
   var lo = k.domain[0], hi = k.domain[1], span = hi - lo || 1;
   var yOf = function (v) { return (1 - (v - lo) / span) * 100; };
 
-  var grid = k.ticks.map(function (t) {
-    return '<div class="gridline" style="top:' + yOf(t).toFixed(2) + '%"></div>'
-      + '<div class="ylabel" style="top:' + yOf(t).toFixed(2) + '%">' + esc(k.fmt(t)) + '</div>';
-  }).join('');
+  function write() {
+    title.textContent = k.chartTitle;
+    legend.innerHTML = (k.target === null ? '' : '<span class="dash"></span>') + esc(k.targetLabel);
+    grid.innerHTML = k.ticks.map(function (tk) {
+      return '<div class="gridline" style="top:' + yOf(tk).toFixed(2) + '%"></div>'
+        + '<div class="ylabel" style="top:' + yOf(tk).toFixed(2) + '%">' + esc(k.fmt(tk)) + '</div>';
+    }).join('') + (k.target === null ? ''
+      : '<div class="gridline target" style="top:' + yOf(k.target).toFixed(2) + '%"></div>');
+    cal.textContent = k.value + k.unit;
+    if (behindCard) behindCard.innerHTML = behind(k);
+  }
 
-  var targetLine = k.target === null ? ''
-    : '<div class="gridline target" style="top:' + yOf(k.target).toFixed(2) + '%"></div>';
+  if (!animate || reduceMotion()) { write(); return; }
 
-  var endTop = yOf(k.series[k.series.length - 1]);
+  var fading = [title, legend, grid, cal];
+  if (behindCard) fading.push(behindCard);
+  fading.forEach(function (el) { el.classList.add('is-out'); });
+  setTimeout(function () {
+    if (token !== CH.token) return;
+    write();
+    fading.forEach(function (el) { el.classList.remove('is-out'); });
+  }, 140);
+}
 
+/* ---------- Hover readout ---------- */
+
+var NEAR = 30;
+
+function hideReadout() {
+  var plot = document.getElementById('plot');
+  if (plot) plot.classList.remove('probing');
+}
+
+function moveReadout(e) {
+  var plot = document.getElementById('plot');
+  if (!plot || !CH.xToY || !CH.pts) return;
+  var r = plot.getBoundingClientRect();
+  var x = e.clientX - r.left, y = e.clientY - r.top;
+  var xi = Math.round(Math.max(0, Math.min(CH.W, x)));
+  var lineY = CH.xToY[xi];
+
+  if (lineY < 0 || Math.abs(y - lineY) > NEAR) { hideReadout(); return; }
+
+  var k = kpiById(CH.id);
+  var n = k.series.length;
+  var i = Math.max(0, Math.min(n - 1, Math.round((x / CH.W) * (n - 1))));
+  var pt = CH.pts[i];
+
+  var dot = document.getElementById('hoverDot');
+  var tip = document.getElementById('hoverTip');
+  var guide = document.getElementById('hoverGuide');
+  dot.style.left = pt[0].toFixed(2) + 'px';
+  dot.style.top = pt[1].toFixed(2) + 'px';
+  guide.style.left = pt[0].toFixed(2) + 'px';
+  tip.textContent = MONTHS[i] + ' · ' + k.fmtPoint(k.series[i]);
+  tip.style.top = pt[1].toFixed(2) + 'px';
+  tip.style.left = Math.max(38, Math.min(CH.W - 38, pt[0])).toFixed(2) + 'px';
+  plot.classList.add('probing');
+}
+
+/* ---------- Views ---------- */
+
+function detailShell() {
   return '<div class="detail-head">'
-    + '<h2>' + esc(k.chartTitle) + '</h2>'
-    + '<span class="legend">' + (k.target === null ? '' : '<span class="dash"></span>')
-    + esc(k.targetLabel) + '</span>'
+    + '<h2 id="chartTitle"></h2>'
+    + '<span class="legend" id="chartLegend"></span>'
     + '</div>'
     + '<div class="chart">'
-    + '<div class="plot">'
-    + grid + targetLine
+    + '<div class="plot" id="plot">'
+    + '<div class="grid-layer" id="gridLayer"></div>'
     + '<div class="plot-svg" id="plotSvg"></div>'
-    + '<span class="callout num" style="top:' + endTop.toFixed(2) + '%">'
-    + esc(k.value + k.unit) + '</span>'
+    + '<span class="callout num" id="callout"></span>'
+    + '<span class="hover-guide" id="hoverGuide"></span>'
+    + '<span class="hover-dot" id="hoverDot"></span>'
+    + '<span class="hover-tip num" id="hoverTip"></span>'
+    + '<span class="probe" id="probe"></span>'
     + '</div>'
     + '<div class="xaxis">' + MONTHS.map(function (m, i) {
         var n = MONTHS.length - 1;
@@ -1084,8 +1315,6 @@ function behind(k) {
     + '</div>';
 }
 
-/* ---------- Views ---------- */
-
 var selectedKpi = 'mrr';
 var currentRole = ROLES[0].id;
 var currentPeriod = 'WTD';
@@ -1097,8 +1326,6 @@ var subEl = document.getElementById('pageSub');
 var headRight = document.querySelector('.head-right');
 
 function overview() {
-  var k = kpiById(selectedKpi);
-
   return '<div class="tiles">'
     + KPIS.map(function (t) {
         return '<button type="button" class="tile" data-kpi="' + t.id + '">'
@@ -1116,8 +1343,8 @@ function overview() {
           + '</button>';
       }).join('')
     + '</div>'
-    + '<section class="card detail">' + chart(k) + '</section>'
-    + '<section class="card behind">' + behind(k) + '</section>';
+    + '<section class="card detail">' + detailShell() + '</section>'
+    + '<section class="card behind" id="behindCard"></section>';
 }
 
 function team() {
@@ -1173,9 +1400,18 @@ function openDefs() {
   return n + ' of ' + total + ' measures still being defined';
 }
 
+function drawSparks() {
+  Array.prototype.forEach.call(document.querySelectorAll('[data-spark]'), function (el) {
+    drawSpark(el, kpiById(el.getAttribute('data-spark')));
+  });
+}
+
 function render() {
   var period = PERIODS.filter(function (p) { return p.id === currentPeriod; })[0];
   var periodsEl = document.getElementById('periods');
+
+  CH.pts = null;
+  CH.id = null;
 
   if (page === 'overview') {
     titleEl.innerHTML = 'Performance <span class="pill">Placeholder data</span>';
@@ -1183,6 +1419,8 @@ function render() {
     headRight.hidden = false;
     periodsEl.hidden = false;
     view.innerHTML = overview();
+    drawSparks();
+    setKpi(selectedKpi, false);
   } else if (page === 'team') {
     titleEl.innerHTML = 'Team <span class="pill">Placeholder data</span>';
     subEl.textContent = 'Weekly leading indicators, ' + openDefs();
@@ -1200,8 +1438,6 @@ function render() {
     if (b.getAttribute('data-page') === page) b.setAttribute('aria-current', 'page');
     else b.removeAttribute('aria-current');
   });
-
-  drawAll();
 }
 
 /* ---------- Rail ---------- */
@@ -1274,13 +1510,31 @@ document.getElementById('periods').addEventListener('click', function (e) {
 
 /* ---------- View interaction ---------- */
 
+/* Pointing at a measure brings its chart up, and keyboard focus does the
+   same, so the two routes agree. */
+function tileTarget(e) {
+  var t = e.target && e.target.closest ? e.target.closest('.tile') : null;
+  return t ? t.getAttribute('data-kpi') : null;
+}
+
+view.addEventListener('mouseover', function (e) {
+  if (page !== 'overview') return;
+  var id = tileTarget(e);
+  if (id && id !== CH.id) setKpi(id, true);
+});
+
+view.addEventListener('focusin', function (e) {
+  if (page !== 'overview') return;
+  var id = tileTarget(e);
+  if (id && id !== CH.id) setKpi(id, true);
+});
+
 view.addEventListener('click', function (e) {
   var tile = e.target.closest('.tile');
   if (tile) {
-    selectedKpi = tile.getAttribute('data-kpi');
-    render();
-    var again = view.querySelector('.tile[data-kpi="' + selectedKpi + '"]');
-    if (again) again.focus();
+    var id = tile.getAttribute('data-kpi');
+    if (id !== CH.id) setKpi(id, true);
+    tile.focus();
     return;
   }
 
@@ -1315,10 +1569,23 @@ view.addEventListener('click', function (e) {
   }
 });
 
+/* The readout appears only when the pointer is near the line itself. */
+view.addEventListener('pointermove', function (e) {
+  if (page !== 'overview') return;
+  if (!e.target || !e.target.closest || !e.target.closest('#probe')) { hideReadout(); return; }
+  moveReadout(e);
+});
+
+view.addEventListener('pointerleave', hideReadout, true);
+view.addEventListener('pointercancel', hideReadout, true);
+
 var resizeTimer;
 window.addEventListener('resize', function () {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(drawAll, 80);
+  resizeTimer = setTimeout(function () {
+    drawSparks();
+    if (page === 'overview') { CH.pts = null; setKpi(selectedKpi, false); }
+  }, 100);
 });
 
 render();
