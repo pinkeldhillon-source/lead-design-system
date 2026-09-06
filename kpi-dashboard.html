@@ -395,20 +395,12 @@ h1 {
    drawn curve happens in script, so this only appears near the line. */
 .probe { position: absolute; inset: 0; cursor: crosshair; }
 
-.hover-guide,
 .hover-dot,
 .hover-tip {
   position: absolute;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.12s ease;
-}
-
-.hover-guide {
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: rgba(160, 176, 210, 0.22);
 }
 
 .hover-dot {
@@ -433,7 +425,6 @@ h1 {
   white-space: nowrap;
 }
 
-.plot.probing .hover-guide,
 .plot.probing .hover-dot,
 .plot.probing .hover-tip { opacity: 1; }
 
@@ -1249,26 +1240,26 @@ function moveReadout(e) {
   var plot = document.getElementById('plot');
   if (!plot || !CH.xToY || !CH.pts) return;
   var r = plot.getBoundingClientRect();
-  var x = e.clientX - r.left, y = e.clientY - r.top;
-  var xi = Math.round(Math.max(0, Math.min(CH.W, x)));
-  var lineY = CH.xToY[xi];
+  var x = Math.max(0, Math.min(CH.W, e.clientX - r.left));
+  var y = e.clientY - r.top;
+  var lineY = CH.xToY[Math.round(x)];
 
   if (lineY < 0 || Math.abs(y - lineY) > NEAR) { hideReadout(); return; }
 
+  /* The marker rides the line under the pointer. The figure it carries
+     is the month the pointer is nearest, so it steps as you cross into
+     the next one rather than sliding through values never measured. */
   var k = kpiById(CH.id);
   var n = k.series.length;
   var i = Math.max(0, Math.min(n - 1, Math.round((x / CH.W) * (n - 1))));
-  var pt = CH.pts[i];
 
   var dot = document.getElementById('hoverDot');
   var tip = document.getElementById('hoverTip');
-  var guide = document.getElementById('hoverGuide');
-  dot.style.left = pt[0].toFixed(2) + 'px';
-  dot.style.top = pt[1].toFixed(2) + 'px';
-  guide.style.left = pt[0].toFixed(2) + 'px';
+  dot.style.left = x.toFixed(2) + 'px';
+  dot.style.top = lineY.toFixed(2) + 'px';
   tip.textContent = MONTHS[i] + ' · ' + k.fmtPoint(k.series[i]);
-  tip.style.top = pt[1].toFixed(2) + 'px';
-  tip.style.left = Math.max(38, Math.min(CH.W - 38, pt[0])).toFixed(2) + 'px';
+  tip.style.top = lineY.toFixed(2) + 'px';
+  tip.style.left = Math.max(46, Math.min(CH.W - 46, x)).toFixed(2) + 'px';
   plot.classList.add('probing');
 }
 
@@ -1284,7 +1275,6 @@ function detailShell() {
     + '<div class="grid-layer" id="gridLayer"></div>'
     + '<div class="plot-svg" id="plotSvg"></div>'
     + '<span class="callout num" id="callout"></span>'
-    + '<span class="hover-guide" id="hoverGuide"></span>'
     + '<span class="hover-dot" id="hoverDot"></span>'
     + '<span class="hover-tip num" id="hoverTip"></span>'
     + '<span class="probe" id="probe"></span>'
