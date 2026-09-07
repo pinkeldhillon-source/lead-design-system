@@ -16,14 +16,16 @@
 :root {
   color-scheme: dark;
 
-  --bg: #0A0C10;
-  --well: #0C0F14;
-  --card: #10131A;
-  --card-hi: #141821;
-  --raise: #1B1F28;
+  /* Three surfaces and nothing else. Depth comes from tone, so no card
+     carries a shadow. */
+  --bg: #0B0D12;
+  --well: #0E1117;      /* quieter level 2, the chart card sits here */
+  --card: #10131A;      /* level 1, the KPI cards */
+  --card-hi: #141925;   /* elevated, the card under the cursor */
+  --raise: #141925;
 
-  --line: rgba(160, 176, 210, 0.10);
-  --line-hi: rgba(160, 176, 210, 0.20);
+  --line: rgba(255, 255, 255, 0.09);
+  --line-hi: rgba(255, 255, 255, 0.15);
 
   --text: #E9ECF2;
   --muted: #8C95A6;
@@ -32,8 +34,11 @@
   --pos: #3EC27A;
   --neg: #EF5D4A;
   --hold: #D9A036;
-  --blue: #7A94FF;
-  --brand: #5167F6;
+
+  /* One accent, pulled back. */
+  --blue: #7C82E8;
+  --brand: #7C82E8;
+  --spark: #6E7688;     /* sparklines are furniture, not the story */
 
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --rail: 262px;
@@ -45,7 +50,7 @@
 body {
   margin: 0;
   background: var(--bg);
-  background-image: radial-gradient(90% 55% at 50% -12%, #12161F 0%, rgba(10, 12, 16, 0) 62%);
+  background-image: radial-gradient(88% 52% at 50% -14%, #10131B 0%, rgba(11, 13, 18, 0) 64%);
   background-attachment: fixed;
   color: var(--text);
   font-family: var(--font);
@@ -54,7 +59,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-::selection { background: rgba(111, 140, 255, 0.28); }
+::selection { background: rgba(124, 130, 232, 0.30); }
 
 .num { font-variant-numeric: tabular-nums; }
 
@@ -113,16 +118,17 @@ button {
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 10px 22px;
+  gap: 11px;
+  padding: 8px 10px 26px;
 }
 
-.brand-mark { height: 22px; width: auto; display: block; flex: none; }
-.brand .name { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; }
+.brand-mark { height: 26px; width: auto; display: block; flex: none; }
+.brand .name { font-size: 15.5px; font-weight: 500; letter-spacing: -0.01em; }
 
 .nav { display: flex; flex-direction: column; gap: 2px; }
 
 .nav button {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 11px;
@@ -137,10 +143,24 @@ button {
 .nav button:hover { background: rgba(255, 255, 255, 0.035); color: var(--text); }
 
 .nav button[aria-current="page"] {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text);
   font-weight: 500;
 }
+
+/* A thin accent line at the left rather than a heavier fill. */
+.nav button[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 7px;
+  bottom: 7px;
+  width: 2px;
+  border-radius: 0 2px 2px 0;
+  background: var(--brand);
+}
+
+.nav button[aria-current="page"] svg { color: var(--brand); }
 
 .nav svg { flex: none; }
 
@@ -196,7 +216,7 @@ h1 {
   letter-spacing: -0.02em;
 }
 
-.page-head .sub { margin: 5px 0 0; font-size: 14px; color: var(--muted); }
+.page-head .sub { margin: 9px 0 0; font-size: 14px; color: var(--muted); }
 
 .pill {
   display: inline-flex;
@@ -250,7 +270,7 @@ h1 {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
-.stamp { margin: 10px 0 0; font-size: 13px; color: var(--faint); }
+.stamp { margin: 14px 0 0; font-size: 13px; color: var(--faint); }
 
 .menu {
   display: none;
@@ -281,6 +301,10 @@ h1 {
   border-radius: var(--r-card);
 }
 
+/* The chart and the supporting lists sit a level quieter than the KPI cards,
+   so the six numbers stay the loudest thing on the page. */
+.detail, .behind, .rows-card, .trendrows, .ehead { background: var(--well); }
+
 /* ---------- Tiles ---------- */
 
 .tiles {
@@ -293,7 +317,7 @@ h1 {
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 22px 24px 14px;
+  padding: 24px 26px 22px;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--r-card);
@@ -301,9 +325,44 @@ h1 {
   transition: background 0.18s ease, border-color 0.18s ease;
 }
 
+/* Elevated, not lit. The card under the cursor rises by tone. */
 .tile:hover { background: var(--card-hi); border-color: var(--line-hi); }
 
-.t-label { display: block; font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+.t-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.t-label { font-size: 14px; color: var(--muted); }
+
+/* A card that needs looking at says so, once. */
+.t-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: var(--neg);
+  white-space: nowrap;
+}
+
+.t-flag::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.t-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 22px;
+}
 
 .t-value {
   display: block;
@@ -324,10 +383,10 @@ h1 {
 
 .t-foot {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: baseline;
+  gap: 9px;
   flex-wrap: wrap;
-  margin-top: 14px;
+  min-width: 0;
   font-size: 13px;
   color: var(--faint);
 }
@@ -336,7 +395,8 @@ h1 {
 .delta.good { color: var(--pos); }
 .delta.bad { color: var(--neg); }
 
-.spark-box { display: block; height: 60px; margin-top: 12px; }
+/* Small, grey and tucked away, so the number carries the card. */
+.spark-box { display: block; width: 132px; height: 34px; flex: none; opacity: 0.85; }
 .spark-box svg { display: block; width: 100%; height: 100%; overflow: visible; }
 
 /* ---------- Chart card ---------- */
@@ -352,7 +412,17 @@ h1 {
   gap: 12px 24px;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 26px;
+  margin-bottom: 10px;
+}
+
+/* One sentence saying what the shape means, so the chart is not left to
+   speak for itself. */
+.chart-read {
+  margin: 0 0 30px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 82ch;
 }
 
 .detail-head h2 { margin: 0; font-size: 15px; font-weight: 500; letter-spacing: -0.01em; }
@@ -412,13 +482,13 @@ h1 {
   border-radius: 50%;
   background: var(--bg);
   border: 2px solid var(--blue);
-  box-shadow: 0 0 0 4px rgba(122, 148, 255, 0.16);
+  box-shadow: 0 0 0 4px rgba(124, 130, 232, 0.16);
 }
 
 .hover-tip {
   transform: translate(-50%, -100%);
   margin-top: -16px;
-  background: #171B24;
+  background: #161A24;
   border: 1px solid var(--line-hi);
   border-radius: 999px;
   padding: 5px 12px;
@@ -434,16 +504,16 @@ h1 {
 
 .callout {
   position: absolute;
-  left: calc(100% + 16px);
+  left: calc(100% + 18px);
   transform: translateY(-50%);
-  background: #171B24;
-  border: 1px solid var(--line-hi);
-  border-radius: 999px;
-  padding: 5px 12px;
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
+  line-height: 1.35;
 }
+
+.callout b { font-weight: 500; }
+.callout small { display: block; margin-top: 3px; font-size: 12px; font-weight: 400; color: var(--faint); }
 
 .xaxis {
   position: relative;
@@ -950,7 +1020,7 @@ table.dt tbody tr:hover .go::after { opacity: 0.45; }
       </div>
       <div class="head-right">
         <div class="seg" id="periods"></div>
-        <p class="stamp" id="stamp">Updated today at 09:12</p>
+        <p class="stamp" id="stamp">Placeholder data, updated today at 09:12</p>
       </div>
     </div>
 
@@ -1060,6 +1130,7 @@ var STATE = {
 var KPIS = [
   {
     id: 'mrr',
+    gapUnit: 'money',
     label: 'Monthly recurring revenue',
     value: '£170,400',
     unit: '',
@@ -1086,6 +1157,7 @@ var KPIS = [
   },
   {
     id: 'profit',
+    gapUnit: 'money',
     label: 'Operating profit',
     value: '£38,200',
     unit: '',
@@ -1112,6 +1184,7 @@ var KPIS = [
   },
   {
     id: 'client-sat',
+    gapUnit: 'score',
     label: 'Client satisfaction',
     value: '8.8',
     unit: '/10',
@@ -1138,6 +1211,7 @@ var KPIS = [
   },
   {
     id: 'colleague-perf',
+    gapUnit: 'score',
     label: 'Colleague performance',
     value: '4.3',
     unit: '/5',
@@ -1164,6 +1238,7 @@ var KPIS = [
   },
   {
     id: 'colleague-sat',
+    gapUnit: 'score',
     label: 'Colleague satisfaction',
     value: '8.1',
     unit: '/10',
@@ -1190,6 +1265,7 @@ var KPIS = [
   },
   {
     id: 'checklist',
+    gapUnit: 'pts',
     label: 'End of day checklist completion',
     value: '78',
     unit: '%',
@@ -5478,6 +5554,40 @@ function arrow(dir) {
   return '';
 }
 
+/* The distance to target, said in points or pounds rather than left for the
+   reader to subtract. */
+function gapText(k) {
+  if (k.target === null || k.target === undefined) return '';
+  var d = k.series[k.series.length - 1] - k.target;
+  if (Math.abs(d) < 0.001) return 'On target';
+  var mag;
+  if (k.gapUnit === 'money') mag = '£' + Math.round(Math.abs(d) * 1000).toLocaleString('en-GB');
+  else if (k.gapUnit === 'pts') mag = Math.round(Math.abs(d)) + ' pts';
+  else mag = (Math.round(Math.abs(d) * 10) / 10).toFixed(1);
+  return mag + (d > 0 ? ' above target' : ' below target');
+}
+
+var COUNT = ['zero', 'one', 'two', 'three', 'four', 'five', 'six',
+             'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+
+/* Says what the shape means, so the chart is not left to argue its own case. */
+function readLine(k) {
+  var s = k.series, below = 0, i, head;
+  var hasT = k.target !== null && k.target !== undefined;
+  for (i = 0; i < s.length; i++) if (hasT && s[i] < k.target) below++;
+  if (!hasT) head = 'Twelve months to September';
+  else if (below === 0) head = 'At or above the ' + k.fmt(k.target) + ' target in every one of the last twelve months';
+  else if (below === s.length) head = 'Below the ' + k.fmt(k.target) + ' target in every one of the last twelve months';
+  else head = 'Below the ' + k.fmt(k.target) + ' target in ' + COUNT[below] + ' of the last twelve months';
+  if (k.delta.dir === 'flat') return head + ', and level on August.';
+  return head + ', and ' + (k.delta.dir === 'up' ? 'up ' : 'down ') + k.delta.text + ' on August.';
+}
+
+function offTarget(k) {
+  if (k.target === null || k.target === undefined) return false;
+  return k.series[k.series.length - 1] < k.target;
+}
+
 function kpiById(id) {
   return KPIS.filter(function (x) { return x.id === id; })[0];
 }
@@ -5518,7 +5628,8 @@ function monotone(pts) {
 
 /* Sparklines are scaled to the metric's own range, not to the series'
    extremes, so a small drift reads as small and a large climb as large. */
-function sparkMarkup(series, lo, hi, W, H, gid) {
+function sparkMarkup(series, lo, hi, W, H, gid, colour) {
+  colour = colour || '#6E7688';
   var span = (hi - lo) || 1;
   var padT = 8, padB = 6, padR = 6;
   var n = series.length;
@@ -5530,14 +5641,9 @@ function sparkMarkup(series, lo, hi, W, H, gid) {
   var area = line + ' L' + last[0].toFixed(2) + ' ' + H + ' L0 ' + H + ' Z';
 
   return '<svg viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true">'
-    + '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">'
-    + '<stop offset="0%" stop-color="#7A94FF" stop-opacity="0.22"/>'
-    + '<stop offset="100%" stop-color="#7A94FF" stop-opacity="0"/>'
-    + '</linearGradient></defs>'
-    + '<path d="' + area + '" fill="url(#' + gid + ')"/>'
-    + '<path d="' + line + '" fill="none" stroke="#7A94FF" stroke-width="1.5"'
+    + '<path d="' + line + '" fill="none" stroke="' + colour + '" stroke-width="1.4"'
     + ' stroke-linecap="round" stroke-linejoin="round"/>'
-    + '<circle cx="' + last[0].toFixed(2) + '" cy="' + last[1].toFixed(2) + '" r="3" fill="#F4F6FA"/>'
+    + '<circle cx="' + last[0].toFixed(2) + '" cy="' + last[1].toFixed(2) + '" r="2.4" fill="' + colour + '"/>'
     + '</svg>';
 }
 
@@ -5571,19 +5677,19 @@ function ensureSvg(W, H) {
   host.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true">'
     + '<defs>'
     + '<linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">'
-    + '<stop offset="0%" stop-color="#7A94FF" stop-opacity="0.26"/>'
-    + '<stop offset="100%" stop-color="#7A94FF" stop-opacity="0"/>'
+    + '<stop offset="0%" stop-color="#7C82E8" stop-opacity="0.11"/>'
+    + '<stop offset="100%" stop-color="#7C82E8" stop-opacity="0"/>'
     + '</linearGradient>'
     + '<filter id="glow" x="-10%" y="-40%" width="120%" height="180%">'
-    + '<feGaussianBlur stdDeviation="6"/></filter>'
+    + '<feGaussianBlur stdDeviation="4"/></filter>'
     + '</defs>'
     + '<path class="c-area" fill="url(#cg)"/>'
-    + '<path class="c-glow" fill="none" stroke="#7A94FF" stroke-opacity="0.32" stroke-width="10"'
+    + '<path class="c-glow" fill="none" stroke="#7C82E8" stroke-opacity="0.13" stroke-width="6"'
     + ' stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>'
-    + '<path class="c-line" fill="none" stroke="#7A94FF" stroke-width="2"'
+    + '<path class="c-line" fill="none" stroke="#7C82E8" stroke-width="1.9"'
     + ' stroke-linecap="round" stroke-linejoin="round"/>'
-    + '<circle class="c-halo" r="9" fill="#7A94FF" fill-opacity="0.22"/>'
-    + '<circle class="c-ring" r="5.5" fill="#0A0C10" stroke="#7A94FF" stroke-width="2"/>'
+    + '<circle class="c-halo" r="7" fill="#7C82E8" fill-opacity="0.18"/>'
+    + '<circle class="c-ring" r="4.5" fill="#0B0D12" stroke="#7C82E8" stroke-width="1.8"/>'
     + '</svg>';
   return host;
 }
@@ -5705,13 +5811,18 @@ function swapLabels(k, token, animate) {
         + '<div class="ylabel" style="top:' + yOf(tk).toFixed(2) + '%">' + esc(k.fmt(tk)) + '</div>';
     }).join('') + (k.target === null ? ''
       : '<div class="gridline target" style="top:' + yOf(k.target).toFixed(2) + '%"></div>');
-    cal.textContent = k.value + k.unit;
+    cal.innerHTML = '<b>' + esc(k.value + k.unit) + '</b>'
+      + (gapText(k) ? '<small>' + esc(gapText(k)) + '</small>' : '');
+    var read = document.getElementById('chartRead');
+    if (read) read.textContent = readLine(k);
     if (behindCard) behindCard.innerHTML = behind(k);
   }
 
   if (!animate || reduceMotion()) { write(); return; }
 
   var fading = [title, legend, grid, cal];
+  var readEl = document.getElementById('chartRead');
+  if (readEl) fading.push(readEl);
   if (behindCard) fading.push(behindCard);
   fading.forEach(function (el) { el.classList.add('is-out'); });
   setTimeout(function () {
@@ -5764,6 +5875,7 @@ function detailShell() {
     + '<h2 id="chartTitle"></h2>'
     + '<span class="legend" id="chartLegend"></span>'
     + '</div>'
+    + '<p class="chart-read" id="chartRead"></p>'
     + '<div class="chart">'
     + '<div class="plot" id="plot">'
     + '<div class="grid-layer" id="gridLayer"></div>'
@@ -6045,18 +6157,22 @@ var headRight = document.querySelector('.head-right');
 function overview() {
   return '<div class="tiles">'
     + KPIS.map(function (t) {
+        var gap = gapText(t);
         return '<button type="button" class="tile" data-kpi="' + t.id + '">'
-          + '<span class="t-label">' + esc(t.label) + '</span>'
+          + '<span class="t-top"><span class="t-label">' + esc(t.label) + '</span>'
+          + (offTarget(t) ? '<span class="t-flag">Needs attention</span>' : '') + '</span>'
           + '<span class="t-value num">' + esc(t.value)
           + (t.unit ? '<span class="unit">' + esc(t.unit) + '</span>' : '') + '</span>'
+          + '<span class="t-bottom">'
           + '<span class="t-foot">'
           + '<span class="delta ' + (t.delta.good ? 'good' : 'bad') + '">'
           + arrow(t.delta.dir)
           + '<span class="sr-only">' + (t.delta.dir === 'up' ? 'Up ' : 'Down ') + '</span>'
           + esc(t.delta.text) + '</span>'
-          + '<span>' + esc(t.context) + '</span>'
+          + '<span>' + esc(gap || t.context) + '</span>'
           + '</span>'
           + '<span class="spark-box" data-spark="' + t.id + '"></span>'
+          + '</span>'
           + '</button>';
       }).join('')
     + '</div>'
@@ -6131,7 +6247,7 @@ function render() {
   CH.id = null;
 
   if (page === 'overview') {
-    titleEl.innerHTML = 'Performance <span class="pill">Placeholder data</span>';
+    titleEl.textContent = 'Performance';
     subEl.textContent = period.sub;
     headRight.hidden = false;
     periodsEl.hidden = false;
@@ -6140,7 +6256,7 @@ function render() {
     setKpi(selectedKpi, false);
   } else if (page === 'kpi') {
     var k = kpiById(openKpi);
-    titleEl.innerHTML = esc(k.label) + ' <span class="pill">Placeholder data</span>';
+    titleEl.textContent = k.label;
     subEl.textContent = 'What makes this number, broken down. Twelve months to September.';
     headRight.hidden = false;
     periodsEl.hidden = true;
@@ -6152,7 +6268,7 @@ function render() {
   } else if (page === 'entity') {
     var e = PAGEFN[openEntity.kind] ? PAGEFN[openEntity.kind](openEntity.id) : null;
     if (openEntity.kind === 'measure' && e && !fromKpi) fromKpi = e.kpi;
-    titleEl.innerHTML = esc(e ? e.title : 'Not found') + ' <span class="pill">Placeholder data</span>';
+    titleEl.textContent = e ? e.title : 'Not found';
     subEl.textContent = openEntity.kind === 'cost' ? 'One cost line, twelve months.'
       : openEntity.kind === 'pod' ? 'One pod, everything it carries.'
       : openEntity.kind === 'measure' ? 'One measure, what makes it and what moves it.'
@@ -6162,7 +6278,7 @@ function render() {
     view.innerHTML = entityPage();
     drawTrendSparks();
   } else if (page === 'team') {
-    titleEl.innerHTML = 'Team <span class="pill">Placeholder data</span>';
+    titleEl.textContent = 'Team';
     subEl.textContent = 'Weekly leading indicators, ' + openDefs();
     headRight.hidden = false;
     periodsEl.hidden = true;
