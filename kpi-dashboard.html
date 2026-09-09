@@ -403,6 +403,8 @@ h1 {
 }
 
 .delta { display: inline-flex; align-items: center; gap: 5px; font-weight: 500; }
+/* A variance never breaks across two lines, it gives up room instead. */
+.t-foot > .delta { flex: none; white-space: nowrap; }
 .delta.good { color: var(--pos); }
 .delta.bad { color: var(--neg); }
 
@@ -6211,7 +6213,6 @@ function kpiPage() {
     + ' stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
     + '<path d="M15 18l-6-6 6-6"/></svg>Back to overview</button>'
     + tiles
-    + '<section class="card detail">' + detailShell() + '</section>'
     + (d ? d.sections.map(section).join('') : '')
     + '<section class="card behind">' + behind(k) + '</section>';
 }
@@ -6388,7 +6389,6 @@ function render() {
     view.innerHTML = kpiPage();
     LINKCTX = null;
     drawTrendSparks();
-    setKpi(openKpi, false);
   } else if (page === 'entity') {
     var e = PAGEFN[openEntity.kind] ? PAGEFN[openEntity.kind](openEntity.id) : null;
     if (openEntity.kind === 'measure' && e && !fromKpi) fromKpi = e.kpi;
@@ -6509,7 +6509,7 @@ document.getElementById('periods').addEventListener('click', function (e) {
 
 /* Pointing at a measure brings its chart up, and keyboard focus does the
    same, so the two routes agree. */
-function hasChart() { return page === 'overview' || page === 'kpi'; }
+function hasChart() { return page === 'overview'; }
 
 function tileTarget(e) {
   var t = e.target && e.target.closest ? e.target.closest('.tile') : null;
@@ -6625,7 +6625,6 @@ window.addEventListener('resize', function () {
     drawSparks();
     drawTrendSparks();
     if (page === 'overview') { CH.pts = null; setKpi(selectedKpi, false); }
-    if (page === 'kpi') { CH.pts = null; setKpi(openKpi, false); }
     if (page === 'entity') render();
   }, 100);
 });
