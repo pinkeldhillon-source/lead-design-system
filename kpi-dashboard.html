@@ -385,10 +385,21 @@ h1 {
   display: flex;
   align-items: baseline;
   gap: 9px;
-  flex-wrap: wrap;
   min-width: 0;
   font-size: 13px;
   color: var(--faint);
+}
+
+.t-foot > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+  .t-bottom { flex-wrap: wrap; }
+  .spark-box { width: 100%; }
 }
 
 .delta { display: inline-flex; align-items: center; gap: 5px; font-weight: 500; }
@@ -396,7 +407,7 @@ h1 {
 .delta.bad { color: var(--neg); }
 
 /* Small, grey and tucked away, so the number carries the card. */
-.spark-box { display: block; width: 132px; height: 34px; flex: none; opacity: 0.85; }
+.spark-box { display: block; width: 104px; height: 32px; flex: none; opacity: 0.85; }
 .spark-box svg { display: block; width: 100%; height: 100%; overflow: visible; }
 
 /* ---------- Chart card ---------- */
@@ -1452,7 +1463,7 @@ var DETAIL = {
    {
     "title": "Twelve months of movement",
     "kind": "trends",
-    "note": "Money in the sparklines is in thousands, apart from average retainer which is in pounds. September net new MRR is £17,300 of new business plus £7,300 of expansion, less £6,200 churned, which is £18,400.",
+    "note": "Money in the sparklines is in thousands, apart from average retainer.",
     "trends": [
      {
       "name": "MRR",
@@ -1643,7 +1654,7 @@ var DETAIL = {
    {
     "title": "Every client on the book",
     "kind": "table",
-    "note": "The two at risk accounts carry £17,700 between them, 10.4% of MRR. The account that left in September was signed in June and lasted four months.",
+    "note": "The two at risk accounts carry £17,700 between them, 10.4% of the book.",
     "columns": [
      "Client",
      "Pod",
@@ -1807,7 +1818,7 @@ var DETAIL = {
    {
     "title": "MRR by pod",
     "kind": "table",
-    "note": "Pod 1 and Pod 2 hold 62% of the book. Northlight Nutrition on its own is 10.9% of MRR, and Maya also carries Ovis Skin at £14,200, so two of the four largest accounts sit in one pod.",
+    "note": "Two of the four largest accounts sit in Pod 1.",
     "columns": [
      "Pod",
      "Lead",
@@ -2003,7 +2014,7 @@ var DETAIL = {
    {
     "title": "What delivery cost is made of",
     "kind": "table",
-    "note": "The four pods, plus freelance help. These two payroll lines cover the 24 people working on client accounts, and what they cost is most of why the margin holds.",
+    "note": "These two payroll lines cover the 24 people working on client accounts.",
     "columns": [
      "Delivery cost line",
      "Pounds",
@@ -2061,7 +2072,7 @@ var DETAIL = {
    {
     "title": "What overheads are made of",
     "kind": "table",
-    "note": "Six people sit in that payroll line, you included. The £1,640 cut in marketing is most of the reason overheads did not rise further this month.",
+    "note": "Six people sit in that payroll line, you included.",
     "columns": [
      "Overhead line",
      "Pounds",
@@ -2137,7 +2148,7 @@ var DETAIL = {
    {
     "title": "Twelve months to September",
     "kind": "trends",
-    "note": "Revenue per head falls every time you add a head and takes a month or two to come back. May and August both show it.",
+    "note": "Revenue per head falls every time you add a head.",
     "trends": [
      {
       "name": "Operating profit",
@@ -2297,7 +2308,7 @@ var DETAIL = {
    {
     "title": "Satisfaction by pod",
     "kind": "table",
-    "note": "Score is the plain average of the clients in that pod who returned a form. The nine returns average 8.8 across the company.",
+    "note": "The average of the clients in each pod who returned a form.",
     "columns": [
      "Pod",
      "Lead",
@@ -2356,7 +2367,7 @@ var DETAIL = {
    {
     "title": "Five clients did not return the form",
     "kind": "table",
-    "note": "No score has been assumed for these five. Two of them signed this month and have not been sent a form yet. Pod 2 holds the two biggest retainers on the list.",
+    "note": "Two of these signed this month and have not been sent a form yet.",
     "columns": [
      "Client",
      "Pod",
@@ -2414,7 +2425,7 @@ var DETAIL = {
    {
     "title": "Question scores by client",
     "kind": "grid",
-    "note": "The nine clients who returned a form. Communication is the weakest column at 7.6 and the two Pod 2 clients are pulling it down hardest.",
+    "note": "Communication is the weakest column, and the two Pod 2 clients pull it down hardest.",
     "columns": [
      "Client",
      "Creative quality",
@@ -2536,7 +2547,7 @@ var DETAIL = {
    {
     "title": "Twelve month view",
     "kind": "trends",
-    "note": "Creative quality has held all year while Communication has fallen every month since February. The complaint is about how we handle clients, not about the work.",
+    "note": "Communication has fallen every month since February while creative quality has held.",
     "trends": [
      {
       "name": "Company score",
@@ -2690,7 +2701,7 @@ var DETAIL = {
    {
     "title": "By pod",
     "kind": "table",
-    "note": "Pod 2 and Pod 4 each carry one person below 3, which is what keeps them near target rather than above it. The outside average is two people, so do not read much into it.",
+    "note": "Pod 2 and Pod 4 each carry one person below 3.",
     "columns": [
      "Pod",
      "Lead",
@@ -2771,7 +2782,7 @@ var DETAIL = {
    {
     "title": "Creative strategists",
     "kind": "grid",
-    "note": "All eight were graded. Sofia L is the one strategist below 3 and has now been under target for three weeks running. Speed is the lowest behaviour for seven of the eight.",
+    "note": "Sofia L is the one strategist below 3. Speed is the lowest behaviour for seven of the eight.",
     "columns": [
      "Strategist",
      "Ownership",
@@ -2873,7 +2884,7 @@ var DETAIL = {
    {
     "title": "Video editors",
     "kind": "grid",
-    "note": "All sixteen were graded. Marcus E is below 3 on three of the five behaviours, with Speed at 2.6 the weakest. After him the lowest editors are Otto K at 3.9 and Bea C at 4.0, in Pods 3 and 2. Speed is the weakest column in all four pods.",
+    "note": "Marcus E is below 3 on three of the five behaviours. Speed is the weakest column in all four pods.",
     "columns": [
      "Editor",
      "Ownership",
@@ -3055,7 +3066,7 @@ var DETAIL = {
    {
     "title": "Outside the pods",
     "kind": "grid",
-    "note": "A blank row means no grade was taken this week, not a low score. Nativ does the grading so is not graded himself. Elena V, Oscar T and Nadia S have no lead who owns their weekly grade, so nothing was recorded. That is four of these six people, and it is the whole of the company gap.",
+    "note": "A blank row means no grade was taken, not a low score. Four of these six are the whole company gap.",
     "columns": [
      "Name",
      "Ownership",
@@ -3292,7 +3303,7 @@ var DETAIL = {
    {
     "title": "By pod",
     "kind": "table",
-    "note": "Each pod score is the average of the people in that pod who answered. Pod 3's 6.7 rests on four replies out of six, so the two who stayed quiet are not in it.",
+    "note": "Pod 3's score rests on four replies out of six.",
     "columns": [
      "Pod",
      "Lead",
@@ -3902,7 +3913,7 @@ var DETAIL = {
    {
     "title": "By pod",
     "kind": "table",
-    "note": "Six people in each pod, plus the six who sit outside them. Twenty-two working days each, so 132 checklists due per group. No pod hits 100%, so the flag marks anything more than 20 points short.",
+    "note": "Twenty-two working days each, so 132 checklists due per group.",
     "columns": [
      "Pod",
      "Lead",
@@ -3990,7 +4001,7 @@ var DETAIL = {
    {
     "title": "By person, all 30",
     "kind": "table",
-    "note": "Grouped by pod, weakest at the foot of each block. Flagged good only at 100%, flagged bad under 80%. Fourteen of the thirty are under 80%.",
+    "note": "Fourteen of the thirty are under 80%.",
     "columns": [
      "Person",
      "Pod",
@@ -4346,7 +4357,7 @@ var DETAIL = {
    {
     "title": "Twelve months to September",
     "kind": "trends",
-    "note": "Editors have sat below strategists in every one of the twelve months. Blockers named is a count of filed checklists, not a percentage, and more of them means the checklist is doing the job it exists for.",
+    "note": "Editors have sat below strategists in every one of the twelve months.",
     "trends": [
      {
       "name": "Company completion",
@@ -4959,6 +4970,11 @@ function buildMeasures() {
     who: function (i) { return whoClients(i, function (c, k) { return c.retainer[k] || null; }, F.money, 'Retainer',
       'Every live account and what it pays. These add up to the figure above.'); } });
 
+  M('mrr', 'Last month MRR', months(function (i) { return i ? DEEP.mrr[i - 1] : null; }), 'money', {
+    target: 150000, targetLabel: 'Target £150,000 a month', owner: 'Nativ and the Creative Lead',
+    definition: 'What the book was worth the month before, so this month has something to sit against.',
+    capture: 'The previous month from the same ledger.', parts: ['MRR'] });
+
   M('mrr', 'Active clients', months(function (i) { return activeAt(i).length; }), 'n', {
     owner: 'Creative Lead',
     definition: 'Accounts with a retainer invoiced in the month. Paused accounts are not counted.',
@@ -5453,6 +5469,66 @@ function buildMeasures() {
 
 
   return MEAS;
+}
+
+/* The six that lead each measure page, in the same treatment as the
+   overview. Names here are measure names; `as` renames one for the tile. */
+var SIX = {
+  'mrr': [
+    { m: 'MRR' },
+    { m: 'Last month MRR' },
+    { m: 'Client churn' },
+    { m: 'New clients signed', as: 'New clients' },
+    { m: 'Active clients' },
+    { m: 'Average retainer', as: 'Average retainer value' }
+  ],
+  'profit': [
+    { m: 'Operating profit' },
+    { m: 'Operating profit margin' },
+    { m: 'Revenue' },
+    { m: 'Total delivery cost' },
+    { m: 'Delivery margin' },
+    { m: 'Total overheads' }
+  ],
+  'client-sat': [
+    { m: 'Company score', as: 'Client satisfaction' },
+    { m: 'Forms returned' },
+    { m: 'Clients below target' },
+    { m: 'Lowest question' },
+    { m: 'Communication' },
+    { m: 'Retainer value not scored', as: 'Value not scored' }
+  ],
+  'colleague-perf': [
+    { m: 'Company average', as: 'Colleague performance' },
+    { m: 'People graded' },
+    { m: 'Grades below 3' },
+    { m: 'At 4.5 or above' },
+    { m: 'Strategist average' },
+    { m: 'Editor average' }
+  ],
+  'colleague-sat': [
+    { m: 'Company score', as: 'Colleague satisfaction' },
+    { m: 'Responses returned' },
+    { m: 'People below 7' },
+    { m: 'Lowest scoring question' },
+    { m: 'Workload' },
+    { m: 'Would recommend NSY' }
+  ],
+  'checklist': [
+    { m: 'Company completion', as: 'Checklist completion' },
+    { m: 'Checklists missed' },
+    { m: 'Editor completion' },
+    { m: 'Strategist completion' },
+    { m: 'Weakest pod' },
+    { m: 'Days the full team filed' }
+  ]
+};
+
+function sixFor(kpi) {
+  return (SIX[kpi] || []).map(function (e) {
+    var m = measureFor(e.m, kpi);
+    return m ? { m: m, label: e.as || m.name } : null;
+  }).filter(Boolean);
 }
 
 /* ---------- lookup ---------- */
@@ -6062,31 +6138,79 @@ function section(sec) {
     + '</section>';
 }
 
+/* The same tile as the overview, built from a measure rather than a KPI, so
+   a measure page leads with six numbers instead of a paragraph. */
+/* A gap between two percentages is points, not per cent. Saying 22% when you
+   mean 22 points is the kind of thing a founder repeats in a board meeting. */
+function diffFmt(m, v) {
+  if (m.fmtKey === 'pct' || m.fmtKey === 'pct0') {
+    return (m.fmtKey === 'pct' ? (Math.round(v * 10) / 10).toFixed(1) : String(Math.round(v))) + ' pts';
+  }
+  return m.fmt(v);
+}
+
+function measureTile(m, label, flag) {
+  var s = m.series, n = s.length;
+  var now = s[n - 1], prev = s[n - 2];
+  var d = (now === null || prev === null) ? 0 : now - prev;
+  var good = d === 0 ? true : (d > 0) === m.goodUp;
+  var lo = Math.min.apply(null, s.filter(function (v) { return v !== null; }));
+  var hi = Math.max.apply(null, s.filter(function (v) { return v !== null; }));
+  var pad = Math.max((hi - lo) * 0.35, Math.abs(hi) * 0.04 || 1);
+  var i = TRENDS.push({ series: s.map(function (v) { return v === null ? lo : v; }), lo: lo - pad, hi: hi + pad }) - 1;
+
+  var gap = '';
+  if (m.target !== null && now !== null) {
+    var g = now - m.target;
+    gap = Math.abs(g) < 0.0001 ? 'On target'
+      : diffFmt(m, Math.abs(g)) + (g > 0 ? ' above target' : ' below target');
+  }
+
+  return '<button type="button" class="tile" data-go="measure:' + m.id + '">'
+    + '<span class="t-top"><span class="t-label">' + esc(label || m.name) + '</span>'
+    + (flag ? '<span class="t-flag">Needs attention</span>' : '') + '</span>'
+    + '<span class="t-value num">' + esc(m.fmt(now)) + '</span>'
+    + '<span class="t-bottom"><span class="t-foot">'
+    + (d === 0 ? '<span class="delta">Level</span>'
+        : '<span class="delta ' + (good ? 'good' : 'bad') + '">' + arrow(d > 0 ? 'up' : 'down')
+          + '<span class="sr-only">' + (d > 0 ? 'Up ' : 'Down ') + '</span>'
+          + esc(diffFmt(m, Math.abs(d))) + '</span>')
+    + (gap ? '<span>' + esc(gap) + '</span>' : '')
+    + '</span>'
+    + '<span class="spark-box" data-tr="' + i + '"></span>'
+    + '</span></button>';
+}
+
 function kpiPage() {
   var k = kpiById(openKpi);
   var d = DETAIL[openKpi];
+
   TRENDS = [];
-
-  var hero = '<section class="card hero">'
-    + '<span class="h-val num">' + esc(k.value)
-    + (k.unit ? '<span class="unit">' + esc(k.unit) + '</span>' : '') + '</span>'
-    + '<span class="h-meta">'
-    + '<span class="delta ' + (k.delta.good ? 'good' : 'bad') + '">' + arrow(k.delta.dir)
-    + '<span class="sr-only">' + (k.delta.dir === 'up' ? 'Up ' : 'Down ') + '</span>'
-    + esc(k.delta.text) + '</span>'
-    + '<span class="h-tgt">' + esc(k.targetLabel) + '</span>'
-    + '</span>'
-    + '<p class="h-intro">' + esc(d ? d.intro : k.definition) + '</p>'
-    + '</section>';
-
-  var stats = d && d.stats && d.stats.length ? statCards(d.stats) : '';
+  var six = sixFor(openKpi);
+  var worst = null, worstBy = 0;
+  six.forEach(function (x) {
+    var m = x.m, now = m.series[m.series.length - 1];
+    if (m.target === null || now === null) return;
+    /* Measures with a target of zero are counts of things going wrong, so they
+       are short whenever anything is. Flagging one says nothing you did not
+       already know, so the flag goes to the measure furthest off a real level. */
+    if (m.target === 0) return;
+    var short = m.goodUp ? m.target - now : now - m.target;
+    if (short <= 0) return;
+    var rel = short / Math.abs(m.target);
+    if (rel > worstBy) { worstBy = rel; worst = m.id; }
+  });
+  var tiles = six.length
+    ? '<div class="tiles">' + six.map(function (x) {
+        return measureTile(x.m, x.label, x.m.id === worst);
+      }).join('') + '</div>'
+    : (d && d.stats && d.stats.length ? statCards(d.stats) : '');
 
   return '<button type="button" class="back" id="back">'
     + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
     + ' stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
     + '<path d="M15 18l-6-6 6-6"/></svg>Back to overview</button>'
-    + hero
-    + stats
+    + tiles
     + '<section class="card detail">' + detailShell() + '</section>'
     + (d ? d.sections.map(section).join('') : '')
     + '<section class="card behind">' + behind(k) + '</section>';
@@ -6405,7 +6529,7 @@ view.addEventListener('focusin', function (e) {
 });
 
 view.addEventListener('click', function (e) {
-  var tile = e.target.closest('.tile');
+  var tile = e.target.closest('.tile[data-kpi]');
   if (tile) {
     openKpi = tile.getAttribute('data-kpi');
     selectedKpi = openKpi;
@@ -6419,9 +6543,12 @@ view.addEventListener('click', function (e) {
 
   var go = e.target.closest('[data-go]');
   if (go) {
-    var bits = go.getAttribute('data-go').split(':');
+    /* A measure id carries its own colon, as in "measure:mrr:client-churn",
+       so split on the first one only. */
+    var raw = go.getAttribute('data-go');
+    var cut = raw.indexOf(':');
     if (page === 'kpi') fromKpi = openKpi;
-    openEntity = { kind: bits[0], id: bits[1] };
+    openEntity = { kind: raw.slice(0, cut), id: raw.slice(cut + 1) };
     page = 'entity';
     window.scrollTo(0, 0);
     render();
