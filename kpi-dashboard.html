@@ -1190,8 +1190,10 @@ var KPIS = [
     domain: [85, 180],
     ticks: [90, 120, 150, 180],
     fmt: function (v) { return '£' + v + 'k'; },
-    target: 150,
-    targetLabel: 'Target £150,000 a month',
+    /* The target here is growth, not a level, so there is no line to draw. */
+    target: null,
+    growth: true,
+    targetLabel: 'Target, up on last month',
     fmtPoint: function (v) { return '£' + Math.round(v * 1000).toLocaleString('en-GB'); },
     chartTitle: 'Monthly recurring revenue, last 12 months',
     owner: 'Nativ and the Creative Lead',
@@ -1207,23 +1209,26 @@ var KPIS = [
   },
   {
     id: 'profit',
-    gapUnit: 'money',
-    label: 'Operating profit',
-    value: '£38,200',
-    unit: '',
-    delta: { dir: 'up', text: '8.8%', good: true },
-    context: '22.4% of revenue',
-    series: [18.2, 19.4, 18.8, 21.6, 23.1, 25.4, 26.2, 24.8, 28.6, 31.2, 35.1, 38.2],
-    domain: [15, 46],
-    ticks: [15, 25, 35, 45],
-    fmt: function (v) { return '£' + v + 'k'; },
-    target: 42,
-    targetLabel: 'Target £42,000 a month',
-    fmtPoint: function (v) { return '£' + Math.round(v * 1000).toLocaleString('en-GB'); },
-    chartTitle: 'Operating profit, last 12 months',
+    gapUnit: 'pts',
+    label: 'Operating margin',
+    value: '22.4',
+    unit: '%',
+    delta: { dir: 'down', text: '0.7 pts', good: false },
+    context: '£38,200 in the month',
+    series: [19.8, 20.2, 20.0, 21.0, 21.0, 21.5, 21.7, 20.8, 22.3, 22.1, 23.1, 22.4],
+    domain: [19, 24],
+    ticks: [19, 21, 23],
+    fmt: function (v) { return v + '%'; },
+    /* Growth again, so no line. Margin can fall in a good month, which is
+       the thing this card is here to show. */
+    target: null,
+    growth: true,
+    targetLabel: 'Target, up on last month',
+    fmtPoint: function (v) { return v.toFixed(1) + '%'; },
+    chartTitle: 'Operating margin, last 12 months',
     owner: 'Nativ and the fractional CFO',
     def: 'agreed',
-    definition: 'Revenue less all delivery cost, payroll, contractor spend, tooling and overhead in the calendar month. Before tax and before founder drawings.',
+    definition: 'Operating profit as a share of revenue in the calendar month. Profit is revenue less all delivery cost, payroll, contractor spend, tooling and overhead, before tax and before founder drawings.',
     capture: 'Closed by the fractional CFO in the month end pack. The only figure on this board that does not come from Notion.',
     support: [
       { name: 'Delivery margin', owner: 'Editing Lead', v: '61.8%', t: 'Target 60%', hit: true },
@@ -1244,8 +1249,8 @@ var KPIS = [
     domain: [7.8, 9.2],
     ticks: [8, 8.5, 9],
     fmt: function (v) { return v.toFixed(1); },
-    target: 8.5,
-    targetLabel: 'Target 8.5 out of 10',
+    target: 9,
+    targetLabel: 'Target 9.0 out of 10',
     fmtPoint: function (v) { return v.toFixed(1) + ' out of 10'; },
     chartTitle: 'Client satisfaction, last 12 months',
     owner: 'the Creative Lead',
@@ -1254,7 +1259,7 @@ var KPIS = [
     capture: 'Google Form, sent monthly to every account lead. Answers land in the same table as everything else.',
     support: [
       { name: 'Forms returned', owner: 'Creative Lead', v: '9 of 14', t: 'Target 12', hit: false },
-      { name: 'Average score across six questions', owner: 'Creative Lead', v: '8.8', t: 'Target 8.5', hit: true },
+      { name: 'Average score across six questions', owner: 'Creative Lead', v: '8.8', t: 'Target 9.0', hit: false },
       { name: 'Lowest scoring question', owner: 'Creative Lead', v: '7.6', t: 'Communication', hit: false },
       { name: 'Negative comments raised on a call first', owner: 'Creative Lead', v: '2 of 3', t: 'Target 3 of 3', hit: false }
     ]
@@ -1925,10 +1930,10 @@ var DETAIL = {
   "intro": "Where September's £170,400 of revenue went, from delivery cost through every overhead line down to £38,200 of operating profit.",
   "stats": [
    {
-    "label": "Operating profit margin",
+    "label": "Operating margin",
     "value": "22.4%",
-    "sub": "Up from 21.1% in August",
-    "tone": "pos"
+    "sub": "Down from 23.1% in August, revenue grew faster than profit",
+    "tone": "neg"
    },
    {
     "label": "Delivery margin",
@@ -2315,8 +2320,8 @@ var DETAIL = {
    {
     "label": "Company score",
     "value": "8.8 / 10",
-    "sub": "Target 8.5, best month of the year",
-    "tone": "pos"
+    "sub": "Target 9.0, best month of the year",
+    "tone": "neg"
    },
    {
     "label": "Forms returned",
@@ -2332,8 +2337,8 @@ var DETAIL = {
    },
    {
     "label": "Clients below target",
-    "value": "2",
-    "sub": "Fernway Wellness and Vireo Health, both Pod 2",
+    "value": "5",
+    "sub": "Fernway Wellness lowest at 8.0, then Vireo Health, Lumen Greens, Sonder Skincare and Kestrel Fitness",
     "tone": "neg"
    },
    {
@@ -4662,8 +4667,8 @@ function clientPage(id) {
       sub: months + ' of 12 months on the book', tone: 'flat' },
     { label: 'Latest satisfaction',
       value: latest === null ? 'None' : one(c.sat[latest]),
-      sub: latest === null ? 'Never returned a form' : (MN[latest] + ', against a target of 8.5'),
-      tone: latest === null ? 'neg' : (c.sat[latest] >= 8.5 ? 'pos' : 'neg') },
+      sub: latest === null ? 'Never returned a form' : (MN[latest] + ', against a target of 9.0'),
+      tone: latest === null ? 'neg' : (c.sat[latest] >= 9 ? 'pos' : 'neg') },
     { label: 'Forms returned', value: replies + ' of ' + months,
       sub: replies === months ? 'Answered every month' : ((months - replies) + ' months with no answer'),
       tone: replies === months ? 'pos' : 'neg' }
@@ -4792,7 +4797,7 @@ function podPage(id) {
   var stats = [
     { label: 'MRR', value: gbp(mrrNow), sub: (mrrNow / DEEP.mrr[11] * 100).toFixed(1) + '% of the book', tone: 'flat' },
     { label: 'Client satisfaction', value: S.csat[11] === null ? 'None' : one(S.csat[11]),
-      sub: 'Target 8.5', tone: S.csat[11] !== null && S.csat[11] >= 8.5 ? 'pos' : 'neg' },
+      sub: 'Target 9.0', tone: S.csat[11] !== null && S.csat[11] >= 9 ? 'pos' : 'neg' },
     { label: 'Colleague performance', value: S.perf[11] === null ? 'None' : one(S.perf[11]),
       sub: 'Target 4.0', tone: S.perf[11] !== null && S.perf[11] >= 4 ? 'pos' : 'neg' },
     { label: 'Colleague satisfaction', value: S.sat[11] === null ? 'None' : one(S.sat[11]),
@@ -5002,7 +5007,7 @@ function buildMeasures() {
 
   /* ---- monthly recurring revenue ---- */
   M('mrr', 'MRR', DEEP.mrr.slice(), 'money', {
-    target: 150000, targetLabel: 'Target £150,000 a month', owner: 'Nativ and the Creative Lead',
+    targetLabel: 'Target, up on last month', owner: 'Nativ and the Creative Lead',
     definition: 'Contracted retainer value invoiced in the calendar month, added up across every live account.',
     capture: 'Read straight from the invoicing ledger at month end close.',
     parts: ['New business won, monthly value', 'Expansion from existing clients', 'MRR lost to churn'],
@@ -5010,7 +5015,7 @@ function buildMeasures() {
       'Every live account and what it pays. These add up to the figure above.'); } });
 
   M('mrr', 'Last month MRR', months(function (i) { return i ? DEEP.mrr[i - 1] : null; }), 'money', {
-    target: 150000, targetLabel: 'Target £150,000 a month', owner: 'Nativ and the Creative Lead',
+    targetLabel: 'Target, up on last month', owner: 'Nativ and the Creative Lead',
     definition: 'What the book was worth the month before, so this month has something to sit against.',
     capture: 'The previous month from the same ledger.', parts: ['MRR'] });
 
@@ -5173,8 +5178,9 @@ function buildMeasures() {
     capture: 'The only figure on this board that does not come from Notion.',
     parts: ['Delivery margin in pounds', 'Total overheads'] });
 
-  M('profit', 'Operating profit margin', months(function (i) { return DEEP.op[i] / DEEP.rev[i] * 100; }), 'pct', {
-    target: 25, targetLabel: 'Target 25%', owner: 'Nativ',
+  M('profit', 'Operating margin', months(function (i) { return DEEP.op[i] / DEEP.rev[i] * 100; }), 'pct', {
+    aliases: ['Operating profit margin'],
+    targetLabel: 'Target, up on last month', owner: 'Nativ',
     definition: 'Operating profit as a share of revenue.',
     capture: 'Falls out of the two figures above it.', parts: ['Operating profit', 'Revenue'] });
 
@@ -5205,10 +5211,14 @@ function buildMeasures() {
         }) };
     } });
 
-  /* ---- client satisfaction ---- */
+  /* ---- client satisfaction ----
+     The score every client is held to, in one place so the page, the
+     question rows and the below target count cannot drift apart. */
+  var CSAT = 9;
+
   M('client-sat', 'Company score', months(function (i) {
       return avg(repliedAt(i).map(function (c) { return c.sat[i]; })); }), 'one', {
-    aliases: ['Average score across six questions'], target: 8.5, targetLabel: 'Target 8.5 out of 10',
+    aliases: ['Average score across six questions'], target: 9, targetLabel: 'Target 9.0 out of 10',
     owner: 'Creative Lead',
     definition: 'The average of the six scored questions, across every client that returned a form this month.',
     capture: 'Google Form, sent monthly to every account lead.',
@@ -5232,12 +5242,12 @@ function buildMeasures() {
     } });
 
   M('client-sat', 'Clients below target', months(function (i) {
-      return repliedAt(i).filter(function (c) { return c.sat[i] < 8.5; }).length; }), 'n', {
+      return repliedAt(i).filter(function (c) { return c.sat[i] < CSAT; }).length; }), 'n', {
     target: 0, targetLabel: 'Target 0', goodUp: false, owner: 'Creative Lead',
-    definition: 'Clients that answered and scored below the 8.5 target.',
+    definition: 'Clients that answered and scored below the 9.0 target.',
     capture: 'Counted from the form responses.',
     who: function (i) {
-      var r = repliedAt(i).filter(function (c) { return c.sat[i] < 8.5; }).sort(function (a, b) { return a.sat[i] - b.sat[i]; });
+      var r = repliedAt(i).filter(function (c) { return c.sat[i] < CSAT; }).sort(function (a, b) { return a.sat[i] - b.sat[i]; });
       return { title: 'Which clients', note: r.length ? 'Worst first.' : 'Every client that answered is at or above target.',
         kind: 'table', columns: ['Client', 'Pod', 'Score', 'Retainer'],
         rows: r.map(function (c) { return { cells: [c.name, c.pod, F.one(c.sat[i]), F.money(c.retainer[i])], tone: 'neg' }; }) };
@@ -5258,7 +5268,7 @@ function buildMeasures() {
 
   Q.forEach(function (qn, j) {
     M('client-sat', qn, months(function (i) { return colMean(i, j, repliedAt(i), function (c, k) { return c.q[k]; }); }), 'one', {
-      aliases: [qn + ' score'], target: 8.5, targetLabel: 'Target 8.5 out of 10', owner: 'Creative Lead',
+      aliases: [qn + ' score'], target: 9, targetLabel: 'Target 9.0 out of 10', owner: 'Creative Lead',
       definition: 'One of the six questions on the monthly client form, averaged across everyone who answered.',
       capture: 'Google Form, one score out of ten per question.',
       who: function (i) { return whoClients(i, function (c, k) { return c.q[k] ? c.q[k][j] : null; }, F.one, qn); } });
@@ -5268,7 +5278,7 @@ function buildMeasures() {
       var v = Q.map(function (q, j) { return colMean(i, j, repliedAt(i), function (c, k) { return c.q[k]; }); })
         .filter(function (x) { return x !== null; });
       return v.length ? Math.min.apply(null, v) : null; }), 'one', {
-    aliases: ['Lowest scoring question'], target: 8.5, targetLabel: 'Target 8.5, like every question',
+    aliases: ['Lowest scoring question'], target: 9, targetLabel: 'Target 9.0, like every question',
     goodUp: true, owner: 'Creative Lead',
     definition: 'The weakest of the six questions in the month. Which question it is matters more than the number.',
     capture: 'The minimum of the six question averages.',
@@ -5277,8 +5287,8 @@ function buildMeasures() {
         .filter(function (r) { return r.v !== null; }).sort(function (a, b) { return a.v - b.v; });
       return { title: 'The six questions this month', note: 'Weakest first.', kind: 'table',
         columns: ['Question', 'Score', 'Against target'],
-        rows: rows.map(function (r) { return { cells: [r.q, F.one(r.v), (r.v - 8.5 >= 0 ? '+' : '') + (Math.round((r.v - 8.5) * 10) / 10).toFixed(1)],
-          tone: r.v < 8.5 ? 'neg' : 'pos' }; }) };
+        rows: rows.map(function (r) { return { cells: [r.q, F.one(r.v), (r.v - CSAT >= 0 ? '+' : '') + (Math.round((r.v - CSAT) * 10) / 10).toFixed(1)],
+          tone: r.v < CSAT ? 'neg' : 'pos' }; }) };
     } });
 
   M('client-sat', 'Negative comments raised on a call first', DEEP.extra['client-sat:negative-comments-raised-on-a-call-first'].series.slice(), 'n', {
@@ -5522,8 +5532,8 @@ var SIX = {
     { m: 'Average retainer', as: 'Average retainer value' }
   ],
   'profit': [
+    { m: 'Operating margin' },
     { m: 'Operating profit' },
-    { m: 'Operating profit margin' },
     { m: 'Revenue' },
     { m: 'Total delivery cost' },
     { m: 'Delivery margin' },
@@ -5690,7 +5700,16 @@ function readLine(k) {
   var s = k.series, below = 0, i, head;
   var hasT = k.target !== null && k.target !== undefined;
   for (i = 0; i < s.length; i++) if (hasT && s[i] < k.target) below++;
-  if (!hasT) head = 'Twelve months to September';
+  /* Where the target is growth rather than a level, the question is how
+     often it went up, not how often it cleared a line. */
+  if (!hasT && k.growth) {
+    var up = 0;
+    for (i = 1; i < s.length; i++) if (s[i] > s[i - 1]) up++;
+    head = up === s.length - 1
+      ? 'Up on the month before in every one of the last eleven months'
+      : 'Up on the month before in ' + COUNT[up] + ' of the last eleven months';
+  }
+  else if (!hasT) head = 'Twelve months to September';
   else if (below === 0) head = 'At or above the ' + k.fmt(k.target) + ' target in every one of the last twelve months';
   else if (below === s.length) head = 'Below the ' + k.fmt(k.target) + ' target in every one of the last twelve months';
   else head = 'Below the ' + k.fmt(k.target) + ' target in ' + COUNT[below] + ' of the last twelve months';
@@ -6193,13 +6212,6 @@ function measureTile(m, label) {
   var pad = Math.max((hi - lo) * 0.35, Math.abs(hi) * 0.04 || 1);
   var i = TRENDS.push({ series: s.map(function (v) { return v === null ? lo : v; }), lo: lo - pad, hi: hi + pad }) - 1;
 
-  var gap = '';
-  if (m.target !== null && now !== null) {
-    var g = now - m.target;
-    gap = Math.abs(g) < 0.0001 ? 'On target'
-      : diffFmt(m, Math.abs(g)) + (g > 0 ? ' above target' : ' below target');
-  }
-
   return '<button type="button" class="tile" data-go="measure:' + m.id + '">'
     + '<span class="t-top"><span class="t-label">' + esc(label || m.name) + '</span></span>'
     + '<span class="t-value num">' + esc(m.fmt(now)) + '</span>'
@@ -6208,7 +6220,7 @@ function measureTile(m, label) {
         : '<span class="delta ' + (good ? 'good' : 'bad') + '">' + arrow(d > 0 ? 'up' : 'down')
           + '<span class="sr-only">' + (d > 0 ? 'Up ' : 'Down ') + '</span>'
           + esc(diffFmt(m, Math.abs(d))) + '</span>')
-    + (gap ? '<span>' + esc(gap) + '</span>' : '')
+    + '<span>vs last month</span>'
     + '</span>'
     + '<span class="spark-box" data-tr="' + i + '"></span>'
     + '</span></button>';
@@ -6300,7 +6312,6 @@ var headRight = document.querySelector('.head-right');
 function overview() {
   return '<div class="tiles">'
     + KPIS.map(function (t) {
-        var gap = gapText(t);
         return '<button type="button" class="tile" data-kpi="' + t.id + '">'
           + '<span class="t-top"><span class="t-label">' + esc(t.label) + '</span></span>'
           + '<span class="t-value num">' + esc(t.value)
@@ -6311,7 +6322,7 @@ function overview() {
           + arrow(t.delta.dir)
           + '<span class="sr-only">' + (t.delta.dir === 'up' ? 'Up ' : 'Down ') + '</span>'
           + esc(t.delta.text) + '</span>'
-          + '<span>' + esc(gap || t.context) + '</span>'
+          + '<span>vs last month</span>'
           + '</span>'
           + '<span class="spark-box" data-spark="' + t.id + '"></span>'
           + '</span>'
