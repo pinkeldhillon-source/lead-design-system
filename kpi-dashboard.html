@@ -338,24 +338,6 @@ h1 {
 
 .t-label { font-size: 14px; color: var(--muted); }
 
-/* A card that needs looking at says so, once. */
-.t-flag {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12.5px;
-  color: var(--neg);
-  white-space: nowrap;
-}
-
-.t-flag::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
 .t-bottom {
   display: flex;
   align-items: flex-end;
@@ -5661,11 +5643,6 @@ function readLine(k) {
   return head + ', and ' + (k.delta.dir === 'up' ? 'up ' : 'down ') + k.delta.text + ' on August.';
 }
 
-function offTarget(k) {
-  if (k.target === null || k.target === undefined) return false;
-  return k.series[k.series.length - 1] < k.target;
-}
-
 function kpiById(id) {
   return KPIS.filter(function (x) { return x.id === id; })[0];
 }
@@ -6151,7 +6128,7 @@ function diffFmt(m, v) {
   return m.fmt(v);
 }
 
-function measureTile(m, label, flag) {
+function measureTile(m, label) {
   var s = m.series, n = s.length;
   var now = s[n - 1], prev = s[n - 2];
   var d = (now === null || prev === null) ? 0 : now - prev;
@@ -6169,8 +6146,7 @@ function measureTile(m, label, flag) {
   }
 
   return '<button type="button" class="tile" data-go="measure:' + m.id + '">'
-    + '<span class="t-top"><span class="t-label">' + esc(label || m.name) + '</span>'
-    + (flag ? '<span class="t-flag">Needs attention</span>' : '') + '</span>'
+    + '<span class="t-top"><span class="t-label">' + esc(label || m.name) + '</span></span>'
     + '<span class="t-value num">' + esc(m.fmt(now)) + '</span>'
     + '<span class="t-bottom"><span class="t-foot">'
     + (d === 0 ? '<span class="delta">Level</span>'
@@ -6189,22 +6165,9 @@ function kpiPage() {
 
   TRENDS = [];
   var six = sixFor(openKpi);
-  var worst = null, worstBy = 0;
-  six.forEach(function (x) {
-    var m = x.m, now = m.series[m.series.length - 1];
-    if (m.target === null || now === null) return;
-    /* Measures with a target of zero are counts of things going wrong, so they
-       are short whenever anything is. Flagging one says nothing you did not
-       already know, so the flag goes to the measure furthest off a real level. */
-    if (m.target === 0) return;
-    var short = m.goodUp ? m.target - now : now - m.target;
-    if (short <= 0) return;
-    var rel = short / Math.abs(m.target);
-    if (rel > worstBy) { worstBy = rel; worst = m.id; }
-  });
   var tiles = six.length
     ? '<div class="tiles">' + six.map(function (x) {
-        return measureTile(x.m, x.label, x.m.id === worst);
+        return measureTile(x.m, x.label);
       }).join('') + '</div>'
     : (d && d.stats && d.stats.length ? statCards(d.stats) : '');
 
@@ -6284,8 +6247,7 @@ function overview() {
     + KPIS.map(function (t) {
         var gap = gapText(t);
         return '<button type="button" class="tile" data-kpi="' + t.id + '">'
-          + '<span class="t-top"><span class="t-label">' + esc(t.label) + '</span>'
-          + (offTarget(t) ? '<span class="t-flag">Needs attention</span>' : '') + '</span>'
+          + '<span class="t-top"><span class="t-label">' + esc(t.label) + '</span></span>'
           + '<span class="t-value num">' + esc(t.value)
           + (t.unit ? '<span class="unit">' + esc(t.unit) + '</span>' : '') + '</span>'
           + '<span class="t-bottom">'
