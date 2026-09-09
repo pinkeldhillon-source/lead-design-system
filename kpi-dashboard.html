@@ -19,10 +19,15 @@
   /* Three surfaces and nothing else. Depth comes from tone, so no card
      carries a shadow. */
   --bg: #0B0D12;
-  --well: #0E1117;      /* quieter level 2, the chart card sits here */
-  --card: #10131A;      /* level 1, the KPI cards */
-  --card-hi: #141925;   /* elevated, the card under the cursor */
-  --raise: #141925;
+
+  /* Cards are a translucent white over the page colour, not a solid fill,
+     so a card reads as a lit surface rather than an outlined box. */
+  --surf-1: rgba(255, 255, 255, 0.03);    /* level 1, the KPI cards */
+  --surf-1-hi: rgba(255, 255, 255, 0.055);/* raised: hovered, or wanting attention */
+  --surf-2: rgba(255, 255, 255, 0.02);    /* level 2, the chart and the lists */
+  --ring-1: rgba(255, 255, 255, 0.14);    /* top of the ring on a level 1 card */
+  --ring-2: rgba(255, 255, 255, 0.08);    /* and on a level 2 card */
+  --dot-bg: #0E1017;                      /* backing behind the chart end point */
 
   --line: rgba(255, 255, 255, 0.09);
   --line-hi: rgba(255, 255, 255, 0.15);
@@ -42,7 +47,7 @@
 
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --rail: 262px;
-  --r-card: 16px;
+  --r-card: 10px;
 }
 
 * { box-sizing: border-box; }
@@ -247,7 +252,7 @@ h1 {
   display: inline-flex;
   gap: 2px;
   padding: 3px;
-  background: var(--well);
+  background: var(--surf-1);
   border: 1px solid var(--line);
   border-radius: 10px;
 }
@@ -265,9 +270,8 @@ h1 {
 
 .seg button[aria-pressed="true"],
 .seg button[aria-selected="true"] {
-  background: var(--raise);
+  background: rgba(255, 255, 255, 0.07);
   color: var(--text);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
 .stamp { margin: 14px 0 0; font-size: 13px; color: var(--faint); }
@@ -281,7 +285,7 @@ h1 {
   color: var(--muted);
 }
 
-.menu:hover { background: var(--card); color: var(--text); }
+.menu:hover { background: var(--surf-1-hi); color: var(--text); }
 
 .scrim {
   position: fixed;
@@ -293,17 +297,60 @@ h1 {
   transition: opacity 0.24s ease;
 }
 
-/* ---------- Cards ---------- */
+/* ---------- Cards ----------
+   No border and no shadow. A 1px ring sits on the card's edge, bright at
+   the top and gone by the bottom, so the light appears to come from above.
+   The ring is a pseudo element masked down to its own padding, which is
+   why both mask-composite lines are needed: xor for Chrome and Safari,
+   exclude for Firefox. */
 
-.card {
-  background: var(--card);
-  border: 1px solid var(--line);
+.card,
+.tile {
+  position: relative;
+  background: var(--surf-1);
+  border: 1px solid rgba(255, 255, 255, 0.06);  /* fallback, dropped below */
   border-radius: var(--r-card);
 }
 
+@supports ((-webkit-mask-composite: xor) or (mask-composite: exclude)) {
+  .card,
+  .tile { border: 0; }
+
+  .card::before,
+  .tile::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    background: linear-gradient(180deg, var(--ring-1), rgba(255, 255, 255, 0) 92%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* A quieter ring on the level 2 surfaces. */
+  .detail::before,
+  .behind::before,
+  .rows-card::before,
+  .trendrows::before,
+  .ehead::before {
+    background: linear-gradient(180deg, var(--ring-2), rgba(255, 255, 255, 0) 92%);
+  }
+
+  .open-question::before {
+    background: linear-gradient(180deg, rgba(217, 160, 54, 0.32), rgba(217, 160, 54, 0) 92%);
+  }
+}
+
+/* Attention is a lighter fill. The ring does not change. */
+.card.attention,
+.tile.attention { background: var(--surf-1-hi); }
+
 /* The chart and the supporting lists sit a level quieter than the KPI cards,
    so the six numbers stay the loudest thing on the page. */
-.detail, .behind, .rows-card, .trendrows, .ehead { background: var(--well); }
+.detail, .behind, .rows-card, .trendrows, .ehead { background: var(--surf-2); }
 
 /* ---------- Tiles ---------- */
 
@@ -318,15 +365,13 @@ h1 {
   flex-direction: column;
   width: 100%;
   padding: 24px 26px 22px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--r-card);
   overflow: hidden;
-  transition: background 0.18s ease, border-color 0.18s ease;
+  transition: background 0.18s ease;
 }
 
-/* Elevated, not lit. The card under the cursor rises by tone. */
-.tile:hover { background: var(--card-hi); border-color: var(--line-hi); }
+/* Raised, not lit. The card under the cursor takes the same lighter fill
+   an attention card does. */
+.tile:hover { background: var(--surf-1-hi); }
 
 .t-top {
   display: flex;
@@ -336,7 +381,13 @@ h1 {
   margin-bottom: 20px;
 }
 
-.t-label { font-size: 14px; color: var(--muted); }
+.t-label {
+  font-size: 14px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .t-bottom {
   display: flex;
@@ -557,7 +608,7 @@ h1 {
 .method {
   margin-top: 22px;
   padding: 16px 18px;
-  background: var(--well);
+  background: var(--surf-2);
   border: 1px solid var(--line);
   border-radius: 10px;
 }
@@ -636,7 +687,7 @@ h1 {
 .src-panel p:last-child { margin-bottom: 0; }
 .src-panel .open { color: var(--hold); }
 
-.open-question { margin-top: 16px; padding: 22px 26px; border-color: rgba(217, 160, 54, 0.18); }
+.open-question { margin-top: 16px; padding: 22px 26px; border-color: rgba(217, 160, 54, 0.22); }
 .open-question h3 { margin: 0 0 8px; font-size: 13px; font-weight: 500; color: var(--hold); }
 .open-question p { margin: 0 0 10px; font-size: 14px; line-height: 1.65; max-width: 80ch; color: var(--muted); }
 .open-question p:last-child { margin-bottom: 0; }
@@ -724,7 +775,7 @@ h1 {
   transition: color 0.14s ease, border-color 0.14s ease, background 0.14s ease;
 }
 
-.back:hover { color: var(--text); border-color: var(--line-hi); background: var(--card); }
+.back:hover { color: var(--text); border-color: var(--line-hi); background: var(--surf-1-hi); }
 .back svg { flex: none; }
 
 .hero {
@@ -791,7 +842,11 @@ table.dt {
   width: 100%;
   min-width: 560px;
   border-collapse: collapse;
-  background: var(--card);
+  background: var(--surf-1);
+  /* An outline follows the radius and costs no layout, which a border on a
+     collapsed table would. */
+  outline: 1px solid rgba(255, 255, 255, 0.07);
+  outline-offset: -1px;
   border-radius: var(--r-card);
   overflow: hidden;
   font-size: 13.5px;
@@ -815,7 +870,7 @@ table.dt thead th {
   padding-bottom: 11px;
 }
 
-table.dt tbody tr:hover td { background: var(--card-hi); }
+table.dt tbody tr:hover td { background: rgba(255, 255, 255, 0.035); }
 table.dt th.r, table.dt td.r { text-align: right; }
 table.dt td.name { color: var(--text); }
 table.dt td.dim { color: var(--muted); }
@@ -906,7 +961,7 @@ table.dt td.avg { text-align: right; font-weight: 500; color: var(--text); }
   transition: background 0.14s ease, color 0.14s ease;
 }
 
-.crumbs button:hover { background: var(--card); color: var(--text); }
+.crumbs button:hover { background: var(--surf-1-hi); color: var(--text); }
 .crumbs .sep { opacity: 0.5; padding: 0 1px; }
 .crumbs .here { padding: 5px 8px; color: var(--text); }
 
@@ -5744,7 +5799,7 @@ function ensureSvg(W, H) {
     + '<path class="c-line" fill="none" stroke="#7C82E8" stroke-width="1.9"'
     + ' stroke-linecap="round" stroke-linejoin="round"/>'
     + '<circle class="c-halo" r="7" fill="#7C82E8" fill-opacity="0.18"/>'
-    + '<circle class="c-ring" r="4.5" fill="#0B0D12" stroke="#7C82E8" stroke-width="1.8"/>'
+    + '<circle class="c-ring" r="4.5" fill="#0E1017" stroke="#7C82E8" stroke-width="1.8"/>'
     + '</svg>';
   return host;
 }
