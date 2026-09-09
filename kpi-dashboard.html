@@ -441,8 +441,10 @@ h1 {
 .delta.good { color: var(--pos); }
 .delta.bad { color: var(--neg); }
 
-/* Small, grey and tucked away, so the number carries the card. */
-.spark-box { display: block; width: 104px; height: 32px; flex: none; opacity: 0.85; }
+/* Small, grey and tucked away, so the number carries the card. It gives
+   up width before the reading beside it does. */
+.spark-box { display: block; width: 96px; height: 32px; flex: none; opacity: 0.85; }
+@media (max-width: 1420px) { .spark-box { width: 68px; } }
 .spark-box svg { display: block; width: 100%; height: 100%; overflow: visible; }
 
 /* ---------- Chart card ---------- */
@@ -1180,6 +1182,7 @@ var STATE = {
 var KPIS = [
   {
     id: 'mrr',
+    wfmt: function (v) { return '£' + Math.round(v).toLocaleString('en-GB'); },
     gapUnit: 'money',
     label: 'Monthly recurring revenue',
     value: '£170,400',
@@ -1209,6 +1212,7 @@ var KPIS = [
   },
   {
     id: 'profit',
+    wfmt: function (v) { return v.toFixed(1); },
     gapUnit: 'pts',
     label: 'Operating margin',
     value: '22.4',
@@ -1239,6 +1243,7 @@ var KPIS = [
   },
   {
     id: 'client-sat',
+    wfmt: function (v) { return v.toFixed(1); },
     gapUnit: 'score',
     label: 'Client satisfaction',
     value: '8.8',
@@ -1266,6 +1271,7 @@ var KPIS = [
   },
   {
     id: 'colleague-perf',
+    wfmt: function (v) { return v.toFixed(1); },
     gapUnit: 'score',
     label: 'Colleague performance',
     value: '4.3',
@@ -1293,6 +1299,7 @@ var KPIS = [
   },
   {
     id: 'colleague-sat',
+    wfmt: function (v) { return v.toFixed(1); },
     gapUnit: 'score',
     label: 'Colleague satisfaction',
     value: '8.1',
@@ -1320,6 +1327,7 @@ var KPIS = [
   },
   {
     id: 'checklist',
+    wfmt: function (v) { return String(Math.round(v)); },
     gapUnit: 'pts',
     label: 'End of day checklist completion',
     value: '78',
@@ -1439,13 +1447,6 @@ var ROLES = [
   }
 ];
 
-var PERIODS = [
-  { id: 'WTD', sub: 'Week to date, 1 to 5 September 2026' },
-  { id: 'MTD', sub: 'Month to date, 1 to 5 September 2026' },
-  { id: 'QTD', sub: 'Quarter to date, 1 July to 5 September 2026' },
-  { id: 'YTD', sub: 'Year to date, 1 January to 5 September 2026' }
-];
-
 var STUBS = {
   clients: ['Clients', 'The account list, one row per client, with retention, satisfaction and the last check-in date. Reads from the same Notion sync as the board.'],
   delivery: ['Delivery', 'The edit pipeline. Throughput, on time rate and the queue by editor. This is the page that cannot be built until an edit has one agreed definition.'],
@@ -1466,6 +1467,45 @@ var ICONS = {
 };
 
 /* ---------- Helpers ---------- */
+/* September week by week, so the period control reads real numbers.
+
+   Today is Wednesday 30 September 2026, the last working day of the
+   month. September holds 22 working days across five weeks, and every
+   figure below was built from the same client, person and cost records
+   the rest of the board uses. The five weeks add back to September, and
+   month to date is the September figure exactly. */
+
+var TODAY = 'Wednesday 30 September 2026';
+
+var PERIODS = [
+  { id: 'WTD', label: 'Week to date',
+    sub: 'Week to date, Monday 28 to Wednesday 30 September 2026. Three working days.' },
+  { id: 'LW', label: 'Last week',
+    sub: 'Last week, Monday 21 to Friday 25 September 2026. Five working days.' },
+  { id: 'MTD', label: 'Month to date',
+    sub: 'Month to date, 1 to 30 September 2026. Twenty two working days.' },
+  { id: 'YTD', label: 'Year to date',
+    sub: 'Year to date, 1 January to 30 September 2026. Nine months.' }
+];
+
+/* Money is what was booked in the window. Margin is that window''s profit
+   over that window''s revenue. The four scores are the readings taken in
+   the window: forms returned, grades filed, pulses answered, checklists
+   filed against checklists due. */
+var WINDOW = {
+  WTD: { mrr: 24241.38, profit: 24.97, 'client-sat': 8.7, 'colleague-perf': 4.52, 'colleague-sat': 8.57, 'checklist': 74.44,
+    prev: { mrr: 24241.38, profit: 27.89 }, against: "last week", n: {"client-sat": 1, "colleague-perf": 9, "colleague-sat": 7, "checklist": [67, 90]} },
+  LW: { mrr: 40402.29, profit: 27.89, 'client-sat': 8.9, 'colleague-perf': 4.37, 'colleague-sat': 7.91, 'checklist': 84.0,
+    prev: { mrr: 40402.29, profit: 24.24 }, against: "prior week", n: {"client-sat": 3, "colleague-perf": 26, "colleague-sat": 17, "checklist": [126, 150]} },
+  MTD: { mrr: 170400.0, profit: 22.42, 'client-sat': 8.8, 'colleague-perf': 4.3, 'colleague-sat': 8.1, 'checklist': 78.03,
+    prev: { mrr: 152000, profit: 23.09 }, against: "August", n: {"client-sat": 9, "colleague-perf": 26, "colleague-sat": 24, "checklist": [515, 660]} },
+  YTD: { mrr: 1162400, profit: 21.87, 'client-sat': 8.57, 'colleague-perf': 4.16, 'colleague-sat': 8.29, 'checklist': 75.36,
+    prev: { mrr: 103000, profit: 20.97 }, against: "January", n: {"client-sat": 79, "colleague-perf": 181, "colleague-sat": 202, "checklist": [3783, 5020]} }
+};
+
+/* Year to date has no window of its own shape to sit against, so the two
+   growth measures compare September with January instead. */
+var YTD_NOW = { mrr: 170400, profit: 22.42 };
 /* Detail page data. Placeholder throughout, but it reconciles. */
 var DETAIL = {
  "mrr": {
@@ -5717,6 +5757,44 @@ function readLine(k) {
   return head + ', and ' + (k.delta.dir === 'up' ? 'up ' : 'down ') + k.delta.text + ' on August.';
 }
 
+/* What a tile says under its number.
+
+   Four of the six are held to a level, so the useful figure is the
+   distance to it. Two are held to growth, so the useful figure is the
+   move on the window before. Either way it is one number. */
+function tileFoot(k, wid) {
+  var w = WINDOW[wid], v = w[k.id];
+  if (v === null || v === undefined) return { dir: 'flat', good: true, text: 'No reading', note: 'in this window' };
+
+  if (k.target !== null && k.target !== undefined) {
+    var g = v - k.target;
+    var hit = k.goodUp === false ? g <= 0 : g >= 0;
+    if (Math.abs(g) < 0.05) return { dir: 'flat', good: true, text: 'On target', note: '' };
+    return { dir: g > 0 ? 'up' : 'down', good: hit,
+      text: gapMag(k, Math.abs(g)), note: (g > 0 ? 'above' : 'below') + ' target' };
+  }
+
+  /* Growth. Year to date has no window of its own shape behind it, so
+     the two money measures compare September with January instead. */
+  var now = wid === 'YTD' ? YTD_NOW[k.id] : v;
+  var was = w.prev[k.id];
+  if (was === null || was === undefined || !was) return { dir: 'flat', good: true, text: 'No comparison', note: '' };
+  var d = now - was;
+  if (Math.abs(d) < (k.id === 'profit' ? 0.05 : Math.abs(was) * 0.0005)) {
+    return { dir: 'flat', good: true, text: 'Level', note: 'vs ' + w.against };
+  }
+  var text = k.id === 'profit'
+    ? (Math.round(Math.abs(d) * 10) / 10).toFixed(1) + ' pts'
+    : (Math.round(Math.abs(d / was) * 1000) / 10).toFixed(1) + '%';
+  return { dir: d > 0 ? 'up' : 'down', good: d > 0, text: text, note: 'vs ' + w.against };
+}
+
+function gapMag(k, d) {
+  if (k.gapUnit === 'money') return '£' + Math.round(d).toLocaleString('en-GB');
+  if (k.gapUnit === 'pts') return Math.round(d) + ' pts';
+  return (Math.round(d * 10) / 10).toFixed(1);
+}
+
 function kpiById(id) {
   return KPIS.filter(function (x) { return x.id === id; })[0];
 }
@@ -6301,7 +6379,7 @@ var LINKCTX = null;
 
 var selectedKpi = 'mrr';
 var currentRole = ROLES[0].id;
-var currentPeriod = 'WTD';
+var currentPeriod = 'MTD';
 var page = 'overview';
 
 var view = document.getElementById('view');
@@ -6310,19 +6388,22 @@ var subEl = document.getElementById('pageSub');
 var headRight = document.querySelector('.head-right');
 
 function overview() {
+  var wid = currentPeriod;
   return '<div class="tiles">'
     + KPIS.map(function (t) {
+        var v = WINDOW[wid][t.id];
+        var f = tileFoot(t, wid);
+        var shown = v === null || v === undefined ? 'None' : t.wfmt(v);
         return '<button type="button" class="tile" data-kpi="' + t.id + '">'
           + '<span class="t-top"><span class="t-label">' + esc(t.label) + '</span></span>'
-          + '<span class="t-value num">' + esc(t.value)
-          + (t.unit ? '<span class="unit">' + esc(t.unit) + '</span>' : '') + '</span>'
+          + '<span class="t-value num">' + esc(shown)
+          + (t.unit && v !== null ? '<span class="unit">' + esc(t.unit) + '</span>' : '') + '</span>'
           + '<span class="t-bottom">'
           + '<span class="t-foot">'
-          + '<span class="delta ' + (t.delta.good ? 'good' : 'bad') + '">'
-          + arrow(t.delta.dir)
-          + '<span class="sr-only">' + (t.delta.dir === 'up' ? 'Up ' : 'Down ') + '</span>'
-          + esc(t.delta.text) + '</span>'
-          + '<span>vs last month</span>'
+          + '<span class="delta ' + (f.good ? 'good' : 'bad') + '">'
+          + (f.dir === 'flat' ? '' : arrow(f.dir))
+          + esc(f.text) + '</span>'
+          + (f.note ? '<span>' + esc(f.note) + '</span>' : '')
           + '</span>'
           + '<span class="spark-box" data-spark="' + t.id + '"></span>'
           + '</span>'
@@ -6518,6 +6599,9 @@ document.querySelector('.rail').addEventListener('click', function (e) {
 
 /* ---------- Periods ---------- */
 
+/* The periods only mean something against a date, so the board says it. */
+document.getElementById('stamp').textContent = 'Placeholder data, ' + TODAY + ' at 09:12';
+
 document.getElementById('periods').innerHTML = PERIODS.map(function (p) {
   return '<button type="button" aria-pressed="' + (p.id === currentPeriod) + '">' + p.id + '</button>';
 }).join('');
@@ -6530,7 +6614,15 @@ document.getElementById('periods').addEventListener('click', function (e) {
     b.setAttribute('aria-pressed', String(b === btn));
   });
   var period = PERIODS.filter(function (p) { return p.id === currentPeriod; })[0];
-  if (page === 'overview') subEl.textContent = period.sub;
+  if (page !== 'overview') return;
+  subEl.textContent = period.sub;
+  /* Redraw the six, keeping the chart where it is. Only the tiles change. */
+  var tiles = view.querySelector('.tiles');
+  if (!tiles) return;
+  var fresh = document.createElement('div');
+  fresh.innerHTML = overview();
+  tiles.innerHTML = fresh.querySelector('.tiles').innerHTML;
+  drawSparks();
 });
 
 /* ---------- View interaction ---------- */
