@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+
+# Scratch output from the check scripts
+src/checks/shots/
+shots/
