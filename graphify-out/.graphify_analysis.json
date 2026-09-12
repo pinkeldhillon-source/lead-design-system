@@ -1,0 +1,403 @@
+{
+  "communities": {
+    "0": [
+      "src_newjs",
+      "src_newjs_arrow",
+      "src_newjs_band",
+      "src_newjs_behind",
+      "src_newjs_buildprobe",
+      "src_newjs_crumbs",
+      "src_newjs_detailshell",
+      "src_newjs_difffmt",
+      "src_newjs_drawspark",
+      "src_newjs_drawsparks",
+      "src_newjs_drawtrendsparks",
+      "src_newjs_easeinout",
+      "src_newjs_ensuresvg",
+      "src_newjs_entitypage",
+      "src_newjs_esc",
+      "src_newjs_gapmag",
+      "src_newjs_gaptext",
+      "src_newjs_gridsection",
+      "src_newjs_haschart",
+      "src_newjs_hidereadout",
+      "src_newjs_icon",
+      "src_newjs_kpibyid",
+      "src_newjs_kpipage",
+      "src_newjs_linkfor",
+      "src_newjs_measuretile",
+      "src_newjs_monotone",
+      "src_newjs_movereadout",
+      "src_newjs_navbutton",
+      "src_newjs_numericcol",
+      "src_newjs_opendefs",
+      "src_newjs_overview",
+      "src_newjs_paint",
+      "src_newjs_ptsfor",
+      "src_newjs_readline",
+      "src_newjs_reducemotion",
+      "src_newjs_render",
+      "src_newjs_rowclass",
+      "src_newjs_section",
+      "src_newjs_setkpi",
+      "src_newjs_setkpi_step",
+      "src_newjs_setnav",
+      "src_newjs_sparkmarkup",
+      "src_newjs_statcards",
+      "src_newjs_stub",
+      "src_newjs_swaplabels",
+      "src_newjs_swaplabels_write",
+      "src_newjs_tablesection",
+      "src_newjs_team",
+      "src_newjs_tilefoot",
+      "src_newjs_tiletarget",
+      "src_newjs_trendssection"
+    ],
+    "1": [
+      "src_measures",
+      "src_measures_activeat",
+      "src_measures_avg",
+      "src_measures_buildmeasures",
+      "src_measures_buildmeasures_chktotals",
+      "src_measures_buildmeasures_m",
+      "src_measures_buildmeasures_roleavg",
+      "src_measures_buildmeasures_whocost",
+      "src_measures_colmean",
+      "src_measures_costseries",
+      "src_measures_firstmonth",
+      "src_measures_gradedat",
+      "src_measures_lastmonth",
+      "src_measures_lostin",
+      "src_measures_measurefor",
+      "src_measures_measurepage",
+      "src_measures_months",
+      "src_measures_podchk",
+      "src_measures_pulsedat",
+      "src_measures_repliedat",
+      "src_measures_signedin",
+      "src_measures_sixfor",
+      "src_measures_slugify",
+      "src_measures_whoclients",
+      "src_measures_whopeople",
+      "src_measures_whopods"
+    ],
+    "2": [
+      "button",
+      "button_button",
+      "button_variants",
+      "card",
+      "card_card",
+      "card_tones",
+      "ctaband",
+      "ctaband_ctaband",
+      "dotgrid",
+      "dotgrid_dotgrid",
+      "eyebrow",
+      "eyebrow_eyebrow",
+      "formfield",
+      "formfield_formfield",
+      "highlight",
+      "highlight_highlight",
+      "index",
+      "overflowring",
+      "overflowring_overflowring",
+      "ref_react",
+      "statblock",
+      "statblock_statblock",
+      "testimonial",
+      "testimonial_testimonial"
+    ],
+    "3": [
+      "src_checks_audit",
+      "src_checks_audit_avgs",
+      "src_checks_audit_bad",
+      "src_checks_audit_chk",
+      "src_checks_audit_cl",
+      "src_checks_audit_clients",
+      "src_checks_audit_cp",
+      "src_checks_audit_cper",
+      "src_checks_audit_dc",
+      "src_checks_audit_due",
+      "src_checks_audit_fil",
+      "src_checks_audit_g",
+      "src_checks_audit_get",
+      "src_checks_audit_graded",
+      "src_checks_audit_money",
+      "src_checks_audit_names",
+      "src_checks_audit_oh",
+      "src_checks_audit_ovlines",
+      "src_checks_audit_ovsum",
+      "src_checks_audit_people_clients_detail",
+      "src_checks_audit_pod",
+      "src_checks_audit_resp",
+      "src_checks_audit_sec"
+    ],
+    "4": [
+      "src_checks_rollup",
+      "src_checks_rollup_act",
+      "src_checks_rollup_below3",
+      "src_checks_rollup_byname",
+      "src_checks_rollup_chk",
+      "src_checks_rollup_cls",
+      "src_checks_rollup_cn",
+      "src_checks_rollup_cs",
+      "src_checks_rollup_forms",
+      "src_checks_rollup_g",
+      "src_checks_rollup_graded",
+      "src_checks_rollup_kpis_detail_deep",
+      "src_checks_rollup_money",
+      "src_checks_rollup_one",
+      "src_checks_rollup_pf",
+      "src_checks_rollup_pn",
+      "src_checks_rollup_podof",
+      "src_checks_rollup_ppl",
+      "src_checks_rollup_resp",
+      "src_checks_rollup_sec",
+      "src_checks_rollup_src",
+      "src_checks_rollup_st",
+      "src_checks_rollup_tr"
+    ],
+    "5": [
+      "ref_playwright",
+      "src_checks_agree",
+      "src_checks_covercheck",
+      "src_checks_covercheck_errs",
+      "src_checks_covercheck_gaps",
+      "src_checks_package",
+      "src_checks_package_description",
+      "src_checks_package_devdependencies",
+      "src_checks_package_devdependencies_playwright",
+      "src_checks_package_name",
+      "src_checks_package_private",
+      "src_checks_package_scripts",
+      "src_checks_package_scripts_all",
+      "src_checks_package_type",
+      "src_checks_review",
+      "src_checks_six",
+      "src_checks_six_errs",
+      "src_checks_sweep2",
+      "src_checks_sweep2_bad",
+      "src_checks_sweep2_errs",
+      "src_checks_windows",
+      "src_checks_windows_seen"
+    ],
+    "6": [
+      "src_entity",
+      "src_entity_buildindex",
+      "src_entity_buildindex_add",
+      "src_entity_clientpage",
+      "src_entity_compact",
+      "src_entity_costpage",
+      "src_entity_entityfor",
+      "src_entity_gbp",
+      "src_entity_golink",
+      "src_entity_meanat",
+      "src_entity_monthgrid",
+      "src_entity_one",
+      "src_entity_personpage",
+      "src_entity_podclients",
+      "src_entity_podpage",
+      "src_entity_podpeople",
+      "src_entity_podseries",
+      "src_entity_trendrow",
+      "src_entity_trendsof"
+    ],
+    "7": [
+      "src_gen",
+      "src_gen_build",
+      "src_gen_fit",
+      "src_gen_ints",
+      "src_gen_line",
+      "src_gen_money",
+      "src_gen_ramp",
+      "src_gen_rationale_35",
+      "src_gen_rationale_58",
+      "src_gen_sec",
+      "src_gen_slug",
+      "src_gen_split",
+      "src_gen_track"
+    ],
+    "8": [
+      "package",
+      "package_description",
+      "package_keywords",
+      "package_license",
+      "package_main",
+      "package_name",
+      "package_peerdependencies",
+      "package_peerdependencies_react",
+      "package_private",
+      "package_version"
+    ],
+    "9": [
+      "src_checks_crosscheck",
+      "src_checks_crosscheck_bad",
+      "src_checks_crosscheck_claim",
+      "src_checks_crosscheck_clientpod",
+      "src_checks_crosscheck_personpod",
+      "src_checks_crosscheck_podlead",
+      "src_checks_crosscheck_podname",
+      "src_checks_crosscheck_pods_people_clients_detail",
+      "src_checks_crosscheck_say"
+    ],
+    "10": [
+      "src_gweeks",
+      "src_gweeks_first",
+      "src_gweeks_mean",
+      "src_gweeks_prev_window",
+      "src_gweeks_r",
+      "src_gweeks_rationale_1",
+      "src_gweeks_rationale_147",
+      "src_gweeks_rationale_193",
+      "src_gweeks_win"
+    ],
+    "11": [
+      "src_emit",
+      "src_emit_act",
+      "src_emit_expansion",
+      "src_emit_first",
+      "src_emit_last",
+      "src_emit_slug"
+    ],
+    "12": [
+      "src_build",
+      "src_build_build",
+      "src_build_rationale_1"
+    ],
+    "13": [
+      "agents_skills_idea_refine_scripts_idea_refine",
+      "agents_skills_idea_refine_scripts_idea_refine_sh__entry"
+    ],
+    "14": [
+      "tailwind_config",
+      "tailwindcss"
+    ],
+    "15": [
+      "src_deep"
+    ],
+    "16": [
+      "src_detail"
+    ],
+    "17": [
+      "src_newdata"
+    ],
+    "18": [
+      "src_roster"
+    ],
+    "19": [
+      "src_weeks"
+    ]
+  },
+  "cohesion": {
+    "0": 0.09647058823529411,
+    "1": 0.16307692307692306,
+    "2": 0.13768115942028986,
+    "3": 0.09486166007905138,
+    "4": 0.08695652173913043,
+    "5": 0.09090909090909091,
+    "6": 0.23391812865497075,
+    "7": 0.1794871794871795,
+    "8": 0.2,
+    "9": 0.2777777777777778,
+    "10": 0.25,
+    "11": 0.3333333333333333,
+    "12": 0.6666666666666666,
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_measures_buildmeasures",
+      "label": "buildMeasures()",
+      "degree": 21
+    },
+    {
+      "id": "src_newjs_esc",
+      "label": "esc()",
+      "degree": 15
+    },
+    {
+      "id": "src_newjs_render",
+      "label": "render()",
+      "degree": 11
+    },
+    {
+      "id": "ref_react",
+      "label": "react",
+      "degree": 11
+    },
+    {
+      "id": "src_newjs_setkpi",
+      "label": "setKpi()",
+      "degree": 10
+    },
+    {
+      "id": "src_newjs_kpibyid",
+      "label": "kpiById()",
+      "degree": 7
+    },
+    {
+      "id": "src_newjs_kpipage",
+      "label": "kpiPage()",
+      "degree": 7
+    },
+    {
+      "id": "src_newjs_section",
+      "label": "section()",
+      "degree": 7
+    },
+    {
+      "id": "ref_playwright",
+      "label": "playwright",
+      "degree": 7
+    },
+    {
+      "id": "src_newjs_entitypage",
+      "label": "entityPage()",
+      "degree": 6
+    }
+  ],
+  "surprises": [],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `react` connect `React UI Component Library` to `Package Metadata`?",
+      "why": "High betweenness centrality (0.011) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `idea-refine.sh script`, `variants`, `tones` to the rest of the system?",
+      "why": "55 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Entity/KPI Page Rendering` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.09647058823529411 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `React UI Component Library` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.13768115942028986 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Client Audit Script` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.09486166007905138 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Data Rollup Aggregation` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Playwright Test Checks` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected."
+    }
+  ]
+}
