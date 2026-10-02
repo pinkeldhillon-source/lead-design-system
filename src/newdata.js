@@ -273,7 +273,6 @@ var ROLES = [
 ];
 
 var STUBS = {
-  clients: ['Clients', 'The account list, one row per client, with retention, satisfaction and the last check-in date. Reads from the same Notion sync as the board.'],
   delivery: ['Delivery', 'The edit pipeline. Throughput, on time rate and the queue by editor. This is the page that cannot be built until an edit has one agreed definition.'],
   finance: ['Finance', 'Retainer value, delivery margin and cash runway. Owned by the fractional CFO rather than pulled from Notion.'],
   reports: ['Reports', 'The Friday report and the month end roll up, written once and shared rather than rebuilt each time.'],

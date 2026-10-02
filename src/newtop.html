@@ -883,6 +883,21 @@ table.dt tr.rule td { border-top: 1px solid var(--line-hi); font-weight: 500; }
 
 .sub-lab { display: block; margin-top: 3px; font-size: 11.5px; color: var(--faint); }
 
+/* ---------- Clients ---------- */
+
+/* Seven columns of account detail. Wider than the default before it
+   scrolls, so the numbers keep their own space on a laptop. */
+table.dt.wide { min-width: 860px; }
+table.dt td.pos { color: var(--pos); }
+table.dt td.neg { color: var(--neg); }
+
+.sect > h3 .pod-lead {
+  margin-left: 10px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--faint);
+}
+
 /* The score grid. Three bands rather than a continuous ramp, because the
    point is to find the bad ones at a glance, not to admire a gradient. */
 table.dt td.cell { text-align: right; color: var(--muted); }

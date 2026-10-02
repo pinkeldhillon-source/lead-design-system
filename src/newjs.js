@@ -748,6 +748,119 @@ function team() {
     + '</div>';
 }
 
+/* ---------- Clients ----------
+
+   One row per account, grouped by the pod that runs it, biggest retainer
+   first. The question this page answers is "how are we doing with each of
+   them", so the columns are the money, the direction, how long they have
+   stayed and what they think of us. */
+
+var CSAT_GOOD = 9, CSAT_BAD = 8;
+
+function clientRow(c) {
+  var now = c.retainer[11], prev = c.retainer[10];
+  var move = prev ? now - prev : null;
+  var billed = c.retainer.reduce(function (a, b) { return a + (b || 0); }, 0);
+
+  /* The latest score they actually gave, and how long ago that was. A
+     number nobody has refreshed in three months should not read as current. */
+  var at = -1, i;
+  for (i = 11; i >= 0; i--) { if (c.sat[i] !== null) { at = i; break; } }
+  var stale = at >= 0 ? 11 - at : null;
+
+  var satCell;
+  if (at < 0) {
+    satCell = '<td class="r cell none">Never</td>';
+  } else {
+    var v = c.sat[at];
+    var band = v >= CSAT_GOOD ? 'good' : v < CSAT_BAD ? 'bad' : '';
+    satCell = '<td class="r cell ' + band + '">' + one(v)
+      + (stale ? '<span class="sub-lab">' + MONTHS[at] + '</span>' : '') + '</td>';
+  }
+
+  /* Steady is the state most accounts should be in, so it stays neutral.
+     Amber here would make a healthy book look like a wall of warnings. */
+  var tone = c.status === 'Growing' ? 'good' : c.status === 'At risk' ? 'bad' : '';
+
+  return '<tr>'
+    + '<td class="name">' + goLink(c.name, { kind: 'client', id: slugify(c.name) }) + '</td>'
+    + '<td class="r num">' + gbp(now) + '</td>'
+    + '<td class="r num ' + (move > 0 ? 'pos' : move < 0 ? 'neg' : 'dim') + '">'
+    + (move === null || move === 0 ? 'Level' : (move > 0 ? '+' : '-') + gbp(Math.abs(move))) + '</td>'
+    + '<td class="r num dim">' + gbp(billed) + '</td>'
+    + '<td class="r num dim">' + c.tenure + '</td>'
+    + satCell
+    + '<td class="r"><span class="chip ' + tone + '">' + esc(c.status) + '</span></td>'
+    + '</tr>';
+}
+
+function clientTable(rows) {
+  return '<div class="scroll-x"><table class="dt wide"><thead><tr>'
+    + '<th scope="col">Client</th>'
+    + '<th class="r" scope="col">Retainer</th>'
+    + '<th class="r" scope="col">vs last month</th>'
+    + '<th class="r" scope="col">Billed in 12 months</th>'
+    + '<th class="r" scope="col">Months with NSY</th>'
+    + '<th class="r" scope="col">Satisfaction</th>'
+    + '<th class="r" scope="col">Status</th>'
+    + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+}
+
+function clients() {
+  var all = Object.keys(DEEP.clients).map(function (k) { return DEEP.clients[k]; });
+  var live = all.filter(function (c) { return c.active; });
+  var book = live.reduce(function (a, c) { return a + c.retainer[11]; }, 0);
+
+  var byPod = PODS.map(function (p) {
+    var mine = live.filter(function (c) { return c.pod === p.name; })
+      .sort(function (a, b) { return b.retainer[11] - a.retainer[11]; });
+    var total = mine.reduce(function (a, c) { return a + c.retainer[11]; }, 0);
+    var scored = mine.filter(function (c) { return c.sat[11] !== null; });
+    return { pod: p, list: mine, total: total, scored: scored };
+  }).filter(function (g) { return g.list.length; })
+    .sort(function (a, b) { return b.total - a.total; });
+
+  var out = byPod.map(function (g) {
+    var mean = g.scored.length
+      ? one(g.scored.reduce(function (a, c) { return a + c.sat[11]; }, 0) / g.scored.length)
+      : null;
+    return '<section class="sect">'
+      + '<h3>' + esc(g.pod.name) + '<span class="pod-lead">led by ' + esc(g.pod.lead) + '</span></h3>'
+      + '<p class="s-note">' + g.list.length + (g.list.length === 1 ? ' client' : ' clients')
+      + ' · ' + gbp(g.total) + ' a month · ' + Math.round(g.total / book * 100) + '% of the book'
+      + (mean ? ' · ' + mean + ' average satisfaction' : '') + '</p>'
+      + clientTable(g.list.map(clientRow).join(''))
+      + '</section>';
+  }).join('');
+
+  /* The accounts that left are performance too, so they sit at the bottom
+     rather than disappearing from the page that is about performance. */
+  var gone = all.filter(function (c) { return !c.active; })
+    .sort(function (a, b) { return b.last - a.last; });
+  if (gone.length) {
+    out += '<section class="sect"><h3>No longer with us</h3>'
+      + '<p class="s-note">' + gone.length + ' accounts closed in the last twelve months, '
+      + gbp(gone.reduce(function (a, c) { return a + c.fee; }, 0)) + ' a month between them.</p>'
+      + '<div class="scroll-x"><table class="dt wide"><thead><tr>'
+      + '<th scope="col">Client</th><th scope="col">Pod</th>'
+      + '<th class="r" scope="col">Last retainer</th>'
+      + '<th class="r" scope="col">Months with NSY</th>'
+      + '<th scope="col">Last month</th><th scope="col">Why they left</th>'
+      + '</tr></thead><tbody>'
+      + gone.map(function (c) {
+          return '<tr><td class="name">' + goLink(c.name, { kind: 'client', id: slugify(c.name) }) + '</td>'
+            + '<td class="dim">' + esc(c.pod) + '</td>'
+            + '<td class="r num">' + gbp(c.fee) + '</td>'
+            + '<td class="r num dim">' + (c.last - c.first + 1) + '</td>'
+            + '<td class="dim">' + MONTHS[c.last] + '</td>'
+            + '<td class="dim">' + esc(c.reason) + '</td></tr>';
+        }).join('')
+      + '</tbody></table></div></section>';
+  }
+
+  return out;
+}
+
 function stub(id) {
   return '<div class="card stub"><h2>' + esc(STUBS[id][0]) + '</h2><p>' + esc(STUBS[id][1]) + '</p></div>';
 }
@@ -805,6 +918,14 @@ function render() {
     periodsEl.hidden = true;
     view.innerHTML = entityPage();
     drawTrendSparks();
+  } else if (page === 'clients') {
+    var liveN = Object.keys(DEEP.clients)
+      .filter(function (k) { return DEEP.clients[k].active; }).length;
+    titleEl.textContent = 'Clients';
+    subEl.textContent = liveN + ' live accounts, by pod, biggest retainer first.';
+    headRight.hidden = false;
+    periodsEl.hidden = true;
+    view.innerHTML = clients();
   } else if (page === 'team') {
     titleEl.textContent = 'Team';
     subEl.textContent = 'Weekly leading indicators, ' + openDefs();
