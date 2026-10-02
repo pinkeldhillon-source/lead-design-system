@@ -24,6 +24,7 @@ PARTS = [
     'detail.js',    # level 2, what makes each KPI
     'deep.js',      # level 3, every client, person, pod and cost line
     'entity.js',    # the end point pages
+    'org.js',       # the org chart on the Team tab
     'measures.js',  # the 66 measures and the big six per page
     'newjs.js'      # rendering, the chart, and interaction
 ]

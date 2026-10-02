@@ -712,7 +712,14 @@ function overview() {
 function team() {
   var r = ROLES.filter(function (x) { return x.id === currentRole; })[0];
 
-  return '<div class="seg roles" role="group" aria-label="Role">'
+  /* The chart first, because the shape of the company is the question
+     this tab is opened to answer. The weekly indicators keep their place
+     underneath it rather than moving somewhere new. */
+  return orgChart()
+    + '<section class="sect"><h3>Weekly leading indicators</h3>'
+    + '<p class="s-note">What each role controls between now and Friday. '
+    + 'The KPIs move when these move.</p></section>'
+    + '<div class="seg roles" role="group" aria-label="Role">'
     + ROLES.map(function (x) {
         return '<button type="button" data-role="' + x.id + '"'
           + ' aria-pressed="' + (x.id === currentRole) + '">' + esc(x.name) + '</button>';
@@ -928,7 +935,7 @@ function render() {
     view.innerHTML = clients();
   } else if (page === 'team') {
     titleEl.textContent = 'Team';
-    subEl.textContent = 'Weekly leading indicators, ' + openDefs();
+    subEl.textContent = 'Who does what, and the weekly inputs they control.';
     headRight.hidden = false;
     periodsEl.hidden = true;
     view.innerHTML = team();

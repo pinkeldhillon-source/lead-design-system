@@ -25,6 +25,7 @@ It opens from disk with no server.
 | `detail.js` | Level 2: what makes up each KPI |
 | `deep.js` | Level 3: every client, person, pod and cost line, twelve months each |
 | `entity.js` | The end point pages for a client, a person, a pod, a cost line |
+| `org.js` | The org chart on the Team tab: craft as rows, pods as columns |
 | `measures.js` | The 66 measures, and which six lead each KPI page |
 | `newjs.js` | Rendering, the chart, the period control, interaction |
 
@@ -70,6 +71,7 @@ Set `CHROME_PATH` if Chromium is not where Playwright expects it.
 | `six.mjs` | The big six on each KPI page resolve and read correctly |
 | `windows.mjs` | The part weeks sit inside the month, the month inside the year, and no KPI repeats a figure across the four periods |
 | `review.mjs` | Hunts contradictions across all 66 measures: scales, targets, percentages, parts against wholes |
+| `org.mjs` | The org chart matches the roster, every card opens that person, no name cramped at any width |
 
 Run them all after any data change. They are the reason the board holds
 together; the numbers are placeholder, but they are consistent placeholder.
