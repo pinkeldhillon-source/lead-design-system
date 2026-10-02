@@ -5,5 +5,6 @@ export { default as DotGrid } from './DotGrid';
 export { default as Eyebrow } from './Eyebrow';
 export { default as FormField } from './FormField';
 export { default as Highlight } from './Highlight';
+export { default as OverflowRing } from './OverflowRing';
 export { default as StatBlock } from './StatBlock';
 export { default as Testimonial } from './Testimonial';

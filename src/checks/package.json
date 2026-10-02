@@ -1,0 +1,12 @@
+{
+  "name": "nsy-board-checks",
+  "private": true,
+  "type": "module",
+  "description": "Checks that the NSY measurement board adds up. Run npm install here first, then node <check>.mjs from the repository root.",
+  "scripts": {
+    "all": "for f in agree audit covercheck crosscheck review rollup six sweep2 windows; do echo \"## $f\"; node $f.mjs; done"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}
