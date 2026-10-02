@@ -5,3 +5,4 @@ node_modules/
 src/checks/shots/
 shots/
 graphify-out/cache/
+node_modules
