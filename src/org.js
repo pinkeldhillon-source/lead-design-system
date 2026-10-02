@@ -79,14 +79,15 @@ function orgChart() {
         return '<div class="ocol-head">'
           + '<span class="oc-name">' + esc(pd.name) + '</span>'
           + '<span class="oc-meta">' + people.length + ' people · '
-          + clients.length + ' clients · ' + gbp(book) + '</span>'
+          + clients.length + ' clients</span>'
+          + '<span class="oc-meta">' + gbp(book) + ' a month</span>'
           + '<span class="oc-meta">' + (mean === null ? 'Not graded' : one(mean) + ' average grade') + '</span>'
           + '</div>';
       }).join('')
     + '<div class="ocol-head is-central">'
     + '<span class="oc-name">Company</span>'
+    + '<span class="oc-meta">' + P.filter(function (p) { return !p.pod; }).length + ' people</span>'
     + '<span class="oc-meta">Serves every pod</span>'
-    + '<span class="oc-meta">6 people</span>'
     + '</div></div>';
 
   var body = ORG_ROWS.map(function (row) {

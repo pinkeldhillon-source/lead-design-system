@@ -898,10 +898,12 @@ table.dt tr.rule td { border-top: 1px solid var(--line-hi); font-weight: 500; }
 }
 
 .orgchart {
-  /* Columns keep enough room for a name at any width; below that the
-     chart scrolls inside its own frame rather than cramming. */
-  --ocol: minmax(186px, 1fr);
-  min-width: 1168px;
+  /* Sized so the whole matrix, the Company column included, is on screen
+     at 1440 and above. Below that the label column and the cards tighten
+     one step rather than the chart scrolling a column out of sight. */
+  --olab: 180px;
+  --ocol: minmax(176px, 1fr);
+  min-width: 1065px;
   display: grid;
   gap: 1px;
   background: var(--line);
@@ -911,12 +913,12 @@ table.dt tr.rule td { border-top: 1px solid var(--line-hi); font-weight: 500; }
 
 .orow {
   display: grid;
-  grid-template-columns: 180px repeat(4, var(--ocol)) var(--ocol);
+  grid-template-columns: var(--olab) repeat(4, var(--ocol)) var(--ocol);
   gap: 1px;
   background: var(--line);
 }
 
-.orow > * { background: var(--bg); padding: 14px; }
+.orow > * { background: var(--bg); padding: var(--ocell-pad, 14px); }
 
 /* The row label carries the craft line that the grid does not draw. */
 .olabel { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
@@ -937,7 +939,7 @@ table.dt tr.rule td { border-top: 1px solid var(--line-hi); font-weight: 500; }
 
 /* The four pod columns collapse to one span on a row whose craft sits
    outside the pods. */
-.orow.is-outside { grid-template-columns: 180px 4fr var(--ocol); }
+.orow.is-outside { grid-template-columns: var(--olab) 4fr var(--ocol); }
 .ocell.is-na {
   background: rgba(0, 0, 0, 0.18);
   align-items: center;
@@ -1010,6 +1012,15 @@ table.dt tr.rule td { border-top: 1px solid var(--line-hi); font-weight: 500; }
    the grid for. */
 .pcard.is-weak { background: rgba(239, 93, 74, 0.07); }
 .pcard.is-weak:hover { background: rgba(239, 93, 74, 0.12); }
+
+/* One tightening step, so a 1280 laptop still gets the whole matrix on
+   screen. The label column gives up what the cards need. */
+@media (max-width: 1400px) {
+  .orgchart { --olab: 132px; --ocol: minmax(158px, 1fr); --ocell-pad: 12px 11px; min-width: 927px; }
+  .pcard { gap: 7px; padding: 8px 9px; }
+  .pc-name, .pc-grade { font-size: 12.5px; }
+  .ol-note { font-size: 11px; }
+}
 
 @media (max-width: 860px) {
   .orow { grid-template-columns: 130px repeat(4, var(--ocol)) var(--ocol); }
